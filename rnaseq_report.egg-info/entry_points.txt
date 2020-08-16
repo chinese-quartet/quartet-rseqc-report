@@ -1,0 +1,12 @@
+[multiqc.hooks.v1]
+execution_start = rnaseq_report.custom_code:rnaseq_report_execution_start
+
+[multiqc.modules.v1]
+rnaseq_performance_assessment = rnaseq_report.modules.rnaseq_performance_assessment:MultiqcModule
+rnaseq_post_alignment_qc = rnaseq_report.modules.rnaseq_post_alignment_qc:MultiqcModule
+rnaseq_quantification_qc = rnaseq_report.modules.rnaseq_quantification_qc:MultiqcModule
+rnaseq_raw_qc = rnaseq_report.modules.rnaseq_raw_qc:MultiqcModule
+
+[multiqc.templates.v1]
+default = rnaseq_report.templates.default
+
