@@ -535,15 +535,15 @@ class MultiqcModule(BaseMultiqcModule):
             'No hits percentage': sum(no_hits_mean) / len(no_hits_mean),
         }
         totals['Historical value'] = {
-            'Human percentage': 98.34,
-            'ERCC percentage': 0.15,
-            'EColi percentage': 0.003,
-            'Adapter percentage': 0.003,
-            'Vector percentage': 0.19,
-            'rRNA percentage': 1.97,
-            'Virus percentage': 0.64,
-            'Yeast percentage': 0.34,
-            'Mitoch percentage': 2.70,
-            'No hits percentage': 0.99
+            'Human percentage': '98.34±14.33',
+            'ERCC percentage': '0.15±0.02',
+            'EColi percentage': '0.003±0.004',
+            'Adapter percentage': '0.003±0.001',
+            'Vector percentage': '0.19±0.03',
+            'rRNA percentage': '1.97±0.29',
+            'Virus percentage': '0.64±0.09',
+            'Yeast percentage': '0.34±0.05',
+            'Mitoch percentage': '2.70±0.39',
+            'No hits percentage': '0.99±0.14'
         }
         return totals

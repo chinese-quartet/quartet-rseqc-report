@@ -35,6 +35,15 @@ def rnaseq_report_execution_start():
     #   so we check whether the value is already set. This is to avoid
     #   clobbering values that have been customised by users.
 
+    ### Module-rnaseq_data_generation_information
+    if 'rnaseq_data_generation_information/information' not in config.sp:
+        config.update_dict(
+            config.sp, {
+                'rnaseq_data_generation_information/information': {
+                    'fn_re': '^information.json$'
+                }
+            })
+
     ### Module-rnaseq_performance_assessment
     if 'rnaseq_performance_assessment/performance_score' not in config.sp:
         config.update_dict(
@@ -233,10 +242,9 @@ def rnaseq_report_execution_start():
     # ])
 
     config.module_order = [
-        'rnaseq_performance_assessment',
-        'rnaseq_raw_qc',
-        'rnaseq_post_alignment_qc',
-        'rnaseq_quantification_qc',
+        'rnaseq_data_generation_information', 'rnaseq_performance_assessment',
+        'rnaseq_raw_qc', 'rnaseq_post_alignment_qc',
+        'rnaseq_quantification_qc', 'rnaseq_supplementary'
     ]
     config.exclude_modules = ['fastqc', 'fastq_screen', 'qualimap']
 

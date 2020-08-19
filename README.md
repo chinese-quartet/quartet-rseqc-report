@@ -13,7 +13,7 @@ To use this code, you need to install MultiQC and then your code. For example:
 ```bash
 # 环境配置
 conda create -n multiqc multiqc
-git clone https://github.com/clinico-omics/rnaseq-report
+git clone https://github.com/clinico-omics/chinese-quartet-rnaseq-report.git
 cd rnaseq-report
 pip install -r requirements.txt
 pip install -e .

@@ -887,17 +887,33 @@ class MultiqcModule(BaseMultiqcModule):
                          x="PC1",
                          y="PC2",
                          color="sample",
-                         template="simple_white")
-        SNR_value = 'SNR: ' + snr_data_df.iloc[1].at['SNR']
+                         color_discrete_map={
+                             "D5": "#4CC3D9",
+                             "D6": "#7BC8A4",
+                             "F7": "#FFC65D",
+                             "M8": "#F16745"
+                         })
+        SNR_value = 'SNR (' + snr_data_df.iloc[1].at['SNR'] + ')'
         PC1_value = 'PC1 (' + snr_data_df.iloc[1].at['PC1_ratio'] + '%)'
         PC2_value = 'PC2 (' + snr_data_df.iloc[1].at['PC2_ratio'] + '%)'
         fig.update_layout(title=SNR_value,
                           xaxis_title=PC1_value,
                           yaxis_title=PC2_value,
                           legend_title='Sample',
-                          font=dict(family="Courier New, monospace",
+                          font=dict(family="Arial, sans-serif",
                                     size=18,
-                                    color="black"))
+                                    color="black"),
+                          template="simple_white")
+
+        fig.update_xaxes(showline=True,
+                         linewidth=1,
+                         linecolor='black',
+                         mirror=True)
+
+        fig.update_yaxes(showline=True,
+                         linewidth=1,
+                         linecolor='black',
+                         mirror=True)
 
         html = plotly_plot(
             fig, {

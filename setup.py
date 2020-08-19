@@ -23,10 +23,12 @@ setup(
     install_requires=['multiqc'],
     entry_points={
         'multiqc.modules.v1': [
+            'rnaseq_data_generation_information = rnaseq_report.modules.rnaseq_data_generation_information:MultiqcModule',
             'rnaseq_performance_assessment = rnaseq_report.modules.rnaseq_performance_assessment:MultiqcModule',
             'rnaseq_raw_qc = rnaseq_report.modules.rnaseq_raw_qc:MultiqcModule',
             'rnaseq_post_alignment_qc = rnaseq_report.modules.rnaseq_post_alignment_qc:MultiqcModule',
-            'rnaseq_quantification_qc = rnaseq_report.modules.rnaseq_quantification_qc:MultiqcModule'
+            'rnaseq_quantification_qc = rnaseq_report.modules.rnaseq_quantification_qc:MultiqcModule',
+            'rnaseq_supplementary = rnaseq_report.modules.rnaseq_supplementary:MultiqcModule'
             # 'rnaseq_qc = rnaseq_report.modules.rnaseq_qc:MultiqcModule'
         ],
         'multiqc.hooks.v1': [

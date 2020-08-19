@@ -76,7 +76,7 @@ def parse_reports(self):
     self.covs = covs
 
     # Make the plots for the report
-    report_sections(self)
+    #report_sections(self)
 
     # Set up the general stats table
     general_stats_headers(self)
@@ -372,22 +372,6 @@ def report_sections(self):
                     self.general_stats_data[s_name]['{}_x_pc'.format(c)] = 0
             # Now add each section in order
 
-    # Section 0 - stats
-    self.add_section(name='Post alignment stats',
-                     anchor='post_alignment_stats',
-                     description='The summary of qualimap',
-                     helptext='''
-            To enable multiple samples to be plotted on the same graph, only the mean quality
-            scores are plotted (unlike the box plots seen in FastQC reports).
-            Taken from the [FastQC help](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/3%20Analysis%20Modules/2%20Per%20Base%20Sequence%20Quality.html):
-            _The y-axis on the graph shows the quality scores. The higher the score, the better
-            the base call. The background of the graph divides the y axis into very good quality
-            calls (green), calls of reasonable quality (orange), and calls of poor quality (red).
-            The quality of calls on most platforms will degrade as the run progresses, so it is
-            common to see base calls falling into the orange area towards the end of a read._
-            ''',
-                     plot=table.plot(self.general_stats_data,
-                                     self.general_stats_headers))
     # Section 1 - GC-content distribution
     if len(self.qualimap_bamqc_gc_content_dist) > 0:
         gc_content_helptext = '''
@@ -517,14 +501,24 @@ def general_stats_headers(self):
         hidecovs = [1, 5, 10, 50]
     hidecovs = [str(i) for i in hidecovs]
 
+    self.general_stats_headers['general_error_rate'] = {
+        'title': '% Error rate',
+        'description':
+        'Alignment error rate. Total edit distance (SAM NM field) over the number of mapped bases',
+        'max': 100,
+        'min': 0,
+        'suffix': '',
+        'scale': 'OrRd',
+        'format': '{0:.2f}'
+    }
     self.general_stats_headers['avg_gc'] = {
         'title': '% GC',
         'description': 'Mean GC content',
         'max': 100,
         'min': 0,
-        'suffix': '%',
+        'suffix': '',
         'scale': 'Set1',
-        'format': '{:,.0f}'
+        'format': '{:,.1f}'
     }
     self.general_stats_headers['median_insert_size'] = {
         'title': 'Ins. size',
@@ -555,14 +549,16 @@ def general_stats_headers(self):
         'description': 'Median coverage',
         'min': 0,
         'suffix': 'X',
-        'scale': 'BuPu'
+        'scale': 'BuPu',
+        'hidden': True
     }
     self.general_stats_headers['mean_coverage'] = {
         'title': 'Mean cov',
         'description': 'Mean coverage',
         'min': 0,
         'suffix': 'X',
-        'scale': 'BuPu'
+        'scale': 'BuPu',
+        'hidden': True
     }
     self.general_stats_headers['percentage_aligned'] = {
         'title': '% Aligned',
@@ -570,7 +566,8 @@ def general_stats_headers(self):
         'max': 100,
         'min': 0,
         'suffix': '%',
-        'scale': 'YlGn'
+        'scale': 'YlGn',
+        'hidden': True
     }
     self.general_stats_headers['mapped_reads'] = {
         'title': '{} Aligned'.format(config.read_count_prefix),
@@ -585,17 +582,6 @@ def general_stats_headers(self):
         'description': 'Number of reads ({})'.format(config.read_count_desc),
         'scale': 'Blues',
         'shared_key': 'read_count',
-        'hidden': True
-    }
-    self.general_stats_headers['general_error_rate'] = {
-        'title': 'Error rate',
-        'description':
-        'Alignment error rate. Total edit distance (SAM NM field) over the number of mapped bases',
-        'max': 100,
-        'min': 0,
-        'suffix': '%',
-        'scale': 'OrRd',
-        'format': '{0:.2f}',
         'hidden': True
     }
 

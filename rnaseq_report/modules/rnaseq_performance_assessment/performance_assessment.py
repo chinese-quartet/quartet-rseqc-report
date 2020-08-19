@@ -39,8 +39,8 @@ class MultiqcModule(BaseMultiqcModule):
             ## Now add each section in order
             performance_score_df = self.list2df(performance_score)
             test_score = performance_score_df.loc[
-                performance_score_df['V1'] ==
-                'QC_batch']['Benchmarkingscore'].values[0]
+                performance_score_df['Batch'] ==
+                'Test']['Benchmarkingscore'].values[0]
             performance_score_list = [
                 performance_score_df['Benchmarkingscore'].values.tolist()
             ]
@@ -84,6 +84,7 @@ class MultiqcModule(BaseMultiqcModule):
             log.debug(
                 "No file matched: ref_degs_point - ref_degs_performance_compared.txt"
             )
+
         # Summary Table2: Relative expression performance summary table
         rel_performance_summary = []
         for f in self.find_log_files(
@@ -133,8 +134,9 @@ class MultiqcModule(BaseMultiqcModule):
             studydesign_performance_summary_list = [
                 studydesign_performance_summary_df.columns.values.tolist()
             ] + studydesign_performance_summary_df.values.tolist()
-            self.plot_rel_summary_table('studydesign_summary_table',
-                                        studydesign_performance_summary_list)
+            self.plot_studydesign_summary_table(
+                'studydesign_summary_table',
+                studydesign_performance_summary_list)
         else:
             log.debug(
                 "No file matched: studydesign_performance_summary_table - studydesign_performance_summary.txt"
@@ -201,7 +203,7 @@ class MultiqcModule(BaseMultiqcModule):
                                    y=-2.5,
                                    xref="x",
                                    yref="y",
-                                   text=str(test_score)[0:5],
+                                   text=str(test_score)[0:4],
                                    textangle=0,
                                    showarrow=True,
                                    font=dict(family="Arial, sans-serif",
@@ -242,7 +244,7 @@ class MultiqcModule(BaseMultiqcModule):
             name='Performance Score',
             anchor=id + '_anchor',
             description=description if description else
-            'Performance metrics and thresholds using reference RNAs',
+            'Performance metrics and thresholds using reference RNA',
             helptext=helptext if helptext else '''
             This longer description explains what exactly the numbers mean
             and supports markdown formatting. This means that we can do _this_:
@@ -260,7 +262,7 @@ class MultiqcModule(BaseMultiqcModule):
     def plot_deg_summary_table(self,
                                id,
                                deg_performance_summary_list,
-                               title="DEGs Performance Summary",
+                               title="DEG Performance Summary",
                                section_name=None,
                                description=None,
                                helptext=None):
@@ -298,7 +300,7 @@ class MultiqcModule(BaseMultiqcModule):
                             id,
                             ref_degs_data_df,
                             deg_performance_summary_list,
-                            title="Reference DEGs Performance Compared",
+                            title="Reference DEG Performance Compared",
                             section_name=None,
                             description=None,
                             helptext=None):
@@ -464,18 +466,35 @@ class MultiqcModule(BaseMultiqcModule):
                            section_name=None,
                            description=None,
                            helptext=None):
-        fig = px.scatter(snr_data_df, x="PC1", y="PC2", color="sample")
-        SNR_value = 'SNR: ' + snr_data_df.iloc[1].at['SNR']
+        fig = px.scatter(snr_data_df,
+                         x="PC1",
+                         y="PC2",
+                         color="sample",
+                         color_discrete_map={
+                             "D5": "#4CC3D9",
+                             "D6": "#7BC8A4",
+                             "F7": "#FFC65D",
+                             "M8": "#F16745"
+                         })
+        SNR_value = 'SNR (' + snr_data_df.iloc[1].at['SNR'] + ')'
         PC1_value = 'PC1 (' + snr_data_df.iloc[1].at['PC1_ratio'] + '%)'
         PC2_value = 'PC2 (' + snr_data_df.iloc[1].at['PC2_ratio'] + '%)'
-        print(SNR_value)
         fig.update_layout(title=SNR_value,
                           xaxis_title=PC1_value,
                           yaxis_title=PC2_value,
                           legend_title='Sample',
-                          font=dict(family="Courier New, monospace",
+                          font=dict(family="Arial, sans-serif",
                                     size=18,
-                                    color="black"))
+                                    color="black"),
+                          template="simple_white")
+        fig.update_xaxes(showline=True,
+                         linewidth=1,
+                         linecolor='black',
+                         mirror=True)
+        fig.update_yaxes(showline=True,
+                         linewidth=1,
+                         linecolor='black',
+                         mirror=True)
 
         html = plotly_plot(
             fig, {
@@ -512,13 +531,27 @@ class MultiqcModule(BaseMultiqcModule):
                           section_name=None,
                           description=None,
                           helptext=None):
-        fig = px.scatter(d5_cor_data_df, x="FPKM.D5_1", y="FPKM.D5_2")
+        fig = px.scatter(d5_cor_data_df,
+                         x="FPKM.D5_1",
+                         y="FPKM.D5_2",
+                         hover_name='GENE_ID',
+                         template="simple_white")
+
         fig.update_layout(title='CTR',
                           xaxis_title='D5_1',
                           yaxis_title='D5_2',
-                          font=dict(family="Courier New, monospace",
+                          font=dict(family="Arial, sans-serif",
                                     size=18,
                                     color="black"))
+
+        fig.update_xaxes(showline=True,
+                         linewidth=1,
+                         linecolor='black',
+                         mirror=True)
+        fig.update_yaxes(showline=True,
+                         linewidth=1,
+                         linecolor='black',
+                         mirror=True)
 
         html = plotly_plot(
             fig, {
