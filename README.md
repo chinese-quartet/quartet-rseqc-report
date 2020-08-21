@@ -23,5 +23,3 @@ multiqc -h
 ```
 
 Use `python setup.py develop` if you're actively working on the code - then you don't need to rerun the installation every time you make an edit _(though you still do if you change anything in `setup.py`)_.
-# quartet_rnaseq_qc_report
-# chinese-quartet-rnaseq-report
