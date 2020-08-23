@@ -1,4 +1,8 @@
-get_one_group <- function(dt_exp_annot, dt_pairs, result_dir) {
+#' Get one group
+#'
+#' @importFrom stats cor
+#' @importFrom ggplot2 ggtitle
+get_one_group <- function(dt_exp_melt, dt_exp_annot, exp_fpkm_log, dt_pairs, dt_meta, result_dir) {
   # S1-2 detected gene number
   dt_detect <- dt_exp_annot[fpkm > 0.1][, .(n_rep = .N), by = .(gene, sample)]
   dt_detect_stats <- dt_detect[, .N, by = .(sample, n_rep)]

@@ -6,6 +6,7 @@
 \usage{
 make_performance_plot(
   dt_performance,
+  result_dir,
   xname = xname,
   yname = yname,
   gname = gname,

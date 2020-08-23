@@ -1,4 +1,6 @@
-# S1-6 SNR
+#' S1-6 SNR
+#'
+#' @importFrom data.table setkey
 calc_signoise_ratio <- function(pca_prcomp, exp_design) {
 
   pcs <- as.data.frame(predict(pca_prcomp))
@@ -22,7 +24,10 @@ calc_signoise_ratio <- function(pca_prcomp, exp_design) {
   return(signoise)
 }
 
-get_pca_list = function(expr_mat_forsignoise, exp_design) {
+#' Get PCA list
+#'
+#' @importFrom stats prcomp
+get_pca_list <- function(expr_mat_forsignoise, exp_design, dt_meta) {
   pca_prcomp = prcomp(t(expr_mat_forsignoise), scale = F)
   pcs = predict(pca_prcomp) %>% data.frame()
   pcs$library = row.names(pcs)
@@ -36,11 +41,13 @@ get_pca_list = function(expr_mat_forsignoise, exp_design) {
   return(pca_list)
 }
 
-# get lst gene which was used to count snr by reference dataset
+#' Get lst gene which was used to count snr by reference dataset
+#'
+#' @importFrom stats predict
 get_more_group <- function(exp_fpkm_log, dt_meta, result_dir) {
   exp_design = (dt_meta[, .(library, group = sample)] %>% setkey(., library))
   exp_fpkm_log_fiter <- exp_fpkm_log[ref_data$snr_lst_gene,]
-  pca_list <- get_pca_list(exp_fpkm_log_fiter, exp_design)
+  pca_list <- get_pca_list(exp_fpkm_log_fiter, exp_design, dt_meta)
   fwrite(pca_list, file = paste(result_dir, "/performance_assessment/studydesign_snr.txt", sep = ""), sep = "\t")
 
   # S3 based on study design

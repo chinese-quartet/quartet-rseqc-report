@@ -17,5 +17,7 @@ Imports:
   ggthemes,
   cowplot,
   dplyr,
-  stats
+  stats,
+  reshape2
 RoxygenNote: 7.1.1
+Encoding: UTF-8

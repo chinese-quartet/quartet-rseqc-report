@@ -17,10 +17,18 @@ make_directories <- function(workdir) {
 #' @param phenotype_file Phenotype file
 #' @param result_dir A directory for result files
 #' @importFrom data.table fread
+#' @importFrom data.table as.data.table
+#' @importFrom data.table setnames
+#' @importFrom dplyr %>%
+#' @importFrom reshape2 melt
+#' @importFrom reshape2 dcast
+#' @importFrom utils combn
 #' @export
 exp2qcdt <- function(exp_table_file, phenotype_file, result_dir) {
   ref_data_dir <- paste(system.file(package = "exp2qcdt"), "/data", sep = "")
-  ref_data <- read_ref_data(ref_data_dir)
+  # Global variable
+  # TODO: This is not a good choice, maybe have another solution
+  ref_data <<- read_ref_data(ref_data_dir)
 
   dt_exp <- fread(exp_table_file)
   dt_meta <- fread(phenotype_file)
@@ -50,17 +58,17 @@ exp2qcdt <- function(exp_table_file, phenotype_file, result_dir) {
   if (length(unique(dt_meta$sample)) < 1) {
     stop('There is no quantitative qc result')
   } else if (length(unique(dt_meta$sample)) == 1) {
-    get_one_group(dt_exp_annot, dt_pairs, result_dir)
+    get_one_group(dt_exp_melt, dt_exp_annot, exp_fpkm_log, dt_pairs, dt_meta, result_dir)
     combine_sd_summary_table(result_dir, sample_num = 1)
     make_score_figure(result_dir, sample_num = 1)
   } else if (length(unique(dt_meta$sample)) == 2) {
-    get_one_group(dt_exp_annot, dt_pairs, result_dir)
-    get_two_group(dt_exp_annot, dt_pairs, result_dir)
+    get_one_group(dt_exp_melt, dt_exp_annot, exp_fpkm_log, dt_pairs, dt_meta, result_dir)
+    get_two_group(dt_exp_annot, exp_fpkm_log, dt_pairs, dt_meta, result_dir)
     combine_sd_summary_table(result_dir, sample_num = 2)
     make_score_figure(result_dir, sample_num = 2)
   } else if (length(unique(dt_meta$sample)) > 2) {
-    get_one_group(dt_exp_annot, dt_pairs, result_dir)
-    get_two_group(dt_exp_annot, dt_pairs, result_dir)
+    get_one_group(dt_exp_melt, dt_exp_annot, exp_fpkm_log, dt_pairs, dt_meta, result_dir)
+    get_two_group(dt_exp_annot, exp_fpkm_log, dt_pairs, dt_meta, result_dir)
     get_more_group(exp_fpkm_log, dt_meta, result_dir)
     combine_sd_summary_table(result_dir, sample_num = 4)
     make_score_figure(result_dir, sample_num = 4)

@@ -8,8 +8,14 @@
 #' @importFrom ggplot2 scale_color_manual
 #' @importFrom ggplot2 labs
 #' @importFrom ggplot2 guide_legend
+#' @importFrom ggplot2 geom_boxplot
+#' @importFrom ggplot2 coord_flip
+#' @importFrom cowplot ggdraw
+#' @importFrom cowplot insert_xaxis_grob
+#' @importFrom cowplot insert_yaxis_grob
 #' @importFrom ggthemes theme_few
-make_performance_plot <- function(dt_performance, xname = xname, yname = yname, gname = gname, file_name = file_name) {
+#' @importFrom ggplot2 theme_classic
+make_performance_plot <- function(dt_performance, result_dir, xname = xname, yname = yname, gname = gname, file_name = file_name) {
   dt_plot <- dt_performance[, c(xname, yname, gname), with = F]
   setnames(dt_plot, xname, "xlab")
   setnames(dt_plot, yname, "ylab")
@@ -46,9 +52,8 @@ make_performance_plot <- function(dt_performance, xname = xname, yname = yname, 
 }
 
 
-get_two_group <- function(dt_exp_annot, dt_pairs, result_dir) {
-  ### S2-3 degs performance-------------------------
-
+get_two_group <- function(dt_exp_annot, exp_fpkm_log, dt_pairs, dt_meta, result_dir) {
+  ### S2-3 degs performance
 
   lst_sample_all <- dt_meta$sample %>% unique()
   pairs_sample <- combn(lst_sample_all, 2) %>% t %>% as.data.table()
@@ -198,13 +203,13 @@ get_two_group <- function(dt_exp_annot, dt_pairs, result_dir) {
   fwrite(deg_performance_summary, file = paste(result_dir, "/simplified_report/DEG_performace_table.txt", sep = ""), sep = "\t")
 
   # S5-3 DEG performance figure
-  make_performance_plot(dt_performance = ref_degs_performance_compared, xname = "Specificity", yname = "Sensitivity", gname = "Group", file_name = "DEG_per_fig")
+  make_performance_plot(dt_performance = ref_degs_performance_compared, result_dir = result_dir, xname = "Specificity", yname = "Sensitivity", gname = "Group", file_name = "DEG_per_fig")
 
   # S5-4 relative expression summary table
   fwrite(rel_performance_summary, file = paste(result_dir, "/simplified_report/DEG_performace_table.txt", sep = ""), sep = "\t")
 
   # S5-5 relative expression figure
-  make_performance_plot(dt_performance = ref_rel_exp_per_compared, xname = "corr", yname = "consistent", gname = "Group", file_name = "rel_per_fig")
+  make_performance_plot(dt_performance = ref_rel_exp_per_compared, result_dir = result_dir, xname = "corr", yname = "consistent", gname = "Group", file_name = "rel_per_fig")
 
   ### count performance score figure ----------------------------------
   # count mean of each batch in relative expression

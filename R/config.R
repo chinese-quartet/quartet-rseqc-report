@@ -62,15 +62,15 @@ DEG_analysis <- function(expr_mat, group, thr_filter = log2(0.5), thr_FC = 2, th
     if ((mean_A > thr_filter) | (mean_B > thr_filter)) {
       p.value <- t.test(x[col_A], x[col_B], var.equal = TRUE)$p.value
       if (p.value < thr_p) {
-        deg_type <- "not DEG"
-        if (logFC > log2(thr_FC)) deg_type <- "Up-regulated"
-        if (logFC < (-log2(thr_FC))) deg_type <- "Down-regulated"
+        DEGtype <- "not DEG"
+        if (logFC > log2(thr_FC)) DEGtype <- "Up-regulated"
+        if (logFC < (-log2(thr_FC))) DEGtype <- "Down-regulated"
       } else {
-        deg_type <- "not DEG"
+        DEGtype <- "not DEG"
       }
     } else {
       p.value <- NA
-      deg_type <- "Low-expressed"
+      DEGtype <- "Low-expressed"
     }
 
 
@@ -81,7 +81,7 @@ DEG_analysis <- function(expr_mat, group, thr_filter = log2(0.5), thr_FC = 2, th
       mean_B = mean_B,
       logFC = logFC,
       p.value = p.value,
-      deg_type = deg_type
+      DEGtype = DEGtype
     ))
 
   }) %>% rbindlist()
@@ -91,17 +91,17 @@ DEG_analysis <- function(expr_mat, group, thr_filter = log2(0.5), thr_FC = 2, th
   dt_DEG$gene <- rownames(expr_mat_filt)
 
 
-  dt_DEG_passlowflit <- dt_DEG[deg_type != "Low-expressed"]
+  dt_DEG_passlowflit <- dt_DEG[DEGtype != "Low-expressed"]
   dt_DEG_passlowflit$p.value.adj <- p.adjust(dt_DEG_passlowflit$p.value, method = "fdr")
-  dt_DEG.passLowfilt_sorted <- dt_DEG_passlowflit[order(ifelse(deg_type %in% c("Up-regulated", "Down-regulated"), 0, 1),
+  dt_DEG.passLowfilt_sorted <- dt_DEG_passlowflit[order(ifelse(DEGtype %in% c("Up-regulated", "Down-regulated"), 0, 1),
                                                         - abs(logFC))]
 
-  dt_DEG.lowExpr <- dt_DEG[deg_type == "Low-expressed"]
+  dt_DEG.lowExpr <- dt_DEG[DEGtype == "Low-expressed"]
 
   dt_DEG <- rbindlist(list(dt_DEG.passLowfilt_sorted, dt_DEG.lowExpr), use.names = TRUE, fill = TRUE)
 
 
-  dt_DEG_foroutput <- dt_DEG[, .(group_A, group_B, gene, mean, mean_A, mean_B, sd, logFC, p.value, p.value.adj, deg_type)]
+  dt_DEG_foroutput <- dt_DEG[, .(group_A, group_B, gene, mean, mean_A, mean_B, sd, logFC, p.value, p.value.adj, DEGtype)]
   return(dt_DEG_foroutput)
 }
 
@@ -109,6 +109,9 @@ DEG_analysis <- function(expr_mat, group, thr_filter = log2(0.5), thr_FC = 2, th
 #'
 #' @return A custom theme
 #' @importFrom ggplot2 theme
+#' @importFrom ggplot2 element_text
+#' @importFrom ggplot2 element_rect
+#' @importFrom ggplot2 element_blank
 #' @export
 make_theme <- function() {
   custom_theme <- theme(plot.background = element_rect(colour = "white"),
@@ -158,17 +161,16 @@ combine_sd_summary_table <- function(result_dir, sample_num) {
 #' @importFrom ggplot2 annotate
 #' @importFrom ggplot2 theme_void
 #' @importFrom ggplot2 theme
+#' @importFrom ggplot2 aes
+#' @importFrom ggplot2 arrow
+#' @importFrom ggplot2 margin
 #' @importFrom RColorBrewer brewer.pal
+#' @importFrom grDevices colorRampPalette
+#' @importFrom grDevices dev.off
+#' @importFrom grDevices pdf
+#' @importFrom grid unit
 #' @export
 make_score_figure <- function(result_dir, sample_num) {
-  # Make the performance score figure
-  #
-  # Args:
-  #   result_dir:
-  #   sample_num:
-  #
-  # Returns:
-  #   None
   if (sample_num == 1) {
     score_table <- detected_gene_performance_mean[SD_performance_mean_one, on = "Batch"]
   } else if (sample_num == 2) {
