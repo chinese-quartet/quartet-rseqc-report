@@ -242,9 +242,11 @@ def rnaseq_report_execution_start():
     # ])
 
     config.module_order = [
-        'rnaseq_data_generation_information', 'rnaseq_performance_assessment',
-        'rnaseq_raw_qc', 'rnaseq_post_alignment_qc',
-        'rnaseq_quantification_qc', 'rnaseq_supplementary'
+        'rnaseq_data_generation_information',
+        'rnaseq_performance_assessment',
+        'rnaseq_raw_qc',  #'rnaseq_post_alignment_qc',
+        'rnaseq_quantification_qc',
+        'rnaseq_supplementary'
     ]
     config.exclude_modules = ['fastqc', 'fastq_screen', 'qualimap']
 

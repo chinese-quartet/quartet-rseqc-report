@@ -73,7 +73,7 @@ class MultiqcModule(BaseMultiqcModule):
         for k in self.general_stats_data.keys():
             error_rate_mean.append(
                 self.general_stats_data[k]['general_error_rate'])
-            #gc_mean.append(self.general_stats_data[k]['avg_gc'])
+            gc_mean.append(self.general_stats_data[k]['avg_gc'])
             median_insert_size_mean.append(
                 self.general_stats_data[k]['median_insert_size'])
             exonic_mean.append(
