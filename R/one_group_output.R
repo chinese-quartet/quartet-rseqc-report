@@ -67,7 +67,8 @@ get_one_group <- function(dt_exp_melt, dt_exp_annot, exp_fpkm_log, dt_pairs, dt_
     lst_gene_for_IR2 <- intersect(lst_gene_detect_libraryA, lst_gene_detect_libraryB)
 
     exp_fpkm_log_d <- exp_fpkm_log[lst_gene_for_IR2,]
-    dt_exp_melt_d5 <- data.table("GENE_ID" = row.names(exp_fpkm_log_d), exp_fpkm_log_d[, grep("D5", colnames(exp_fpkm_log_d))])
+    dt_exp_melt_d5 <- data.table("GENE_ID" = row.names(exp_fpkm_log_d), exp_fpkm_log_d[, grep('D5', dt_meta$group)])
+    colnames(dt_exp_melt_d5) <- c('GENE_ID', dt_meta$group[grep('D5', dt_meta$group)])
     fwrite(dt_exp_melt_d5, file = paste(result_dir, "/performance_assessment/d5_correlation.txt", sep = ""), sep = "\t")
 
     return(
@@ -179,10 +180,10 @@ get_one_group <- function(dt_exp_melt, dt_exp_annot, exp_fpkm_log, dt_pairs, dt_
   # S5-8 D5_1 and D5_2 correlation figure
   dt_exp_melt_d5 <- fread(paste(result_dir, "/performance_assessment/d5_correlation.txt", sep = ""))
   pdf(file = paste(result_dir, "/simplified_report/", "cor_d5", ".pdf", sep = ""), 6, 6)
-  dt_cor <- ggplot(dt_exp_melt_d5, aes(x = FPKM.D5_1, y = FPKM.D5_2)) + geom_point(color = "#2f5c85") +
+  dt_cor <- ggplot(dt_exp_melt_d5, aes(x = D5_1, y = D5_2)) + geom_point(color = "#2f5c85") +
     theme_few() +
     make_theme() +
-    ggtitle(paste("CTR = ", round(dt_LIR2[.("FPKM.D5_1", "FPKM.D5_2"), on = .(library_A, library_B)][["Cor"]], digits = 2), sep = "")) +
+    ggtitle(paste("CTR = ", round(dt_LIR2[.("D5_1", "D5_2"), on = .(library_A, library_B)][["Cor"]], digits = 2), sep = "")) +
     labs(x = "D5_1",
          y = "D5_2")
   print(dt_cor)
