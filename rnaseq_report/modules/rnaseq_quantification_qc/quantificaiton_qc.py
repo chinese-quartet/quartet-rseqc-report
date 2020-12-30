@@ -838,8 +838,8 @@ class MultiqcModule(BaseMultiqcModule):
             description=None,
             helptext=None):
         fig = px.scatter(d5_cor_data_df,
-                         x="FPKM.D5_1",
-                         y="FPKM.D5_2",
+                         x="D5_1",
+                         y="D5_2",
                          template="simple_white")
         fig.update_layout(title='CTR',
                           xaxis_title='D5_1',
