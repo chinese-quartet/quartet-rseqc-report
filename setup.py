@@ -8,7 +8,7 @@ from setuptools import setup, find_packages
 version = '0.1.1'
 
 setup(
-    name='rnaseq_report',
+    name='quartet_rnaseq_report',
     version=version,
     author='Jun Shang',
     author_email='shangjunv@163.com',
@@ -20,7 +20,7 @@ setup(
     license='MIT',
     packages=find_packages(),
     include_package_data=True,
-    install_requires=['multiqc'],
+    install_requires=['multiqc==1.9', 'plotly==4.9.0', 'pandas==1.1.0'],
     entry_points={
         'multiqc.modules.v1': [
             'rnaseq_data_generation_information = rnaseq_report.modules.rnaseq_data_generation_information:MultiqcModule',
