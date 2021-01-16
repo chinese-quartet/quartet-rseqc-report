@@ -13,18 +13,9 @@ read_ref_data <- function(ref_data_dir) {
   # Returns:
   #   ref_data
   ref_data <- list()
-  ref_data$highqual_batch <- c("R_ILM_L5_B2", "R_BGI_L7_B1", "R_ILM_L6_B1", "P_ILM_L6_B1", "R_ILM_L1_B1",
-                      "R_BGI_L6_B1", "R_BGI_L3_B1", "R_ILM_L2_B2", "R_ILM_L4_B2", "R_ILM_L8_B1",
-                      "R_ILM_L4_B3", "P_BGI_L6_B1", "P_BGI_L3_B1", "P_ILM_L1_B1", "P_ILM_L8_B1", "Test")
-  ref_data$ref_meta <- fread(paste0(ref_data_dir, "/ref_metadata.csv"))
-  ref_data$ref_data <- fread(paste0(ref_data_dir, "/ref_detect_sets.csv"))
-  ref_data$ref_detected_gene_per <- fread(paste0(ref_data_dir, "/performance_evaluation_gene_detection.csv"))
-  ref_data$ref_range <- fread(paste0(ref_data_dir, "/ref_reletive_exp_range.csv"))
-  ref_data$snr_lst_gene <- fread(paste0(ref_data_dir, "/ref_snr_lst_gene.csv"))[["lst.gene"]]
-  ref_data$ref_rel_exp_per <- fread(paste0(ref_data_dir, "/performance_evaluation_reletive_expression.csv"))
-  ref_data$SD_ref <- fread(paste0(ref_data_dir, "/ref_studydesign_qc_summary.csv"))
-  ref_data$ref_degs <- fread(paste0(ref_data_dir, "/ref_degs_all.csv"))
-  ref_data$ref_degs_per <- fread(paste0(ref_data_dir, "/performance_evaluation_DEG.csv"))
+  ref_data$qcintra_forplot <- readRDS(paste0(ref_data_dir, "/qcintra_forplot.rds"))
+  ref_data$corr_ref <- fread(paste0(ref_data_dir, "/TableS2_ReferenceDatasets.csv"), drop = 'V1')
+  ref_data$refqc_202011_forplot <- readRDS(paste0(ref_data_dir, "/refqc_202011_forplot.rds"))
 
   return(ref_data)
 }
@@ -147,6 +138,7 @@ combine_sd_summary_table <- function(result_dir, sample_num) {
     fwrite(summary_table, file = paste(result_dir, "/simplified_report/SD_performace_table.txt", sep = ""), sep = "\t")
   }
 }
+
 
 #' Make the performance score figure
 #'

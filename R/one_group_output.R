@@ -12,8 +12,8 @@ get_one_group <- function(dt_fpkm_log, dt_counts, dt_meta, result_dir) {
       replicate_combn <- data.table(combn(dt_meta[sample == x][['group']], 2))
       mat_abs_cor_per <-  lapply(1:dim(replicate_combn)[2], function(y){
         compare_name <- paste(replicate_combn[[y]][1], 'vs', replicate_combn[[y]][2], sep = '')
-        sample_id1 <- dt_meta[group == replicate_combn[[y]][1]][['sample_id']]
-        sample_id2 <-dt_meta[group == replicate_combn[[y]][2]][['sample_id']]
+        sample_id1 <- dt_meta[group == replicate_combn[[y]][1]][['library']]
+        sample_id2 <-dt_meta[group == replicate_combn[[y]][2]][['library']]
         gene_list_1 <- dt_counts[dt_counts[[sample_id1]] >= 3][['gene_id']]
         gene_list_2 <- dt_counts[dt_counts[[sample_id2]] >= 3][['gene_id']]
         gene_list_com <- intersect(gene_list_1, gene_list_2)
@@ -32,27 +32,32 @@ get_one_group <- function(dt_fpkm_log, dt_counts, dt_meta, result_dir) {
     )
   }) %>% rbindlist()
   
-  ### one group scatter plot figure and data
-  compare_name_median <- dt_abs_cor[with(dt_abs_cor, which.min(abs(dt_abs_cor$abs_cor - median(dt_abs_cor$abs_cor))))][['compare_name']]
-  sample_1 <- strsplit(compare_name_median, 'vs')[[1]][1]
-  sample_2 <- strsplit(compare_name_median, 'vs')[[1]][2]
-  sample_id1 <- dt_meta[group == sample_1][['sample_id']]
-  sample_id2 <- dt_meta[group == sample_2][['sample_id']]
-  gene_list_1 <- dt_counts[dt_counts[[sample_id1]] >= 3][['gene_id']]
-  gene_list_2 <- dt_counts[dt_counts[[sample_id2]] >= 3][['gene_id']]
-  gene_list_com <- intersect(gene_list_1, gene_list_2)
-  cor_vlaue <- round(dt_abs_cor[with(dt_abs_cor, which.min(abs(dt_abs_cor$abs_cor - median(dt_abs_cor$abs_cor))))][['abs_cor']], digits = 3)
-  gene_num <- dt_abs_cor[with(dt_abs_cor, which.min(abs(dt_abs_cor$abs_cor - median(dt_abs_cor$abs_cor))))][['gene_num']]
-  dt_one_group_out <- data.table(batch = 'QC_test', LIR = cor_vlaue)
+  ### abs expression replicates correlation of median group ----------------------
+  dt_abs_cor_median <- dt_abs_cor[with(dt_abs_cor, which.min(abs(dt_abs_cor$abs_cor - median(dt_abs_cor$abs_cor))))]
+  output_abs_rep_res <- function(dt_abs_cor, dt_fpkm_log, dt_counts, dt_meta, result_dir){
+    compare_name_median <- dt_abs_cor_median[['compare_name']]
+    sample_1 <- strsplit(compare_name_median, 'vs')[[1]][1]
+    sample_2 <- strsplit(compare_name_median, 'vs')[[1]][2]
+    sample_id1 <- dt_meta[group == sample_1][['library']]
+    sample_id2 <- dt_meta[group == sample_2][['library']]
+    gene_list_1 <- dt_counts[dt_counts[[sample_id1]] >= 3][['gene_id']]
+    gene_list_2 <- dt_counts[dt_counts[[sample_id2]] >= 3][['gene_id']]
+    gene_list_com <- intersect(gene_list_1, gene_list_2)
+    
+    # output correlation plot and data
+    dt_one_cor <- dt_fpkm_log[gene_list_com, on = .(gene_id)][, c('gene_id', sample_id1, sample_id2), with = F]
+    fwrite(dt_one_cor, file = paste(result_dir, "/performance_assessment/abs_median_sample_two_replicate_correlation.txt", sep = ""), sep = "\t")
+    return(dt_one_cor)
+  }
   
-  # output correlation plot and data
-  dt_one_cor <- dt_fpkm_log[gene_list_com, on = .(gene_id)][, c('gene_id', sample_id1, sample_id2), with = F]
-  fwrite(dt_one_cor, file = paste(result_dir, "/performance_assessment/median_sample_two_replicate_correlation.txt", sep = ""), sep = "\t")
-  dt_scatter <- dt_one_cor
-  colnames(dt_scatter) <- c('gene_id', 'replicate1', 'replicate2')
+  # output abs median cor group scatter plot
+  dt_abs_scatter <- output_abs_rep_res(dt_abs_cor, dt_fpkm_log, dt_counts, dt_meta, result_dir)
+  colnames(dt_abs_scatter) <- c('gene_id', 'replicate1', 'replicate2')
+  gene_num <- dt_abs_cor_median[['gene_num']]
+  cor_vlaue_pt <- round(cor(dt_abs_scatter$replicate1, dt_abs_scatter$replicate2), digits = 3)
   
   # abs correlation plot 
-  pt_abs_cor <- ggplot2::ggplot(dt_scatter, aes(x = replicate1, y = replicate2)) +
+  pt_abs_median_cor <- ggplot2::ggplot(dt_abs_scatter, aes(x = replicate1, y = replicate2)) +
     geom_point(alpha = 0.8, size = 0.3, col = 'steelblue') +
     scale_fill_viridis_c(name = "density") +
     make_theme () +
@@ -61,12 +66,10 @@ get_one_group <- function(dt_fpkm_log, dt_counts, dt_meta, result_dir) {
          x = sample_1,
          y = sample_2)
   
-  # output abs correlation plot 
-  pdf(file = paste(result_dir, "/simplified_report/", "median_sample_two_replicate_correlation", ".pdf", sep = ""), 6, 5)
-  print(pt)
-  dev.off()
+  # return abs meidan correlation value and pt
+  abs_cor_median <<- dt_abs_cor_median[['abs_cor']]
   
   # one group figure and data will be used in more group
-  one_group_out <- list(dt_one_group_out, pt_abs_cor)
+  one_group_out <- list(dt_abs_meidan_cor_out, pt_abs_meidan_cor)
   return(one_group_out)
 }
