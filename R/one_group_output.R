@@ -52,6 +52,8 @@ get_one_group <- function(dt_fpkm_log, dt_counts, dt_meta, result_dir) {
   
   # output abs median cor group scatter plot
   dt_abs_scatter <- output_abs_rep_res(dt_abs_cor, dt_fpkm_log, dt_counts, dt_meta, result_dir)
+  xlab_abs_cor <- dt_meta[colnames(dt_abs_scatter)[2], on = .(library)][['group']]
+  ylab_abs_cor <- dt_meta[colnames(dt_abs_scatter)[3], on = .(library)][['group']]
   colnames(dt_abs_scatter) <- c('gene_id', 'replicate1', 'replicate2')
   gene_num <- dt_abs_cor_median[['gene_num']]
   cor_vlaue_pt <- round(cor(dt_abs_scatter$replicate1, dt_abs_scatter$replicate2), digits = 3)
@@ -59,17 +61,18 @@ get_one_group <- function(dt_fpkm_log, dt_counts, dt_meta, result_dir) {
   # abs correlation plot 
   pt_abs_median_cor <- ggplot2::ggplot(dt_abs_scatter, aes(x = replicate1, y = replicate2)) +
     geom_point(alpha = 0.8, size = 0.3, col = 'steelblue') +
+    theme_few() + 
+    theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5)) +
     scale_fill_viridis_c(name = "density") +
-    make_theme () +
     labs(title = 'One Group: Absolute Correlation',
-         subtitle = paste('Correlation = ', cor_vlaue, ' N = (', gene_num, ')'),
-         x = sample_1,
-         y = sample_2)
+         subtitle = paste('Correlation = ', cor_vlaue_pt, ' N = (', gene_num, ')'),
+         x = xlab_abs_cor,
+         y = ylab_abs_cor)
   
   # return abs meidan correlation value and pt
-  abs_cor_median <<- dt_abs_cor_median[['abs_cor']]
+  abs_cor_median <- dt_abs_cor_median[['abs_cor']]
   
   # one group figure and data will be used in more group
-  one_group_out <- list(dt_abs_meidan_cor_out, pt_abs_meidan_cor)
+  one_group_out <- list(abs_cor_median, pt_abs_median_cor)
   return(one_group_out)
 }

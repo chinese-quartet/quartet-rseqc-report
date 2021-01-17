@@ -24,54 +24,37 @@ make_directories <- function(workdir) {
 #' @importFrom reshape2 dcast
 #' @importFrom utils combn
 #' @export
-exp2qcdt <- function(exp_table_file, phenotype_file, result_dir) {
+exp2qcdt <- function(exp_table_file, count_table_file, phenotype_file, result_dir) {
   ref_data_dir <- paste(system.file(package = "exp2qcdt"), "/data", sep = "")
   # Global variable
   # TODO: This is not a good choice, maybe have another solution
   ref_data <<- read_ref_data(ref_data_dir)
 
-  dt_exp <- fread(exp_table_file)
+  dt_fpkm <- fread(exp_table_file)
+  dt_counts <- fread(count_table_file)
   dt_meta <- fread(phenotype_file)
 
   # Prepare directories
   make_directories(result_dir)
-  dt_exp_melt <- as.data.table(melt(dt_exp, id = 'GENE_ID'))
-  setnames(dt_exp_melt, 1:3, c('gene', 'library', 'fpkm'))
-  dt_exp_melt$gene <- as.character(dt_exp_melt$gene)
-  dt_exp_melt$library <- as.character(dt_exp_melt$library)
 
-  # get pairs table
-  lst_library_all <- dt_meta$library
-  dt_pairs <- combn(lst_library_all, 2) %>% t %>% as.data.table
-  setnames(dt_pairs, 1:2, c('library_A', 'library_B'))
-  dt_pairs$sampleA <- dt_meta[dt_pairs$library_A, on = 'library']$sample
-  dt_pairs$sampleB <- dt_meta[dt_pairs$library_B, on = 'library']$sample
-  dt_pairs$sample_type <- apply(dt_pairs, 1, function(x) {
-    if (x['sampleA'] == x['sampleB']) return('Intra-sample')
-    return('xross-sample')
-  })
-  dt_pairs$sample_type <- factor(dt_pairs$sample_type, levels = c('Intra-sample', 'xross-sample'))
-  dt_exp_annot <- merge(dt_meta, dt_exp_melt, by = 'library')
-  exp_fpkm <- dcast(dt_exp_annot, gene ~ library, value.var = 'fpkm') %>% data.frame(row.names = 1) %>% as.matrix()
-  exp_fpkm_log <- log(exp_fpkm + 0.01)
+  if(colnames(dt_fpkm)[1] != 'gene_id'){
+    colnames(dt_fpkm)[1] = 'gene_id'
+  }
+  
+  if(!all(colnames(dt_counts) == colnames(dt_fpkm))){
+    colnames(dt_fpkm) <- colnames(dt_counts)
+  } 
+  
+  dt_fpkm_log <- data.table(apply(dt_fpkm[, !'gene_id'], 2, function(x)(log2(x + 0.01))))
+  dt_fpkm_log[, gene_id := dt_fpkm$gene_id]
 
-  if (length(unique(dt_meta$sample)) < 1) {
-    stop('There is no quantitative qc result')
-  } else if (length(unique(dt_meta$sample)) == 1) {
-    get_one_group(dt_exp_melt, dt_exp_annot, exp_fpkm_log, dt_pairs, dt_meta, result_dir)
-    combine_sd_summary_table(result_dir, sample_num = 1)
-    make_score_figure(result_dir, sample_num = 1)
-  } else if (length(unique(dt_meta$sample)) == 2) {
-    get_one_group(dt_exp_melt, dt_exp_annot, exp_fpkm_log, dt_pairs, dt_meta, result_dir)
-    get_two_group(dt_exp_annot, exp_fpkm_log, dt_pairs, dt_meta, result_dir)
-    combine_sd_summary_table(result_dir, sample_num = 2)
-    make_score_figure(result_dir, sample_num = 2)
-  } else if (length(unique(dt_meta$sample)) > 2) {
-    get_one_group(dt_exp_melt, dt_exp_annot, exp_fpkm_log, dt_pairs, dt_meta, result_dir)
-    get_two_group(dt_exp_annot, exp_fpkm_log, dt_pairs, dt_meta, result_dir)
-    get_more_group(exp_fpkm_log, dt_meta, result_dir)
-    combine_sd_summary_table(result_dir, sample_num = 4)
-    make_score_figure(result_dir, sample_num = 4)
+  if (length(unique(dt_meta$sample)) < 2 & all(table(dt_meta[, 'sample']) < 2) ) {
+    stop('At least two types of samples are required to calculate SNR')
+  } else {
+    one_group_out_list <- get_one_group(dt_fpkm_log, dt_counts, dt_meta, result_dir)
+    abs_cor_median <- one_group_out_list[[1]]
+    pt_abs_median_cor <- one_group_out_list[[2]]
+    make_performance_plot(dt_fpkm_log, dt_counts, dt_meta, result_dir, abs_cor_median, pt_abs_median_cor)
   }
 }
 

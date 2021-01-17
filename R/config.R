@@ -26,74 +26,37 @@ read_ref_data <- function(ref_data_dir) {
 #'                 For transcriptome, a matrix after log transformation is recommended.
 #' @param group    should be a factor whose length is identical to the number of the columns in expr_mat,
 #'                 describing the group information of each column in expr_mat
-#' @param thr_filter genes with average no larger than thr_filter in both groups will not be considered as DEGs
-#' @return A statistics table for deg
-#' @importFrom stats sd
-#' @importFrom stats t.test
-#' @importFrom stats p.adjust
+#' @importFrom edgeR DGEList
+#' @importFrom edgeR filterByExpr
+#' @importFrom edgeR calcNormFactors
+#' @importFrom limma voom
+#' @importFrom limma lmFit
+#' @importFrom limma eBayes
+#' @importFrom limma topTable
+#' @importFrom stats stats
 #' @importFrom dplyr %>%
-#' @importFrom data.table rbindlist
+#' @importFrom data.table as.data.table
 #' @export
-DEG_analysis <- function(expr_mat, group, thr_filter = log2(0.5), thr_FC = 2, thr_p = 0.05) {
-  group_A <- levels(group)[1]
-  group_B <- levels(group)[2]
-  col_A <- which(as.numeric(group) == 1)
-  col_B <- which(as.numeric(group) == 2)
-  expr_mat_filt <- expr_mat[apply(expr_mat, 1, sd) > 0,]
+library(edgeR)
+library(limma)
 
-
-  dt_DEG <- apply(expr_mat_filt, 1, function(x) {
-
-    mean <- mean(x[c(col_A, col_B)])
-    sd <- sd(x[c(col_A, col_B)])
-    mean_A <- mean(x[col_A])
-    mean_B <- mean(x[col_B])
-    logFC <- mean_B - mean_A
-
-    if ((mean_A > thr_filter) | (mean_B > thr_filter)) {
-      p.value <- t.test(x[col_A], x[col_B], var.equal = TRUE)$p.value
-      if (p.value < thr_p) {
-        DEGtype <- "not DEG"
-        if (logFC > log2(thr_FC)) DEGtype <- "Up-regulated"
-        if (logFC < (-log2(thr_FC))) DEGtype <- "Down-regulated"
-      } else {
-        DEGtype <- "not DEG"
-      }
-    } else {
-      p.value <- NA
-      DEGtype <- "Low-expressed"
-    }
-
-
-    return(list(
-      mean = mean,
-      sd = sd,
-      mean_A = mean_A,
-      mean_B = mean_B,
-      logFC = logFC,
-      p.value = p.value,
-      DEGtype = DEGtype
-    ))
-
-  }) %>% rbindlist()
-
-  dt_DEG$group_A <- group_A
-  dt_DEG$group_B <- group_B
-  dt_DEG$gene <- rownames(expr_mat_filt)
-
-
-  dt_DEG_passlowflit <- dt_DEG[DEGtype != "Low-expressed"]
-  dt_DEG_passlowflit$p.value.adj <- p.adjust(dt_DEG_passlowflit$p.value, method = "fdr")
-  dt_DEG.passLowfilt_sorted <- dt_DEG_passlowflit[order(ifelse(DEGtype %in% c("Up-regulated", "Down-regulated"), 0, 1),
-                                                        - abs(logFC))]
-
-  dt_DEG.lowExpr <- dt_DEG[DEGtype == "Low-expressed"]
-
-  dt_DEG <- rbindlist(list(dt_DEG.passLowfilt_sorted, dt_DEG.lowExpr), use.names = TRUE, fill = TRUE)
-
-
-  dt_DEG_foroutput <- dt_DEG[, .(group_A, group_B, gene, mean, mean_A, mean_B, sd, logFC, p.value, p.value.adj, DEGtype)]
-  return(dt_DEG_foroutput)
+DEGanalysis <- function(exprMat, group){
+  dge <- DGEList(counts = exprMat)
+  design <- model.matrix(~group)
+  
+  keep <- filterByExpr(dge, design)
+  dge <- dge[keep,,keep.lib.sizes=FALSE]
+  dge <- calcNormFactors(dge)
+  
+  v <- voom(dge, design, plot=F)
+  fit <- lmFit(v, design)
+  
+  fit <- eBayes(fit)
+  result <- topTable(fit, coef=ncol(design), sort.by = 'logFC', number = Inf)
+  result$gene = rownames(result)
+  result$groupA =  levels(group)[1]
+  result$groupB =  levels(group)[2]
+  return(as.data.table(result))
 }
 
 #' Make a custom theme
@@ -117,26 +80,77 @@ make_theme <- function() {
   return(custom_theme)
 }
 
-#' Combine sd summary based on number of sample types
+
+#' Make scatter and box figure
+#' @importFrom ggplot2 ggplot
+#' @importFrom cowplot
+
+plot_scatter_box <- function(dt_sb, var_x, var_y, col_g, xlab, ylab, title_lab){
+  pmain <- ggplot(dt_sb, aes_string(x = var_x, y = var_y, color = col_g)) +
+    geom_point() +
+    scale_color_manual(values = c('#2f5c85', '#7ba1c7', 'red')) +
+    theme_few() +
+    theme(legend.position = "none") +
+    labs(title = title_lab, x = xlab, y = ylab)
+  
+  xplot <- ggplot(dt_sb, aes_string(x = col_g, y = var_x, colour = col_g)) + 
+    geom_boxplot() +
+    scale_color_manual(values = c('#2f5c85', '#7ba1c7', 'red')) +
+    coord_flip() +
+    theme_classic()
+  
+  yplot <- ggplot(dt_sb, aes_string(x = col_g, y = var_y, colour = col_g)) + 
+    geom_boxplot() +
+    scale_color_manual(values = c('#2f5c85', '#7ba1c7', 'red')) +
+    theme_classic()
+  
+  p1 <- insert_xaxis_grob(pmain, xplot, grid::unit(.2, "null"), position = "top")
+  p2 <- insert_yaxis_grob(p1, yplot, grid::unit(.2, "null"), position = "right")
+  pt_sb <- ggdraw(p2)
+  return(pt_sb)
+}
+
+#' S1-6 SNR
 #'
-#' @param result_dir A directory for result files
-#' @param sample_num The number of samples
-#' @importFrom data.table fread
-#' @importFrom data.table fwrite
-#' @export
-combine_sd_summary_table <- function(result_dir, sample_num) {
-  if (sample_num > 2) {
-    summary_one <- fread(paste(result_dir, "/performance_assessment/studydesign_performance_summary_one.txt", sep = ""))
-    summary_more <- fread(paste(result_dir, "/performance_assessment/studydesign_performance_summary_more.txt", sep = ""))
-    summary_table <- rbind(summary_one, summary_more)
-    fwrite(summary_table, file = paste(result_dir, "/simplified_report/studydesign_performance_summary.txt", sep = ""), sep = "\t")
-    fwrite(summary_table, file = paste(result_dir, "/simplified_report/SD_performace_table.txt", sep = ""), sep = "\t")
-  } else {
-    summary_one <- fread(paste(result_dir, "/performance_assessment/studydesign_performance_summary_one.txt", sep = ""))
-    summary_table <- summary_one
-    fwrite(summary_table, file = paste(result_dir, "/simplified_report/studydesign_performance_summary.txt", sep = ""), sep = "\t")
-    fwrite(summary_table, file = paste(result_dir, "/simplified_report/SD_performace_table.txt", sep = ""), sep = "\t")
-  }
+#' @importFrom data.table setkey
+calc_signoise_ratio <- function(pca_prcomp, exp_design) {
+  
+  pcs <- as.data.frame(predict(pca_prcomp))
+  dt_perc_pcs <- data.table(PCX = 1:nrow(pcs),
+                            Percent = summary(pca_prcomp)$importance[2,],
+                            AccumPercent = summary(pca_prcomp)$importance[3,])
+  
+  dt_dist <- data.table(ID.A = rep(rownames(pcs), each = nrow(pcs)),
+                        ID.B = rep(rownames(pcs), time = nrow(pcs)))
+  
+  dt_dist$Group.A <- exp_design[dt_dist$ID.A]$group
+  dt_dist$Group.B <- exp_design[dt_dist$ID.B]$group
+  
+  dt_dist[, Type := ifelse(ID.A == ID.B, "Same",
+                           ifelse(Group.A == Group.B, "Intra", "Inter"))]
+  dt_dist[, Dist := sqrt(dt_perc_pcs[1]$Percent * (pcs[ID.A, 1] - pcs[ID.B, 1]) ^ 2 + dt_perc_pcs[2]$Percent * (pcs[ID.A, 2] - pcs[ID.B, 2]) ^ 2)]
+  
+  dt_dist_stats <- dt_dist[, .(Avg.Dist = mean(Dist)), by = .(Type)]
+  setkey(dt_dist_stats, Type)
+  signoise <- dt_dist_stats["Inter"]$Avg.Dist / dt_dist_stats["Intra"]$Avg.Dist
+  return(signoise)
+}
+
+#' Get PCA list
+#'
+#' @importFrom stats prcomp
+get_pca_list <- function(expr_mat_forsignoise, exp_design, dt_meta) {
+  pca_prcomp = prcomp(t(expr_mat_forsignoise), scale = F)
+  pcs = predict(pca_prcomp) %>% data.frame()
+  pcs$library = row.names(pcs)
+  pcs_add_meta = merge(pcs, dt_meta, by = "library")
+  PC1_ratio = round(summary(pca_prcomp)$importance[2, 1] * 100, digits = 2)
+  PC2_ratio = round(summary(pca_prcomp)$importance[2, 2] * 100, digits = 2)
+  PC3_ratio = round(summary(pca_prcomp)$importance[2, 3] * 100, digits = 2)
+  SNR = round(calc_signoise_ratio(pca_prcomp, exp_design = exp_design), digits = 2)
+  gene_num = dim(expr_mat_forsignoise)[1]
+  pca_list = cbind(pcs_add_meta, PC1_ratio, PC2_ratio, PC3_ratio, SNR, gene_num)
+  return(pca_list)
 }
 
 
