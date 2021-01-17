@@ -33,8 +33,6 @@ read_ref_data <- function(ref_data_dir) {
 #' @importFrom limma lmFit
 #' @importFrom limma eBayes
 #' @importFrom limma topTable
-#' @importFrom stats stats
-#' @importFrom dplyr %>%
 #' @importFrom data.table as.data.table
 #' @export
 library(edgeR)
@@ -83,8 +81,10 @@ make_theme <- function() {
 
 #' Make scatter and box figure
 #' @importFrom ggplot2 ggplot
-#' @importFrom cowplot
-
+#' @importFrom ggplot2 scale_color_manual
+#' @importFrom ggthemes theme_few
+#' @importFrom cowplot insert_xaxis_grob
+#' @export
 plot_scatter_box <- function(dt_sb, var_x, var_y, col_g, xlab, ylab, title_lab){
   pmain <- ggplot(dt_sb, aes_string(x = var_x, y = var_y, color = col_g)) +
     geom_point() +
@@ -113,6 +113,7 @@ plot_scatter_box <- function(dt_sb, var_x, var_y, col_g, xlab, ylab, title_lab){
 #' S1-6 SNR
 #'
 #' @importFrom data.table setkey
+#' @export
 calc_signoise_ratio <- function(pca_prcomp, exp_design) {
   
   pcs <- as.data.frame(predict(pca_prcomp))
@@ -139,6 +140,7 @@ calc_signoise_ratio <- function(pca_prcomp, exp_design) {
 #' Get PCA list
 #'
 #' @importFrom stats prcomp
+#' @export
 get_pca_list <- function(expr_mat_forsignoise, exp_design, dt_meta) {
   pca_prcomp = prcomp(t(expr_mat_forsignoise), scale = F)
   pcs = predict(pca_prcomp) %>% data.frame()

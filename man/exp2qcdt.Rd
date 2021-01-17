@@ -4,7 +4,7 @@
 \alias{exp2qcdt}
 \title{Convert expression table to qc data table.}
 \usage{
-exp2qcdt(exp_table_file, phenotype_file, result_dir)
+exp2qcdt(exp_table_file, count_table_file, phenotype_file, result_dir)
 }
 \arguments{
 \item{exp_table_file}{Expression table file}

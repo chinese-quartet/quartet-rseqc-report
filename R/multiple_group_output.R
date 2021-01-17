@@ -16,8 +16,14 @@
 #' @importFrom ggthemes theme_few
 #' @importFrom ggplot2 theme_classic
 
-make_performance_plot <- function(dt_fpkm_log, dt_counts, dt_meta, result_dir, 
+make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, result_dir, 
                                   abs_cor_median, pt_abs_median_cor) {
+  
+  # import reference data
+  qcintra_forplot <- ref_data$qcintra_forplot
+  corr_ref <- ref_data$corr_ref
+  refqc_202011_forplot <- ref_data$refqc_202011_forplot
+  
   # two group which two replicates are need 
   
   sample_type_list <- dt_meta[['sample']] %>% unique()

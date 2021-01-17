@@ -29,7 +29,6 @@ exp2qcdt <- function(exp_table_file, count_table_file, phenotype_file, result_di
   # Global variable
   # TODO: This is not a good choice, maybe have another solution
   ref_data <<- read_ref_data(ref_data_dir)
-
   dt_fpkm <- fread(exp_table_file)
   dt_counts <- fread(count_table_file)
   dt_meta <- fread(phenotype_file)
@@ -54,7 +53,7 @@ exp2qcdt <- function(exp_table_file, count_table_file, phenotype_file, result_di
     one_group_out_list <- get_one_group(dt_fpkm_log, dt_counts, dt_meta, result_dir)
     abs_cor_median <- one_group_out_list[[1]]
     pt_abs_median_cor <- one_group_out_list[[2]]
-    make_performance_plot(dt_fpkm_log, dt_counts, dt_meta, result_dir, abs_cor_median, pt_abs_median_cor)
+    make_performance_plot(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, result_dir, abs_cor_median, pt_abs_median_cor)
   }
 }
 

@@ -4,14 +4,7 @@
 \alias{get_one_group}
 \title{Get one group}
 \usage{
-get_one_group(
-  dt_exp_melt,
-  dt_exp_annot,
-  exp_fpkm_log,
-  dt_pairs,
-  dt_meta,
-  result_dir
-)
+get_one_group(dt_fpkm_log, dt_counts, dt_meta, result_dir)
 }
 \description{
 Get one group
