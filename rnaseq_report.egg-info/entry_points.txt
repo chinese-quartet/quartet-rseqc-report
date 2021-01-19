@@ -1,0 +1,14 @@
+[multiqc.hooks.v1]
+execution_start = quartet_rnaseq_report.custom_code:quartet_rnaseq_report_execution_start
+
+[multiqc.modules.v1]
+rnaseq_data_generation_information = quartet_rnaseq_report.modules.rnaseq_data_generation_information:MultiqcModule
+rnaseq_performance_assessment = quartet_rnaseq_report.modules.rnaseq_performance_assessment:MultiqcModule
+rnaseq_post_alignment_qc = quartet_rnaseq_report.modules.rnaseq_post_alignment_qc:MultiqcModule
+rnaseq_quantification_qc = quartet_rnaseq_report.modules.rnaseq_quantification_qc:MultiqcModule
+rnaseq_raw_qc = quartet_rnaseq_report.modules.rnaseq_raw_qc:MultiqcModule
+rnaseq_supplementary = quartet_rnaseq_report.modules.rnaseq_supplementary:MultiqcModule
+
+[multiqc.templates.v1]
+default = quartet_rnaseq_report.templates.default
+
