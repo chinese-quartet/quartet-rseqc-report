@@ -15,12 +15,12 @@ from multiqc.utils import report, util_functions, config
 log = logging.getLogger('multiqc')
 
 # Save this plugin's version number (defined in setup.py) to the MultiQC config
-config.rnaseq_report_version = get_distribution(
+config.quartet_rnaseq_report_version = get_distribution(
     "quartet_rnaseq_report").version
 
 
 # Add default config options for the things that are used in MultiQC_NGI
-def rnaseq_report_execution_start():
+def quartet_rnaseq_report_execution_start():
     """ Code to execute after the config files and
     command line flags have been parsedself.
 
@@ -33,7 +33,7 @@ def rnaseq_report_execution_start():
         return None
 
     log.info("Running Example MultiQC Plugin v{}".format(
-        config.rnaseq_report_version))
+        config.quartet_rnaseq_report_version))
 
     # Add to the main MultiQC config object.
     # User config files have already been loaded at this point

@@ -35,7 +35,7 @@ setup(
         'multiqc.cli_options.v1':
         ['disable_plugin = quartet_rnaseq_report.cli:disable_plugin'],
         'multiqc.hooks.v1': [
-            'execution_start = quartet_rnaseq_report.custom_code:rnaseq_report_execution_start'
+            'execution_start = quartet_rnaseq_report.custom_code:quartet_rnaseq_report_execution_start'
         ],
         'multiqc.templates.v1':
         ['default = quartet_rnaseq_report.templates.default']

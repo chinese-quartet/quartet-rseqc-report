@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 """ MultiQC functions to use plotly library """
 
 import logging
@@ -9,26 +8,29 @@ from multiqc.utils import report
 
 logger = logging.getLogger(__name__)
 
+
 def fig_to_json_html(fig, pconfig):
-  if pconfig.get('auto_margin'):
-    fig.update_layout(margin=dict(l=40, r=20, t=40, b=40))
+    if pconfig.get('auto_margin'):
+        fig.update_layout(margin=dict(l=40, r=20, t=40, b=40))
 
-  if pconfig.get('ylab'):
-    fig.update_layout(yaxis=dict(title_text=pconfig['ylab']))
+    if pconfig.get('ylab'):
+        fig.update_layout(yaxis=dict(title_text=pconfig['ylab']))
 
-  if pconfig.get('xlab'):
-    fig.update_layout(xaxis=dict(title_text=pconfig['xlab']))
+    if pconfig.get('xlab'):
+        fig.update_layout(xaxis=dict(title_text=pconfig['xlab']))
 
-  if pconfig.get('title'):
-    fig.update_layout(title_text=pconfig['title'], title_x=0.5)
+    if pconfig.get('title'):
+        fig.update_layout(title_text=pconfig['title'], title_x=0.5)
 
-  json_str = to_json(fig)
-  html = '<script id="{id}" type="text/json">{json}</script>'.format(id=pconfig['data_id'], json=json_str)
-  return html
+    json_str = to_json(fig)
+    html = '<script id="{id}" type="text/json">{json}</script>'.format(
+        id=pconfig['data_id'], json=json_str)
+    return html
+
 
 def plot(fig, pconfig):
-  data_html = fig_to_json_html(fig, pconfig)
-  html = '''
+    data_html = fig_to_json_html(fig, pconfig)
+    html = '''
   <div class="hc-plot-wrapper">
     <div id="{id}" class="hc-plot not_rendered">
       <small>loading..</small>
@@ -57,4 +59,4 @@ def plot(fig, pconfig):
     }};
   </script>
   '''.format(id=pconfig['id'], data_id=pconfig['data_id'], data_html=data_html)
-  return html
+    return html

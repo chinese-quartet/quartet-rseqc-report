@@ -11,7 +11,7 @@ import plotly.figure_factory as ff
 
 from multiqc import config
 from multiqc.modules.base_module import BaseMultiqcModule
-from rnaseq_report.modules.plotly import plot as plotly_plot
+from quartet_rnaseq_report.modules.plotly import plot as plotly_plot
 
 # Initialise the main MultiQC logger
 log = logging.getLogger('multiqc')
