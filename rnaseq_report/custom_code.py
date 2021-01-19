@@ -27,6 +27,10 @@ def rnaseq_report_execution_start():
     to use custom command line flags.
     """
 
+    # Halt execution if we've disabled the plugin
+    if config.kwargs.get('disable_plugin', True):
+        return None
+
     log.info("Running Example MultiQC Plugin v{}".format(
         config.rnaseq_report_version))
 

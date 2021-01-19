@@ -15,8 +15,9 @@ setup(
     description="MultiReport for Quartet RNA-Seq Pipeline.",
     long_description=__doc__,
     keywords='bioinformatics',
-    url='https://github.com/clinico-omics/rnaseq-report',
-    download_url='https://github.com/clinico-omics/rnaseq-report/releases',
+    url='https://github.com/clinico-omics/quartet_rnaseq_report',
+    download_url=
+    'https://github.com/clinico-omics/quartet_rnaseq_report/releases',
     license='MIT',
     packages=find_packages(),
     include_package_data=True,
@@ -31,6 +32,8 @@ setup(
             'rnaseq_supplementary = rnaseq_report.modules.rnaseq_supplementary:MultiqcModule'
             # 'rnaseq_qc = rnaseq_report.modules.rnaseq_qc:MultiqcModule'
         ],
+        'multiqc.cli_options.v1':
+        ['disable_plugin = quartet-rnaseq-report.cli:disable_plugin'],
         'multiqc.hooks.v1': [
             'execution_start = rnaseq_report.custom_code:rnaseq_report_execution_start'
         ],
