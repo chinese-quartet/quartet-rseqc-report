@@ -16,6 +16,7 @@
 #' @importFrom ggthemes theme_few
 #' @importFrom ggplot2 theme_classic
 #' @importFrom dplyr bind_rows
+#' @importFrom scales rescale
 
 make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, result_dir, 
                                   abs_cor_median, pt_abs_median_cor) {
@@ -102,7 +103,7 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   
   # relative expression table of two sample   
   dt_rel_scatter <- output_rel_rep_res(dt_rel_cor, dt_fpkm_log, dt_counts, dt_meta)
-  fwrite(dt_rel_scatter, file = paste(result_dir, "/performance_assessment/rel_median_sample_two_replicate_correlation.txt", sep = ""), sep = "\t" )
+  fwrite(dt_rel_scatter, file = paste(result_dir, "/performance_assessment/relative_exp_correlation.txt", sep = ""), sep = "\t" )
   
   ## output figure
   # relative correlation plot 
@@ -176,7 +177,7 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   
   ### relative performance -----------------------------------
   # relative performance output data
-  fwrite(dt_cor_logfc_combine_h, file = paste(result_dir, "/performance_assessment/performance_evaluation_in_relative_expression.txt", sep = ""), sep = "\t")
+  fwrite(dt_cor_logfc_combine_h, file = paste(result_dir, "/performance_assessment/performance_of_relative_exp.txt", sep = ""), sep = "\t")
   
   ### SNR performance -----------------------------------------
   ## obtain SNR results
@@ -214,10 +215,10 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
       y = paste("PC1 (", dt_snr$PC2_ratio, "%)", sep = ""))
   
   ## output snr table
-  fwrite(dt_snr, file = paste(result_dir, "/performance_assessment/studydesign_performance_summary_more.txt", sep = ""), sep = "\t")
+  fwrite(dt_snr, file = paste(result_dir, "/performance_assessment/pca_with_snr.txt", sep = ""), sep = "\t")
   
   ## abs expression correlation and snr
-  rel_cor_median <- dt_rel_cor_median[['cor_value']]
+  rel_cor_median <- median(dt_rel_cor$cor_value)
   dt_snr_abs_rel_cor_new <- data.table(batch = 'QC_test', SNR = snr_value, LIR = abs_cor_median, 
                                        LRR2 = rel_cor_median, DataQual = 'Test')
   dt_snr_abs_rel_cor_combine <- rbind(qcintra_forplot, dt_snr_abs_rel_cor_new)
@@ -230,7 +231,7 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   
   dt_snr_abs_rel_cor_combine[, protocol := dt_abs_protocol$protocol]
   dt_snr_abs_rel_cor_combine_h <- dt_snr_abs_rel_cor_combine[DataQual != 'LowQual']
-  fwrite(dt_snr_abs_rel_cor_combine_h, file = paste(result_dir, "/performance_assessment/snr_abs_rel_cor.txt", sep = ""), sep = "\t")
+  fwrite(dt_snr_abs_rel_cor_combine_h, file = paste(result_dir, "/performance_assessment/performance_of_absolute_exp.txt", sep = ""), sep = "\t")
   
   ### output report figure-----------------------------
   pdf(file = paste(result_dir, "/simplified_report/", "figure2", ".pdf", sep = ""), 12, 4)
@@ -257,7 +258,7 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   print(pt_fig1)
   dev.off()
   
-  ### output summary table
+  ### output summary table ---
   snr_rank <- c(rank(dt_snr_abs_rel_cor_combine$SNR)[which(dt_snr_abs_rel_cor_combine$batch == "QC_test")])
   abs_cor_rank <- c(rank(dt_snr_abs_rel_cor_combine$LIR)[which(dt_snr_abs_rel_cor_combine$batch == "QC_test")])
   rel_cor_rank <- c(rank(dt_snr_abs_rel_cor_combine$LRR2)[which(dt_snr_abs_rel_cor_combine$batch == "QC_test")])
@@ -266,9 +267,28 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
                                   value = c(snr_value, rel_cor_median, abs_cor_median),
                                   historical_value = c('14.45 ± 9.58', '0.493 ± 0.111', '0.973 ± 0.015'),
                                   rank = c(snr_rank, abs_cor_rank, rel_cor_rank))
-  fwrite(dt_metric_summary, file = paste(result_dir, "/performance_assessment/qc_metric_summary.txt", sep = ""), sep = "\t")
+  fwrite(dt_metric_summary, file = paste(result_dir, "/performance_assessment/qc_metrics_summary.txt", sep = ""), sep = "\t")
   
-  ### output total quality score
+  ### output total quality score ---
+  dt_cor_logfc_combine_h_mean <- lapply(unique(as.character(dt_cor_logfc_combine_h$Batch)), function(x){
+    corr_ref_mean <- mean(dt_cor_logfc_combine_h[x, on = .(Batch)][['corr_ref']])
+    
+    return(
+      list(
+        Batch = x,
+        corr_ref_mean = corr_ref_mean
+      )
+    )
+  }) %>% rbindlist()
   
+  dt_hq_score <- dt_snr_abs_rel_cor_combine_h[dt_cor_logfc_combine_h_mean, on = "batch==Batch"]
+  dt_hq_score_scale <- data.table(apply(dt_hq_score[, c('SNR','LIR', 'LRR2','corr_ref_mean'), with = F], 2, 
+        function(x){rescale(x, c(1, 10))}))
+  dt_hq_score_scale[, batch := dt_hq_score$batch]
+  dt_hq_score_scale[, quality_score := rowMeans(.SD, na.rm = T), .SDcols = c('SNR','LIR', 'LRR2','corr_ref_mean')]
+  dt_hq_score_scale$quality_score <- rescale(dt_hq_score_scale$quality_score, c(0, 1))
+  fwrite(dt_hq_score_scale, file = paste(result_dir, "/performance_assessment/quality_score.txt", sep = ""), sep = "\t")
   
-}
+  ### quality score plot ---
+  make_score_figure(result_dir, dt_hq_score_scale)
+  }

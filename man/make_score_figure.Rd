@@ -4,7 +4,7 @@
 \alias{make_score_figure}
 \title{Make the performance score figure}
 \usage{
-make_score_figure(result_dir, sample_num)
+make_score_figure(result_dir, dt_hq_score_scale)
 }
 \arguments{
 \item{result_dir}{A directory for result files}

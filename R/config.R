@@ -162,7 +162,6 @@ get_pca_list <- function(expr_mat_forsignoise, exp_design, dt_meta) {
 #' @param sample_num The number of samples
 #' @importFrom dplyr %>%
 #' @importFrom data.table data.table
-#' @importFrom data.table fwrite
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 geom_tile
 #' @importFrom ggplot2 scale_fill_manual
@@ -178,43 +177,24 @@ get_pca_list <- function(expr_mat_forsignoise, exp_design, dt_meta) {
 #' @importFrom grDevices pdf
 #' @importFrom grid unit
 #' @export
-make_score_figure <- function(result_dir, sample_num) {
-  if (sample_num == 1) {
-    score_table <- detected_gene_performance_mean[SD_performance_mean_one, on = "Batch"]
-  } else if (sample_num == 2) {
-    score_table <- detected_gene_performance_mean[rel_exp_performance_mean, on = "Batch"][degs_performance_mean, on = "Batch"][SD_performance_mean_one, on = "Batch"]
-  } else if (sample_num > 2) {
-    SD_performance_mean <- SD_performance_mean_one[SD_performance_mean_more, on = "Batch"]
-    score_table <- detected_gene_performance_mean[rel_exp_performance_mean, on = "Batch"][degs_performance_mean, on = "Batch"][SD_performance_mean, on = "Batch"]
-  }
 
-  score_table_list <- colnames(score_table)[-1] %>% lapply(., function(x) {
-    scale_value <- (score_table[[x]] - min(score_table[[x]])) / (max(score_table[[x]]) - min(score_table[[x]]))
-    return({
-      scale_value
-    })
-  })
-
-  score_table_scale_mat <- data.table(do.call(cbind, score_table_list))
-  score_table_scale_mat[, "Benchmarkingscore"] <- apply(score_table_scale_mat, 1, function(x) { mean(x) })
-  score_table_scale_mat_m <- data.table(score_table$Batch, score_table_scale_mat)
-  colnames(score_table_scale_mat_m) <- c(colnames(score_table), "Benchmarkingscore")
-  score_table_scale_mat_m_order <- score_table_scale_mat_m[order(score_table_scale_mat_m$Benchmarkingscore, decreasing = TRUE),]
-  fwrite(score_table_scale_mat_m_order, file = paste(result_dir, "/performance_assessment/performance_score.txt", sep = ""), sep = "\t")
-
-  # S5-1 performance score figure
-  dt_pscore <- data.table(cbind("score", score_table_scale_mat_m_order[, .(Benchmarkingscore, Batch)]))
+make_score_figure <- function(result_dir, dt_hq_score_scale) {
+  # dt_hq_score_scale shold contain batch colname and quality score
+  dt_hq_score_scale_order <- dt_hq_score_scale[order(dt_hq_score_scale$quality_score, decreasing = TRUE),]
+  dt_pscore <- data.table(cbind("score", dt_hq_score_scale_order[, .(quality_score, batch)]))
   setnames(dt_pscore, "V1", "type")
-  dt_pscore$Benchmarkingscore <- as.character(round(dt_pscore$Benchmarkingscore, digits = 2))
-  test_score <- dt_pscore[.("Test"), on = .(Batch)][["Benchmarkingscore"]]
-  pdf(paste(result_dir, "/simplified_report/performance_score.pdf", sep = ""), 4, 4)
-  pt <- ggplot(dt_pscore, aes(x = Benchmarkingscore, y = type, fill = Benchmarkingscore)) +
+  dt_pscore$quality_score <- as.character(round(dt_pscore$quality_score, digits = 2))
+  test_score <- dt_pscore[.("QC_test"), on = .(batch)][["quality_score"]]
+  
+  # plot
+  pdf(paste(result_dir, "/performance_assessment/performance_score.pdf", sep = ""), 4, 4)
+  pt <- ggplot(dt_pscore, aes(x = quality_score, y = type, fill = quality_score)) +
     geom_tile(color = "white", show.legend = FALSE) +
     scale_fill_manual(values = colorRampPalette(brewer.pal(9, "RdYlGn"))(16)) +
     annotate(geom = "curve", x = test_score,
              y = 2.5, xend = test_score, curvature = 0,
              yend = 1.5, arrow = arrow(angle = 45, length = unit(9, "mm"), type = "closed"), color = "grey") +
-    annotate(geom = "text", x = dt_pscore[.("Test"), on = .(Batch)][["Benchmarkingscore"]],
+    annotate(geom = "text", x = dt_pscore[.("QC_test"), on = .(batch)][["quality_score"]],
              y = 2.2, label = test_score, hjust = "center", size = 10, fontface = "bold") +
     theme_void() +
     theme(plot.margin = margin(3, 0, 4, 0, "cm"))

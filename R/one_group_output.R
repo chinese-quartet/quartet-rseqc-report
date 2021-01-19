@@ -47,7 +47,7 @@ get_one_group <- function(dt_fpkm_log, dt_counts, dt_meta, result_dir) {
     
     # output correlation plot and data
     dt_one_cor <- dt_fpkm_log[gene_list_com, on = .(gene_id)][, c('gene_id', sample_id1, sample_id2), with = F]
-    fwrite(dt_one_cor, file = paste(result_dir, "/performance_assessment/abs_median_sample_two_replicate_correlation.txt", sep = ""), sep = "\t")
+    fwrite(dt_one_cor, file = paste(result_dir, "/performance_assessment/absolute_exp_correlation.txt", sep = ""), sep = "\t")
     return(dt_one_cor)
   }
   
@@ -71,7 +71,8 @@ get_one_group <- function(dt_fpkm_log, dt_counts, dt_meta, result_dir) {
          y = ylab_abs_cor)
   
   # return abs meidan correlation value and pt
-  abs_cor_median <- dt_abs_cor_median[['abs_cor']]
+  # abs_cor_median <- dt_abs_cor_median[['abs_cor']]
+  abs_cor_median <- median(dt_abs_cor$abs_cor)
   
   # one group figure and data will be used in more group
   one_group_out <- list(abs_cor_median, pt_abs_median_cor)
