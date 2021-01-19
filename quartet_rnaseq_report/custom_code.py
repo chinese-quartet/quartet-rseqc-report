@@ -15,7 +15,8 @@ from multiqc.utils import report, util_functions, config
 log = logging.getLogger('multiqc')
 
 # Save this plugin's version number (defined in setup.py) to the MultiQC config
-config.rnaseq_report_version = get_distribution("rnaseq_report").version
+config.rnaseq_report_version = get_distribution(
+    "quartet_rnaseq_report").version
 
 
 # Add default config options for the things that are used in MultiQC_NGI
