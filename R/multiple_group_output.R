@@ -15,6 +15,7 @@
 #' @importFrom cowplot insert_yaxis_grob
 #' @importFrom ggthemes theme_few
 #' @importFrom ggplot2 theme_classic
+#' @importFrom dplyr bind_rows
 
 make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, result_dir, 
                                   abs_cor_median, pt_abs_median_cor) {
@@ -32,12 +33,12 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   compare_combn <- data.table(combn(sample_type_list, 2))
   dt_rel_cor <- lapply(1:dim(compare_combn)[2], function(x){
     compare_name <- paste(compare_combn[[x]][2], '/', compare_combn[[x]][1], sep = '')
-    dt_count_compare <- dt_counts[, c('gene_id',
-                                      dt_meta[c(compare_combn[[x]][1], compare_combn[[x]][2]), on = .(sample)][['library']]), with = F]
-    gene_list_com <- dt_count_compare[['gene_id']][apply(dt_count_compare[, !'gene_id'], 1, function(x){all(x >= 3)})]
+    dt_detect_gene <-  data.table(apply(dt_counts[, dt_meta[compare_combn[[x]][1], on = .(sample)][['library']], with = F], 1, function(x){length(which(x >= 3)) >= 2}),
+                 apply(dt_counts[, dt_meta[compare_combn[[x]][2], on = .(sample)][['library']], with = F], 1, function(x){length(which(x >= 3)) >= 2}))
+    gene_list_com <- dt_counts[['gene_id']][apply(dt_detect_gene, 1, function(x){all(x)})]
     group_list1 <- dt_meta[sample == compare_combn[[x]][1]][['group']]
     group_list2 <- dt_meta[sample == compare_combn[[x]][2]][['group']]
-    ratio_group <- outer(group_list2, group_list1, paste, sep = 'to')
+    ratio_group <- outer(group_list1, group_list2, paste, sep = 'to')
     ratio_cor_group <- data.table(combn(ratio_group, 2))
     
     
@@ -50,11 +51,11 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
       sample_id_b1 <- dt_meta[group == strsplit(ratio_name_2, 'to')[[1]][1]][['library']]
       sample_id_b2 <- dt_meta[group == strsplit(ratio_name_2, 'to')[[1]][2]][['library']]
       ratio_value_b <- dt_fpkm_log[gene_list_com, on = .(gene_id)][[sample_id_b1]] - dt_fpkm_log[gene_list_com, on = .(gene_id)][[sample_id_b2]]
-      cor_value <- cor(ratio_value_a, ratio_value_b)
+      cor_value <- cor(ratio_value_b, ratio_value_a)
       
       return(list(
         compare_group = compare_name,
-        comapre_id = paste(ratio_name_1, ratio_name_2, sep = 'vs'),
+        comapre_id = paste(ratio_name_2, ratio_name_1, sep = 'vs'),
         cor_value = cor_value,
         gene_num = length(gene_list_com)
       ))
@@ -77,8 +78,11 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
     sample_r2_2 <- strsplit(sample_r2, 'to')[[1]][2]
     
     # filter gene based on counts >= 3
-    dt_count_compare <- dt_counts[, c('gene_id', dt_meta[c(sample_r1_1, sample_r1_2, sample_r2_1, sample_r2_2), on = .(group)][['library']]), with = F]
-    gene_list_com <- dt_count_compare[['gene_id']][apply(dt_count_compare[, !'gene_id'], 1, function(x){all(x >= 3)})]
+    dt_detect_gene <-  data.table(apply(dt_counts[, dt_meta[strsplit(dt_rel_cor_median[['compare_group']], '/')[[1]][1], on = .(sample)][['library']], with = F], 
+                                        1, function(x){length(which(x >= 3)) >= 2}),
+                                  apply(dt_counts[, dt_meta[strsplit(dt_rel_cor_median[['compare_group']], '/')[[1]][2], on = .(sample)][['library']], with = F], 
+                                        1, function(x){length(which(x >= 3)) >= 2}))
+    gene_list_com <- dt_counts[['gene_id']][apply(dt_detect_gene, 1, function(x){all(x)})]
     
     # obtain relative expression table
     sample_id_a1 <- dt_meta[group == sample_r1_1][['library']]
@@ -102,11 +106,11 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   
   ## output figure
   # relative correlation plot 
-  xlab_rel_cor <- colnames(dt_rel_scatter)[1]
-  ylab_rel_cor <- colnames(dt_rel_scatter)[2]
+  xlab_rel_cor <- colnames(dt_rel_scatter)[2]
+  ylab_rel_cor <- colnames(dt_rel_scatter)[1]
   colnames(dt_rel_scatter) <- c('replicate1', 'replicate2', 'gene_id')
-  rel_cor_pt <- round(cor(dt_rel_scatter$replicate1, dt_rel_scatter$replicate2), digits = 3)
-  pt_rel_median_cor <- ggplot2::ggplot(dt_rel_scatter, aes(x = replicate1, y = replicate2)) +
+  rel_cor_pt <- round(cor(dt_rel_scatter$replicate2, dt_rel_scatter$replicate1), digits = 3)
+  pt_rel_median_cor <- ggplot2::ggplot(dt_rel_scatter, aes(x = replicate2, y = replicate1)) +
     geom_point(alpha = 0.8, size = 0.3, col = '#7BC8A4') +
     scale_fill_viridis_c(name = "density") +
     theme_few() + 
@@ -121,10 +125,13 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
     compare_name <- paste(compare_combn[[x]][2], '/', compare_combn[[x]][1], sep = '')
     corr_ref_compare <- corr_ref[compare_name, on = .(compare)]
     
-    # get comapre column
+    ### at least tow replicate counts >= 3 
+    dt_detect_gene <-  data.table(apply(dt_counts[, dt_meta[compare_combn[[x]][1], on = .(sample)][['library']], with = F], 1, function(x){length(which(x >= 3)) >= 2}),
+                                  apply(dt_counts[, dt_meta[compare_combn[[x]][2], on = .(sample)][['library']], with = F], 1, function(x){length(which(x >= 3)) >= 2}))
+    gene_list_com <- dt_counts[['gene_id']][apply(dt_detect_gene, 1, function(x){all(x)})]
+    
     dt_count_compare <- dt_counts[, c('gene_id',
                                       dt_meta[c(compare_combn[[x]][1], compare_combn[[x]][2]), on = .(sample)][['library']]), with = F]
-    gene_list_com <- dt_count_compare[['gene_id']][apply(dt_count_compare[, !'gene_id'], 1, function(x){all(x > 3)})]
     dt_count_compare_com <- dt_count_compare[gene_list_com, on = .(gene_id)]
     group_compare <- dt_meta[c(compare_combn[[x]][1], compare_combn[[x]][2]), on = .(sample)][['sample']]
     
@@ -158,33 +165,38 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   # combine new relative correlation value and logfc correlation value from reference to reference data
   dt_cor_logfc_new <- logfc_corr_with_ref[dt_rel_cor_mean, on = .(compare)]
   dt_cor_logfc_combine <- rbind(refqc_202011_forplot, dt_cor_logfc_new)
+  dt_rel_protocol <- lapply(as.character(dt_cor_logfc_combine$Batch), function(x){
+    protocol = strsplit(x, '_')[[1]][1]
+    return(list(
+      protocol = protocol
+    ))
+  }) %>%  rbindlist()
+  dt_cor_logfc_combine[, protocol:=dt_rel_protocol$protocol]
+  dt_cor_logfc_combine_h <- dt_cor_logfc_combine[DataQual != "LowQual"]
   
   ### relative performance -----------------------------------
-  # scaltter plot between logfc correlation based on reference logfc and relative expression correlation
-  # relative performance correlation plot 
-  pt_rel_fc <- ggplot2::ggplot(dt_cor_logfc_combine, aes(x = corr_ref, y = corr_FC)) +
-    geom_point(alpha = 0.8, size = 0.3, col = 'steelblue') +
-    #make_theme () +
-    labs(title = 'Performance evaluation in relative expression',
-         x = "Reference datasets based relative correlation",
-         y = "Relative correlation")
-
   # relative performance output data
-  fwrite(dt_cor_logfc_combine, file = paste(result_dir, "/performance_assessment/performance_evaluation_in_relative_expression.txt", sep = ""), sep = "\t")
+  fwrite(dt_cor_logfc_combine_h, file = paste(result_dir, "/performance_assessment/performance_evaluation_in_relative_expression.txt", sep = ""), sep = "\t")
   
   ### SNR performance -----------------------------------------
   ## obtain SNR results
-  output_snr_res <- function(dt_fpkm, dt_counts, dt_meta){
-    gene_list_snr <-  dt_counts[['gene_id']][apply(dt_counts[, !'gene_id'], 1, function(x){all(x >= 3)})]
+  output_snr_res <- function(dt_fpkm_log, dt_counts, dt_meta){
+    dt_detect_gene <- do.call(cbind, lapply(unique(dt_meta$sample), function(x){
+      detect_res <- apply(dt_counts[, dt_meta[sample == x][['library']], with = F], 1, function(x){length(which(x >= 3)) >= 2})
+      return(
+        detect_res = detect_res
+        ) 
+    }))
+    
+    gene_list_snr <- dt_counts[['gene_id']][apply(dt_detect_gene, 1, function(x){any(x)})]
     exp_design = (dt_meta[, .(library, group = sample)] %>% setkey(., library))
-    dt_fpkm_f <- dt_fpkm[gene_list_snr, on = .(gene_id)]
-    dt_fpkm_zscore <- data.table(t(apply(dt_fpkm_f[, !'gene_id'], 1, function(x){(x - mean(x))/sd(x)})))
-    colnames(dt_fpkm_zscore) <- colnames(dt_fpkm_f[, !'gene_id'])
+    dt_fpkm_f <- dt_fpkm_log[gene_list_snr, on = .(gene_id)]
+    dt_fpkm_zscore <- data.table(t(apply(dt_fpkm_f[, dt_meta$library, with = F], 1, function(x){(x - mean(x))/sd(x)})))
     pca_list <- get_pca_list(dt_fpkm_zscore, exp_design, dt_meta)
     return(pca_list)
   }
   
-  dt_snr <- output_snr_res(dt_fpkm, dt_counts, dt_meta)
+  dt_snr <- output_snr_res(dt_fpkm_log, dt_counts, dt_meta)
   snr_value <- dt_snr$SNR[1]
   snr_gene_num <- dt_snr$gene_num[1]
   
@@ -209,7 +221,16 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   dt_snr_abs_rel_cor_new <- data.table(batch = 'QC_test', SNR = snr_value, LIR = abs_cor_median, 
                                        LRR2 = rel_cor_median, DataQual = 'Test')
   dt_snr_abs_rel_cor_combine <- rbind(qcintra_forplot, dt_snr_abs_rel_cor_new)
-  fwrite(dt_snr_abs_rel_cor_combine, file = paste(result_dir, "/performance_assessment/snr_abs_rel_cor.txt", sep = ""), sep = "\t")
+  dt_abs_protocol <- lapply(as.character(dt_snr_abs_rel_cor_combine$batch), function(x){
+    protocol = strsplit(x, '_')[[1]][1]
+    return(list(
+      protocol = protocol
+    ))
+  }) %>%  rbindlist()
+  
+  dt_snr_abs_rel_cor_combine[, protocol := dt_abs_protocol$protocol]
+  dt_snr_abs_rel_cor_combine_h <- dt_snr_abs_rel_cor_combine[DataQual != 'LowQual']
+  fwrite(dt_snr_abs_rel_cor_combine_h, file = paste(result_dir, "/performance_assessment/snr_abs_rel_cor.txt", sep = ""), sep = "\t")
   
   ### output report figure-----------------------------
   pdf(file = paste(result_dir, "/simplified_report/", "figure2", ".pdf", sep = ""), 12, 4)
@@ -219,11 +240,15 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   dev.off()
   
   # Plot scatter and box combined plot
-  pt_snr_abs_cor <- plot_scatter_box(dt_snr_abs_rel_cor_combine, var_x = 'SNR', var_y = 'LIR', 
-                                     col_g = 'DataQual', xlab = 'SNR', ylab = 'Absolute correlation', 
+  dt_snr_abs_rel_cor_combine_h$protocol <- factor(dt_snr_abs_rel_cor_combine_h$protocol,
+                                            levels = c('P','R', 'QC'),ordered = TRUE)
+  dt_cor_logfc_combine_h$protocol <- factor(dt_cor_logfc_combine_h$protocol,
+                                            levels = c('P','R', 'QC'),ordered = TRUE)
+  pt_snr_abs_cor <- plot_scatter_box(dt_snr_abs_rel_cor_combine_h, var_x = 'SNR', var_y = 'LIR', 
+                                     col_g = 'protocol', xlab = 'SNR', ylab = 'Absolute correlation', 
                                      title_lab = 'Performance evaluation on the intra-batch level')
-  pt_rel_cor <- plot_scatter_box(dt_cor_logfc_combine, var_x = 'corr_ref', var_y = 'corr_FC', 
-                                     col_g = 'DataQual', xlab = 'Reference datasets based on relative correlation', 
+  pt_rel_cor <- plot_scatter_box(dt_cor_logfc_combine_h, var_x = 'corr_ref', var_y = 'corr_FC', 
+                                     col_g = 'protocol', xlab = 'Reference datasets based on relative correlation', 
                                      ylab = 'Relative correlation', 
                                      title_lab = 'Performance evaluation in relative expression')
   
@@ -246,4 +271,4 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   ### output total quality score
   
   
-  }
+}

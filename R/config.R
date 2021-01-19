@@ -3,7 +3,7 @@
 #' @param ref_data_dir A root directory for reference data
 #' @return The reference data as a list.
 #' @importFrom data.table fread
-#' @export
+#' @export 
 read_ref_data <- function(ref_data_dir) {
   # Read reference data
   #
@@ -35,8 +35,6 @@ read_ref_data <- function(ref_data_dir) {
 #' @importFrom limma topTable
 #' @importFrom data.table as.data.table
 #' @export
-library(edgeR)
-library(limma)
 
 DEGanalysis <- function(exprMat, group){
   dge <- DGEList(counts = exprMat)
@@ -65,6 +63,7 @@ DEGanalysis <- function(exprMat, group){
 #' @importFrom ggplot2 element_rect
 #' @importFrom ggplot2 element_blank
 #' @export
+#' 
 make_theme <- function() {
   custom_theme <- theme(plot.background = element_rect(colour = "white"),
                         axis.title.y = element_text(size = 16),
@@ -86,22 +85,23 @@ make_theme <- function() {
 #' @importFrom cowplot insert_xaxis_grob
 #' @export
 plot_scatter_box <- function(dt_sb, var_x, var_y, col_g, xlab, ylab, title_lab){
+  colors_fill = c(P = "#2f5c85", R = "#7ba1c7", QC = "red")
   pmain <- ggplot(dt_sb, aes_string(x = var_x, y = var_y, color = col_g)) +
     geom_point() +
-    scale_color_manual(values = c('#2f5c85', '#7ba1c7', 'red')) +
+    scale_color_manual(values = colors_fill) +
     theme_few() +
     theme(legend.position = "none") +
     labs(title = title_lab, x = xlab, y = ylab)
   
   xplot <- ggplot(dt_sb, aes_string(x = col_g, y = var_x, colour = col_g)) + 
     geom_boxplot() +
-    scale_color_manual(values = c('#2f5c85', '#7ba1c7', 'red')) +
+    scale_color_manual(values = colors_fill) +
     coord_flip() +
     theme_classic()
   
   yplot <- ggplot(dt_sb, aes_string(x = col_g, y = var_y, colour = col_g)) + 
     geom_boxplot() +
-    scale_color_manual(values = c('#2f5c85', '#7ba1c7', 'red')) +
+    scale_color_manual(values = colors_fill) +
     theme_classic()
   
   p1 <- insert_xaxis_grob(pmain, xplot, grid::unit(.2, "null"), position = "top")

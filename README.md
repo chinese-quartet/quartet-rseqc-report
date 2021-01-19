@@ -12,8 +12,10 @@ devtools::install_github("clinico-omics/exp2qcdt")
 
 ```R
 library(exp2qcdt)
-exp2qcdt("~/Downloads/exp2qcdt/test/fpkm_exp.txt", "~/Downloads/exp2qcdt/test/meta.txt", "~/Downloads/exp2qcdt/test/")
+exp2qcdt("~/Downloads/exp2qcdt/test/fpkm_table.txt", "~/Downloads/exp2qcdt/test/counts_table.txt", "~/Downloads/exp2qcdt/test/phenotype.txt", "~/Downloads/exp2qcdt/test/")
 ```
+
+## phenotype table example
 
 ## reference data
 

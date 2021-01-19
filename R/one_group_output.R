@@ -2,6 +2,7 @@
 #'
 #' @importFrom stats cor
 #' @importFrom ggplot2 ggtitle
+#' @export
 get_one_group <- function(dt_fpkm_log, dt_counts, dt_meta, result_dir) {
   sample_type_list <- dt_meta[['sample']] %>% unique()
   
