@@ -259,14 +259,15 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   dev.off()
   
   ### output summary table ---
-  snr_rank <- c(rank(dt_snr_abs_rel_cor_combine$SNR)[which(dt_snr_abs_rel_cor_combine$batch == "QC_test")])
-  abs_cor_rank <- c(rank(dt_snr_abs_rel_cor_combine$LIR)[which(dt_snr_abs_rel_cor_combine$batch == "QC_test")])
-  rel_cor_rank <- c(rank(dt_snr_abs_rel_cor_combine$LRR2)[which(dt_snr_abs_rel_cor_combine$batch == "QC_test")])
+  rank_len = dim(dt_snr_abs_rel_cor_combine)[1]
+  snr_rank <- c(rank(rank_len - dt_snr_abs_rel_cor_combine$SNR)[which(dt_snr_abs_rel_cor_combine$batch == "QC_test")])
+  abs_cor_rank <- c(rank_len - rank(dt_snr_abs_rel_cor_combine$LIR)[which(dt_snr_abs_rel_cor_combine$batch == "QC_test")])
+  rel_cor_rank <- c(rank_len - rank(dt_snr_abs_rel_cor_combine$LRR2)[which(dt_snr_abs_rel_cor_combine$batch == "QC_test")])
   dt_metric_summary <- data.table(qc_metrics = c('Signal-to-Noise Ratio (SNR)', 'Relative correlation', 'Absolute correlation'),
                                   category = c('More groups', 'Two groups', 'One group'),
-                                  value = c(snr_value, rel_cor_median, abs_cor_median),
+                                  value = c(round(snr_value, digits = 3), round(rel_cor_median, digits = 3), round(abs_cor_median, digits = 3)),
                                   historical_value = c('14.45 ± 9.58', '0.493 ± 0.111', '0.973 ± 0.015'),
-                                  rank = c(snr_rank, abs_cor_rank, rel_cor_rank))
+                                  rank = c(paste(c(snr_rank, abs_cor_rank, rel_cor_rank), rank_len, sep = '/')))
   fwrite(dt_metric_summary, file = paste(result_dir, "/performance_assessment/qc_metrics_summary.txt", sep = ""), sep = "\t")
   
   ### output total quality score ---

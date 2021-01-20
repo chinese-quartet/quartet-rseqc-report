@@ -45,14 +45,15 @@ get_one_group <- function(dt_fpkm_log, dt_counts, dt_meta, result_dir) {
     gene_list_2 <- dt_counts[dt_counts[[sample_id2]] >= 3][['gene_id']]
     gene_list_com <- intersect(gene_list_1, gene_list_2)
     
-    # output correlation plot and data
     dt_one_cor <- dt_fpkm_log[gene_list_com, on = .(gene_id)][, c('gene_id', sample_id1, sample_id2), with = F]
-    fwrite(dt_one_cor, file = paste(result_dir, "/performance_assessment/absolute_exp_correlation.txt", sep = ""), sep = "\t")
     return(dt_one_cor)
   }
   
   # output abs median cor group scatter plot
   dt_abs_scatter <- output_abs_rep_res(dt_abs_cor, dt_fpkm_log, dt_counts, dt_meta, result_dir)
+  colnames(dt_abs_scatter) <- c('gene_id', dt_meta[colnames(dt_abs_scatter)[2:3], on = .(library)][['group']])
+  # output correlation data
+  fwrite(dt_abs_scatter, file = paste(result_dir, "/performance_assessment/absolute_exp_correlation.txt", sep = ""), sep = "\t")
   xlab_abs_cor <- dt_meta[colnames(dt_abs_scatter)[2], on = .(library)][['group']]
   ylab_abs_cor <- dt_meta[colnames(dt_abs_scatter)[3], on = .(library)][['group']]
   colnames(dt_abs_scatter) <- c('gene_id', 'replicate1', 'replicate2')
