@@ -52,10 +52,12 @@ get_one_group <- function(dt_fpkm_log, dt_counts, dt_meta, result_dir) {
   # output abs median cor group scatter plot
   dt_abs_scatter <- output_abs_rep_res(dt_abs_cor, dt_fpkm_log, dt_counts, dt_meta, result_dir)
   colnames(dt_abs_scatter) <- c('gene_id', dt_meta[colnames(dt_abs_scatter)[2:3], on = .(library)][['group']])
+  
   # output correlation data
   fwrite(dt_abs_scatter, file = paste(result_dir, "/performance_assessment/absolute_exp_correlation.txt", sep = ""), sep = "\t")
-  xlab_abs_cor <- dt_meta[colnames(dt_abs_scatter)[2], on = .(library)][['group']]
-  ylab_abs_cor <- dt_meta[colnames(dt_abs_scatter)[3], on = .(library)][['group']]
+  xlab_abs_cor <- colnames(dt_abs_scatter)[2]
+  ylab_abs_cor <- colnames(dt_abs_scatter)[3]
+  
   colnames(dt_abs_scatter) <- c('gene_id', 'replicate1', 'replicate2')
   gene_num <- dt_abs_cor_median[['gene_num']]
   cor_vlaue_pt <- round(cor(dt_abs_scatter$replicate1, dt_abs_scatter$replicate2), digits = 3)
