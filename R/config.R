@@ -190,7 +190,7 @@ make_score_figure <- function(result_dir, dt_hq_score_scale) {
   pdf(paste(result_dir, "/performance_assessment/performance_score.pdf", sep = ""), 4, 4)
   pt <- ggplot(dt_pscore, aes(x = quality_score, y = type, fill = quality_score)) +
     geom_tile(color = "white", show.legend = FALSE) +
-    scale_fill_manual(values = colorRampPalette(brewer.pal(9, "RdYlGn"))(30)) +
+    scale_fill_manual(values = colorRampPalette(brewer.pal(9, "RdYlGn"))(21)) +
     annotate(geom = "curve", x = test_score,
              y = 2.5, xend = test_score, curvature = 0,
              yend = 1.5, arrow = arrow(angle = 45, length = unit(9, "mm"), type = "closed"), color = "grey") +
