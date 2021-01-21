@@ -82,6 +82,7 @@ class MultiqcModule(BaseMultiqcModule):
                 self.general_stats_data[k]['reads_aligned_intronic'])
             intergenic_mean.append(
                 self.general_stats_data[k]['reads_aligned_intergenic'])
+
         self.general_stats_data['Batch average value'] = {
             'general_error_rate':
             sum(error_rate_mean) / len(error_rate_mean),
@@ -134,7 +135,7 @@ class MultiqcModule(BaseMultiqcModule):
             r"overlapping exon\s*=\s*([\d,]+)",
         }
         for f in self.find_log_files(
-                'rnaseq_post_alignment_qc/rnaseq/rnaseq_results'):
+                'rnaseq_post_alignment_qc/rnaseq_qc/rnaseq_qc_results'):
             d = dict()
 
             # Get the sample name
@@ -224,7 +225,7 @@ class MultiqcModule(BaseMultiqcModule):
             r"overlapping exon\s*=\s*([\d,]+)",
         }
         for f in self.find_log_files(
-                'rnaseq_post_alignment_qc/rnaseq/rnaseq_results'):
+                'rnaseq_post_alignment_qc/rnaseq_qc/rnaseq_qc_results'):
             d = dict()
 
             # Get the sample name
@@ -274,7 +275,8 @@ class MultiqcModule(BaseMultiqcModule):
         #### Coverage profile
         self.qualimap_rnaseq_cov_hist = dict()
         for f in self.find_log_files(
-                'rnaseq_post_alignment_qc/rnaseq/coverage', filehandles=True):
+                'rnaseq_post_alignment_qc/rnaseq_qc/coverage',
+                filehandles=True):
             s_name = self.get_s_name(f)
             d = dict()
             for l in f['f']:

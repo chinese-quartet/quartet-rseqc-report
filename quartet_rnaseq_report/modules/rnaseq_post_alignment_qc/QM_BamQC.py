@@ -20,7 +20,7 @@ def parse_reports(self):
     # General stats - genome_results.txt
     self.qualimap_bamqc_genome_results = dict()
     for f in self.find_log_files(
-            'rnaseq_post_alignment_qc/bamqc/genome_results'):
+            'rnaseq_post_alignment_qc/bam_qc/genome_results'):
         parse_genome_results(self, f)
     self.qualimap_bamqc_genome_results = self.ignore_samples(
         self.qualimap_bamqc_genome_results)
@@ -29,7 +29,7 @@ def parse_reports(self):
 
     # Coverage - coverage_histogram.txt
     self.qualimap_bamqc_coverage_hist = dict()
-    for f in self.find_log_files('rnaseq_post_alignment_qc/bamqc/coverage',
+    for f in self.find_log_files('rnaseq_post_alignment_qc/bam_qc/coverage',
                                  filehandles=True):
         parse_coverage(self, f)
     self.qualimap_bamqc_coverage_hist = self.ignore_samples(
@@ -37,7 +37,7 @@ def parse_reports(self):
 
     # Insert size - insert_size_histogram.txt
     self.qualimap_bamqc_insert_size_hist = dict()
-    for f in self.find_log_files('rnaseq_post_alignment_qc/bamqc/insert_size',
+    for f in self.find_log_files('rnaseq_post_alignment_qc/bam_qc/insert_size',
                                  filehandles=True):
         parse_insert_size(self, f)
     self.qualimap_bamqc_insert_size_hist = self.ignore_samples(
@@ -47,7 +47,7 @@ def parse_reports(self):
     self.qualimap_bamqc_gc_content_dist = dict()
     self.qualimap_bamqc_gc_by_species = dict(
     )  # {'HUMAN': data_dict, 'MOUSE': data_dict}
-    for f in self.find_log_files('rnaseq_post_alignment_qc/bamqc/gc_dist',
+    for f in self.find_log_files('rnaseq_post_alignment_qc/bam_qc/gc_dist',
                                  filehandles=True):
         parse_gc_dist(self, f)
     self.qualimap_bamqc_gc_by_species = self.ignore_samples(

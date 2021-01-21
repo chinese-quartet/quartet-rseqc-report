@@ -28,7 +28,6 @@ setup(
             'rnaseq_performance_assessment = quartet_rnaseq_report.modules.rnaseq_performance_assessment:MultiqcModule',
             'rnaseq_raw_qc = quartet_rnaseq_report.modules.rnaseq_raw_qc:MultiqcModule',
             'rnaseq_post_alignment_qc = quartet_rnaseq_report.modules.rnaseq_post_alignment_qc:MultiqcModule',
-            'rnaseq_quantification_qc = quartet_rnaseq_report.modules.rnaseq_quantification_qc:MultiqcModule',
             'rnaseq_supplementary = quartet_rnaseq_report.modules.rnaseq_supplementary:MultiqcModule'
             # 'rnaseq_qc = quartet_rnaseq_report.modules.rnaseq_qc:MultiqcModule'
         ],

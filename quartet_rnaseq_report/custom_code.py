@@ -29,8 +29,8 @@ def quartet_rnaseq_report_execution_start():
     """
 
     # Halt execution if we've disabled the plugin
-    if config.kwargs.get('disable_plugin', True):
-        return None
+    # if config.kwargs.get('disable_plugin', True):
+    #    return None
 
     log.info("Running Example MultiQC Plugin v{}".format(
         config.quartet_rnaseq_report_version))
@@ -50,69 +50,59 @@ def quartet_rnaseq_report_execution_start():
             })
 
     ### Module-rnaseq_performance_assessment
-    if 'rnaseq_performance_assessment/performance_score' not in config.sp:
+    if 'rnaseq_performance_assessment/quality_score' not in config.sp:
         config.update_dict(
             config.sp, {
-                'rnaseq_performance_assessment/performance_score': {
-                    'fn_re': '^performance_score.txt$'
+                'rnaseq_performance_assessment/quality_score': {
+                    'fn_re': '^quality_score.txt$'
                 }
             })
 
-    if 'rnaseq_performance_assessment/deg_performance_summary' not in config.sp:
+    if 'rnaseq_performance_assessment/performance_of_absolute_exp' not in config.sp:
         config.update_dict(
             config.sp, {
-                'rnaseq_performance_assessment/deg_performance_summary': {
-                    'fn_re': '^deg_performance_summary.txt$'
+                'rnaseq_performance_assessment/performance_of_absolute_exp': {
+                    'fn_re': '^performance_of_absolute_exp.txt$'
                 }
             })
 
-    if 'rnaseq_performance_assessment/ref_degs_performance_compared' not in config.sp:
+    if 'rnaseq_performance_assessment/performance_of_relative_exp' not in config.sp:
         config.update_dict(
             config.sp, {
-                'rnaseq_performance_assessment/ref_degs_performance_compared':
-                {
-                    'fn_re': '^ref_degs_performance_compared.txt$'
+                'rnaseq_performance_assessment/performance_of_relative_exp': {
+                    'fn_re': '^performance_of_relative_exp.txt$'
                 }
             })
 
-    if 'rnaseq_performance_assessment/rel_performance_summary' not in config.sp:
+    if 'rnaseq_performance_assessment/pca_with_snr' not in config.sp:
         config.update_dict(
             config.sp, {
-                'rnaseq_performance_assessment/rel_performance_summary': {
-                    'fn_re': '^rel_performance_summary.txt$'
+                'rnaseq_performance_assessment/pca_with_snr': {
+                    'fn_re': '^pca_with_snr.txt$'
                 }
             })
 
-    if 'rnaseq_performance_assessment/ref_rel_exp_per_compared' not in config.sp:
+    if 'rnaseq_performance_assessment/relative_exp_correlation' not in config.sp:
         config.update_dict(
             config.sp, {
-                'rnaseq_performance_assessment/ref_rel_exp_per_compared': {
-                    'fn_re': '^ref_rel_exp_per_compared.txt$'
+                'rnaseq_performance_assessment/relative_exp_correlation': {
+                    'fn_re': '^relative_exp_correlation.txt$'
                 }
             })
 
-    if 'rnaseq_performance_assessment/studydesign_performance_summary' not in config.sp:
+    if 'rnaseq_performance_assessment/absolute_exp_correlation' not in config.sp:
         config.update_dict(
             config.sp, {
-                'rnaseq_performance_assessment/studydesign_performance_summary':
-                {
-                    'fn_re': '^studydesign_performance_summary.txt$'
+                'rnaseq_performance_assessment/absolute_exp_correlation': {
+                    'fn_re': '^absolute_exp_correlation.txt$'
                 }
             })
 
-    if 'rnaseq_performance_assessment/studydesign_snr' not in config.sp:
+    if 'rnaseq_performance_assessment/qc_metrics_summary' not in config.sp:
         config.update_dict(
             config.sp, {
-                'rnaseq_performance_assessment/studydesign_snr': {
-                    'fn_re': '^studydesign_snr.txt$'
-                }
-            })
-
-    if 'rnaseq_performance_assessment/d5_correlation' not in config.sp:
-        config.update_dict(
-            config.sp, {
-                'rnaseq_performance_assessment/d5_correlation': {
-                    'fn_re': '^d5_correlation.txt$'
+                'rnaseq_performance_assessment/qc_metrics_summary': {
+                    'fn_re': '^qc_metrics_summary.txt$'
                 }
             })
     ### Module-rnaseq_raw_qc
@@ -134,101 +124,51 @@ def quartet_rnaseq_report_execution_start():
                 'fn': '*_screen.txt'
             }})
     ### Module-post_alignment_qc_modules
-    if 'rnaseq_post_alignment_qc/bamqc/genome_results' not in config.sp:
+    if 'rnaseq_post_alignment_qc/bam_qc/genome_results' not in config.sp:
         config.update_dict(
             config.sp, {
-                'rnaseq_post_alignment_qc/bamqc/genome_results': {
+                'rnaseq_post_alignment_qc/bam_qc/genome_results': {
                     'fn': 'genome_results.txt'
                 }
             })
 
-    if 'rnaseq_post_alignment_qc/bamqc/coverage' not in config.sp:
+    if 'rnaseq_post_alignment_qc/bam_qc/coverage' not in config.sp:
         config.update_dict(
             config.sp, {
-                'rnaseq_post_alignment_qc/bamqc/coverage': {
+                'rnaseq_post_alignment_qc/bam_qc/coverage': {
                     'fn': 'coverage_histogram.txt'
                 }
             })
 
-    if 'rnaseq_post_alignment_qc/bamqc/insert_size' not in config.sp:
+    if 'rnaseq_post_alignment_qc/bam_qc/insert_size' not in config.sp:
         config.update_dict(
             config.sp, {
-                'rnaseq_post_alignment_qc/bamqc/insert_size': {
+                'rnaseq_post_alignment_qc/bam_qc/insert_size': {
                     'fn': 'insert_size_histogram.txt'
                 }
             })
 
-    if 'rnaseq_post_alignment_qc/bamqc/gc_dist' not in config.sp:
+    if 'rnaseq_post_alignment_qc/bam_qc/gc_dist' not in config.sp:
         config.update_dict(
             config.sp, {
-                'rnaseq_post_alignment_qc/bamqc/gc_dist': {
+                'rnaseq_post_alignment_qc/bam_qc/gc_dist': {
                     'fn': 'mapped_reads_gc-content_distribution.txt'
                 }
             })
 
-    if 'rnaseq_post_alignment_qc/rnaseq/rnaseq_results' not in config.sp:
+    if 'rnaseq_post_alignment_qc/rnaseq_qc/rnaseq_qc_results' not in config.sp:
         config.update_dict(
             config.sp, {
-                'rnaseq_post_alignment_qc/rnaseq/rnaseq_results': {
+                'rnaseq_post_alignment_qc/rnaseq_qc/rnaseq_qc_results': {
                     'fn': 'rnaseq_qc_results.txt'
                 }
             })
 
-    if 'rnaseq_post_alignment_qc/rnaseq/coverage' not in config.sp:
+    if 'rnaseq_post_alignment_qc/rnaseq_qc/coverage' not in config.sp:
         config.update_dict(
             config.sp, {
-                'rnaseq_post_alignment_qc/rnaseq/coverage': {
+                'rnaseq_post_alignment_qc/rnaseq_qc/coverage': {
                     'fn': 'coverage_profile_along_genes_*'
-                }
-            })
-
-    ### Module-rnaseq_quantification_qc
-    if 'rnaseq_quantification_qc/ref_one_group_performance_summary' not in config.sp:
-        config.update_dict(
-            config.sp, {
-                'rnaseq_quantification_qc/ref_one_group_performance_summary': {
-                    'fn_re': '^ref_one_group_performance_summary.txt$'
-                }
-            })
-
-    if 'rnaseq_quantification_qc/ref_detected_gene_performance_compared' not in config.sp:
-        config.update_dict(
-            config.sp, {
-                'rnaseq_quantification_qc/ref_detected_gene_performance_compared':
-                {
-                    'fn_re': '^ref_detected_gene_performance_compared.txt$'
-                }
-            })
-
-    if 'rnaseq_quantification_qc/ref_two_group_performance_summary' not in config.sp:
-        config.update_dict(
-            config.sp, {
-                'rnaseq_quantification_qc/ref_two_group_performance_summary': {
-                    'fn_re': '^ref_two_group_performance_summary.txt$'
-                }
-            })
-
-    if 'rnaseq_quantification_qc/detected_gene_num' not in config.sp:
-        config.update_dict(
-            config.sp, {
-                'rnaseq_quantification_qc/detected_gene_num': {
-                    'fn_re': '^detected_gene_num.txt$'
-                }
-            })
-
-    if 'rnaseq_quantification_qc/sd_one_group_performance_summary' not in config.sp:
-        config.update_dict(
-            config.sp, {
-                'rnaseq_quantification_qc/sd_one_group_performance_summary': {
-                    'fn_re': '^sd_one_group_performance_summary.txt$'
-                }
-            })
-
-    if 'rnaseq_quantification_qc/sd_cv_mean_ratio' not in config.sp:
-        config.update_dict(
-            config.sp, {
-                'rnaseq_quantification_qc/sd_cv_mean_ratio': {
-                    'fn_re': '^sd_one_group_cv.txt$'
                 }
             })
 
@@ -248,8 +188,7 @@ def quartet_rnaseq_report_execution_start():
 
     config.module_order = [
         'rnaseq_data_generation_information', 'rnaseq_performance_assessment',
-        'rnaseq_raw_qc', 'rnaseq_post_alignment_qc',
-        'rnaseq_quantification_qc', 'rnaseq_supplementary'
+        'rnaseq_raw_qc', 'rnaseq_post_alignment_qc', 'rnaseq_supplementary'
     ]
     config.exclude_modules = ['fastqc', 'fastq_screen', 'qualimap']
 

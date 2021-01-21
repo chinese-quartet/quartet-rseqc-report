@@ -1,0 +1,397 @@
+[2021-01-21 11:47:57,499] multiqc                                            [DEBUG  ]  No MultiQC config found: /Users/stead/miniconda3/envs/multiqc/lib/python3.6/site-packages/multiqc_config.yaml
+[2021-01-21 11:47:57,500] multiqc                                            [DEBUG  ]  No MultiQC config found: /Users/stead/.multiqc_config.yaml
+[2021-01-21 11:47:57,500] multiqc                                            [DEBUG  ]  No MultiQC config found: multiqc_config.yaml
+[2021-01-21 11:47:57,500] multiqc                                            [DEBUG  ]  Command used: /Users/stead/miniconda3/envs/multiqc/bin/multiqc ./
+[2021-01-21 11:48:01,188] multiqc                                            [DEBUG  ]  Latest MultiQC version is v1.9
+[2021-01-21 11:48:01,188] multiqc                                            [INFO   ]  Running Example MultiQC Plugin v0.1.1
+[2021-01-21 11:48:01,189] multiqc                                            [INFO   ]  This is MultiQC v1.9
+[2021-01-21 11:48:01,189] multiqc                                            [DEBUG  ]  Command     : /Users/stead/miniconda3/envs/multiqc/bin/multiqc ./
+[2021-01-21 11:48:01,189] multiqc                                            [DEBUG  ]  Working dir : /Users/stead/JS_data/source_tree/project_code/plan_publish/chinese_quartet/report/MultiReport
+[2021-01-21 11:48:01,190] multiqc                                            [INFO   ]  Template    : default
+[2021-01-21 11:48:01,190] multiqc                                            [DEBUG  ]  Running Python 3.6.2 |Continuum Analytics, Inc.| (default, Jul 20 2017, 13:14:59)  [GCC 4.2.1 Compatible Apple LLVM 6.0 (clang-600.0.57)]
+[2021-01-21 11:48:01,190] multiqc                                            [INFO   ]  Searching   : /Users/stead/JS_data/source_tree/project_code/plan_publish/chinese_quartet/report/MultiReport
+[2021-01-21 11:48:01,191] multiqc                                            [INFO   ]  Excluding modules 'fastqc', 'fastq_screen', 'qualimap'
+[2021-01-21 11:48:01,191] multiqc                                            [DEBUG  ]  Analysing modules: adapterRemoval, afterqc, bamtools, bbmap, bcftools, bcl2fastq, biobambam2, biobloomtools, biscuit, bismark, bowtie1, bowtie2, busco, clipandmerge, clusterflow, conpair, custom_content, cutadapt, damageprofiler, dedup, deeptools, disambiguate, dragen, fastp, featureCounts, fgbio, flash, flexbar, gatk, goleft_indexcov, happy, hicexplorer, hicpro, hicup, hisat2, homer, htseq, interop, ivar, jellyfish, kaiju, kallisto, kat, kraken, leehom, longranger, macs2, malt, methylQA, minionqc, mirtop, mirtrace, mosdepth, mtnucratio, multivcfanalyzer, peddy, phantompeakqualtools, picard, preseq, prokka, pycoqc, qorts, quast, rna_seqc, rockhopper, rsem, rseqc, salmon, samblaster, samtools, sargasso, seqyclean, sexdeterrmine, sickle, skewer, slamdunk, snpeff, snpsplit, somalier, sortmerna, stacks, star, supernova, theta2, tophat, trimmomatic, varscan2, vcftools, verifybamid, rnaseq_data_generation_information, rnaseq_performance_assessment, rnaseq_raw_qc, rnaseq_post_alignment_qc, rnaseq_supplementary
+[2021-01-21 11:48:01,191] multiqc                                            [DEBUG  ]  Using temporary directory for creating report: /var/folders/xb/0qd_rsj103n5y_lxv1cs9s700000gn/T/tmp0qd954sf
+[2021-01-21 11:48:01,200] multiqc                                            [DEBUG  ]  Ignored 11 search patterns as didn't match running modules.
+[2021-01-21 11:48:01,201] multiqc                                            [DEBUG  ]  Ignoring directory as matched fn_ignore_dirs: ./multiqc_data
+[2021-01-21 11:48:01,228] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: multiqc_report.html
+[2021-01-21 11:48:01,228] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: .DS_Store
+[2021-01-21 11:48:01,301] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: setup.py
+[2021-01-21 11:48:01,380] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: custom_code.py
+[2021-01-21 11:48:01,382] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: custom_code.py
+[2021-01-21 11:48:01,434] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: custom_code.cpython-36.pyc
+[2021-01-21 11:48:01,466] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: foot.html
+[2021-01-21 11:48:01,466] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: toolbox.html
+[2021-01-21 11:48:01,467] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: general_stats.html
+[2021-01-21 11:48:01,467] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: base.html
+[2021-01-21 11:48:01,478] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: includes.html
+[2021-01-21 11:48:01,478] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: head.html
+[2021-01-21 11:48:01,478] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: footer.html
+[2021-01-21 11:48:01,478] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: header.html
+[2021-01-21 11:48:01,489] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: content.html
+[2021-01-21 11:48:01,507] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: bootstrap.min.css
+[2021-01-21 11:48:01,510] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: bootstrap.min.css
+[2021-01-21 11:48:01,524] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: jquery.toast.css
+[2021-01-21 11:48:01,526] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: jquery.toast.css
+[2021-01-21 11:48:01,534] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: default_multiqc.css
+[2021-01-21 11:48:01,536] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: default_multiqc.css
+[2021-01-21 11:48:01,586] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: multiqc_toolbox.js
+[2021-01-21 11:48:01,588] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: multiqc_toolbox.js
+[2021-01-21 11:48:01,624] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: multiqc_tables.js
+[2021-01-21 11:48:01,626] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: multiqc_tables.js
+[2021-01-21 11:48:01,644] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: multiqc_plotting.js
+[2021-01-21 11:48:01,646] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: multiqc_plotting.js
+[2021-01-21 11:48:01,706] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: FileSaver.min.js
+[2021-01-21 11:48:01,714] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: highcharts.exporting.js
+[2021-01-21 11:48:01,716] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: highcharts.exporting.js
+[2021-01-21 11:48:01,726] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: highcharts.export-csv.js
+[2021-01-21 11:48:01,727] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: highcharts.export-csv.js
+[2021-01-21 11:48:01,736] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: highcharts.heatmap.js
+[2021-01-21 11:48:01,738] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: highcharts.heatmap.js
+[2021-01-21 11:48:01,748] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: jquery-ui.min.js
+[2021-01-21 11:48:01,750] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: jquery-ui.min.js
+[2021-01-21 11:48:01,761] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: jquery.tablesorter.min.js
+[2021-01-21 11:48:01,762] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: jquery.tablesorter.min.js
+[2021-01-21 11:48:01,780] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: plotly-latest.min.js
+[2021-01-21 11:48:01,795] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: plotly-latest.min.js
+[2021-01-21 11:48:01,795] multiqc                                            [DEBUG  ]  File ignored by rockhopper because it exceeded search pattern filesize limit: plotly-latest.min.js
+[2021-01-21 11:48:01,795] multiqc                                            [DEBUG  ]  File ignored by rseqc/bam_stat because it exceeded search pattern filesize limit: plotly-latest.min.js
+[2021-01-21 11:48:01,795] multiqc                                            [DEBUG  ]  File ignored by rseqc/junction_annotation because it exceeded search pattern filesize limit: plotly-latest.min.js
+[2021-01-21 11:48:01,795] multiqc                                            [DEBUG  ]  File ignored by rseqc/read_distribution because it exceeded search pattern filesize limit: plotly-latest.min.js
+[2021-01-21 11:48:01,795] multiqc                                            [DEBUG  ]  File ignored by rseqc/infer_experiment because it exceeded search pattern filesize limit: plotly-latest.min.js
+[2021-01-21 11:48:01,799] multiqc                                            [DEBUG  ]  File ignored by stacks/sumstats because it exceeded search pattern filesize limit: plotly-latest.min.js
+[2021-01-21 11:48:01,971] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: clipboard.min.js
+[2021-01-21 11:48:01,973] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: clipboard.min.js
+[2021-01-21 11:48:01,982] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: highcharts.offline-exporting.js
+[2021-01-21 11:48:01,984] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: highcharts.offline-exporting.js
+[2021-01-21 11:48:01,993] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: highcharts.js
+[2021-01-21 11:48:01,995] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: highcharts.js
+[2021-01-21 11:48:02,027] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: bootstrap.min.js
+[2021-01-21 11:48:02,029] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: bootstrap.min.js
+[2021-01-21 11:48:02,041] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: jquery-3.1.1.min.js
+[2021-01-21 11:48:02,044] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: jquery-3.1.1.min.js
+[2021-01-21 11:48:02,057] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: jquery.toast.min.js
+[2021-01-21 11:48:02,059] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: jquery.toast.min.js
+[2021-01-21 11:48:02,068] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: lz-string.min.js
+[2021-01-21 11:48:02,070] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: lz-string.min.js
+[2021-01-21 11:48:02,091] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: glyphicons-halflings-regular.woff
+[2021-01-21 11:48:02,093] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: glyphicons-halflings-regular.woff
+[2021-01-21 11:48:02,100] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: glyphicons-halflings-regular.eot
+[2021-01-21 11:48:02,102] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: glyphicons-halflings-regular.eot
+[2021-01-21 11:48:02,110] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: glyphicons-halflings-regular.woff2
+[2021-01-21 11:48:02,111] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: glyphicons-halflings-regular.woff2
+[2021-01-21 11:48:02,119] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: glyphicons-halflings-regular.ttf
+[2021-01-21 11:48:02,121] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: glyphicons-halflings-regular.ttf
+[2021-01-21 11:48:02,149] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: plotly_patch.py
+[2021-01-21 11:48:02,151] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: plotly_patch.py
+[2021-01-21 11:48:02,177] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: data_generation_information.py
+[2021-01-21 11:48:02,198] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: data_generation_information.cpython-36.pyc
+[2021-01-21 11:48:02,210] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: .DS_Store
+[2021-01-21 11:48:02,224] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: post_alignment_qc.py
+[2021-01-21 11:48:02,226] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: post_alignment_qc.py
+[2021-01-21 11:48:02,240] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: QM_BamQC.py
+[2021-01-21 11:48:02,243] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: QM_BamQC.py
+[2021-01-21 11:48:02,268] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: QM_RNASeq.py
+[2021-01-21 11:48:02,270] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: QM_RNASeq.py
+[2021-01-21 11:48:02,284] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: QM_BamQC.cpython-36.pyc
+[2021-01-21 11:48:02,286] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: QM_BamQC.cpython-36.pyc
+[2021-01-21 11:48:02,294] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: post_alignment_qc.cpython-36.pyc
+[2021-01-21 11:48:02,297] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: post_alignment_qc.cpython-36.pyc
+[2021-01-21 11:48:02,305] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: QM_RNASeq.cpython-36.pyc
+[2021-01-21 11:48:02,306] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: QM_RNASeq.cpython-36.pyc
+[2021-01-21 11:48:02,320] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: .DS_Store
+[2021-01-21 11:48:02,324] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: pre_alignment_qc.py
+[2021-01-21 11:48:02,326] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: pre_alignment_qc.py
+[2021-01-21 11:48:02,405] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: performance_assessment.cpython-36.pyc
+[2021-01-21 11:48:02,407] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: performance_assessment.cpython-36.pyc
+[2021-01-21 11:48:02,424] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: pre_alignment_qc.cpython-36.pyc
+[2021-01-21 11:48:02,425] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: pre_alignment_qc.cpython-36.pyc
+[2021-01-21 11:48:02,445] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: multiqc_fastqc.css
+[2021-01-21 11:48:02,456] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: multiqc_fastqc.js
+[2021-01-21 11:48:02,458] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: multiqc_fastqc.js
+[2021-01-21 11:48:02,482] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: plotly_patch.cpython-36.pyc
+[2021-01-21 11:48:02,484] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: plotly_patch.cpython-36.pyc
+[2021-01-21 11:48:02,528] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: supplementary.py
+[2021-01-21 11:48:02,530] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: supplementary.py
+[2021-01-21 11:48:02,551] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: supplementary.cpython-36.pyc
+[2021-01-21 11:48:02,553] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: supplementary.cpython-36.pyc
+[2021-01-21 11:48:02,570] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: performance_assessment.py
+[2021-01-21 11:48:02,573] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: performance_assessment.py
+[2021-01-21 11:48:02,608] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: performance_assessment.cpython-36.pyc
+[2021-01-21 11:48:02,610] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: performance_assessment.cpython-36.pyc
+[2021-01-21 11:48:02,667] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: index
+[2021-01-21 11:48:02,669] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: index
+[2021-01-21 11:48:02,745] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: a950e489c7f6164514c6e6fa0d30f03086b6ca
+[2021-01-21 11:48:02,747] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: a950e489c7f6164514c6e6fa0d30f03086b6ca
+[2021-01-21 11:48:02,799] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: b0c371d41c6b9895b96e0e877cb9700f70ab3f
+[2021-01-21 11:48:02,800] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: b0c371d41c6b9895b96e0e877cb9700f70ab3f
+[2021-01-21 11:48:02,810] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 4367923b373df6d6dc4bcab27f4af4714e8ed7
+[2021-01-21 11:48:02,868] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: cd2fccaed9442f1460191d6670ca5e8e08520c
+[2021-01-21 11:48:02,869] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: cd2fccaed9442f1460191d6670ca5e8e08520c
+[2021-01-21 11:48:02,878] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 56f6c430368b20010bf2de0a89290cbdd44aad
+[2021-01-21 11:48:02,880] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 56f6c430368b20010bf2de0a89290cbdd44aad
+[2021-01-21 11:48:02,898] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 612858f802245ddcbf59788a0db942224bab35
+[2021-01-21 11:48:02,900] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 612858f802245ddcbf59788a0db942224bab35
+[2021-01-21 11:48:02,966] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 2f772b7cc8340dfc8f8e41927e3d308ed0fcd2
+[2021-01-21 11:48:02,974] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: a0d7bd5d5105ae9c704622837a2490bd2239a1
+[2021-01-21 11:48:02,975] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: a0d7bd5d5105ae9c704622837a2490bd2239a1
+[2021-01-21 11:48:03,040] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 4937dd305e2ecec8b2f85cdcf4851c44ff02da
+[2021-01-21 11:48:03,048] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: fb5490a2ed10b2c69a4a567a4fd2e4f706d841
+[2021-01-21 11:48:03,050] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: fb5490a2ed10b2c69a4a567a4fd2e4f706d841
+[2021-01-21 11:48:03,114] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 544c88d69b9975b9bb94e002b7d3bba6d7ccc8
+[2021-01-21 11:48:03,142] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: f50d6560f85d1ac8e4b1dafac509b36f7672fc
+[2021-01-21 11:48:03,143] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: f50d6560f85d1ac8e4b1dafac509b36f7672fc
+[2021-01-21 11:48:03,188] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 266f3592876e1255c1e6779b0dee5f413f7c17
+[2021-01-21 11:48:03,189] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 266f3592876e1255c1e6779b0dee5f413f7c17
+[2021-01-21 11:48:03,224] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 50eb8af5b414a8fa665e1432f6aaf6fa916079
+[2021-01-21 11:48:03,226] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 50eb8af5b414a8fa665e1432f6aaf6fa916079
+[2021-01-21 11:48:03,255] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: a2896e97e22ef5a4ddf74a00e08c01eee7967a
+[2021-01-21 11:48:03,257] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: a2896e97e22ef5a4ddf74a00e08c01eee7967a
+[2021-01-21 11:48:03,276] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: a95608d676dfec2bc53a42389a21b9632b84e0
+[2021-01-21 11:48:03,278] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: a95608d676dfec2bc53a42389a21b9632b84e0
+[2021-01-21 11:48:03,328] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 9e9dcbf4df9bc5e1f5755e5be36e76a8286837
+[2021-01-21 11:48:03,330] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 9e9dcbf4df9bc5e1f5755e5be36e76a8286837
+[2021-01-21 11:48:03,378] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: f89a927138e6c2ecdf7b29b673fbd71e268200
+[2021-01-21 11:48:03,417] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 17e5d28eb309dccaea7dcd422b8126a2b2d1c0
+[2021-01-21 11:48:03,418] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 17e5d28eb309dccaea7dcd422b8126a2b2d1c0
+[2021-01-21 11:48:03,436] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 1e114b10febad790f33a27f9ad1099fd45569a
+[2021-01-21 11:48:03,437] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 1e114b10febad790f33a27f9ad1099fd45569a
+[2021-01-21 11:48:03,483] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 339eb03f59f33042acbe86122c107b80f47be5
+[2021-01-21 11:48:03,485] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 339eb03f59f33042acbe86122c107b80f47be5
+[2021-01-21 11:48:03,512] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: c16f99aa6c9f422e81f2a1273f59955d106626
+[2021-01-21 11:48:03,514] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: c16f99aa6c9f422e81f2a1273f59955d106626
+[2021-01-21 11:48:03,694] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 8498019f2f446f220a91f8058c0bab1678b4de
+[2021-01-21 11:48:03,742] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 4e51768093fed3f390252ec69a66821d7859a7
+[2021-01-21 11:48:03,750] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 4675b88eaba0016aea1ae16d7a7047ab9eeb35
+[2021-01-21 11:48:03,752] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 4675b88eaba0016aea1ae16d7a7047ab9eeb35
+[2021-01-21 11:48:03,847] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 0c81c548f537718c381a49bd0fccf6f07b4d84
+[2021-01-21 11:48:03,855] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 5be4c0fbe230e81d95718a18829e965a2d14b2
+[2021-01-21 11:48:03,857] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 5be4c0fbe230e81d95718a18829e965a2d14b2
+[2021-01-21 11:48:03,913] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: dece21049e6d3054bf5185d3bffd048b5eafce
+[2021-01-21 11:48:04,037] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: cf170451a330c1ecb2234fad56a8af628fc257
+[2021-01-21 11:48:04,039] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: cf170451a330c1ecb2234fad56a8af628fc257
+[2021-01-21 11:48:04,076] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 64fa5275497b1da2c55846db85fb2697199d99
+[2021-01-21 11:48:04,077] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 64fa5275497b1da2c55846db85fb2697199d99
+[2021-01-21 11:48:04,113] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 194ba1317653210367464546de62d9f5d5d80e
+[2021-01-21 11:48:04,115] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 194ba1317653210367464546de62d9f5d5d80e
+[2021-01-21 11:48:04,115] multiqc                                            [DEBUG  ]  File ignored by rockhopper because it exceeded search pattern filesize limit: 194ba1317653210367464546de62d9f5d5d80e
+[2021-01-21 11:48:04,115] multiqc                                            [DEBUG  ]  File ignored by rseqc/bam_stat because it exceeded search pattern filesize limit: 194ba1317653210367464546de62d9f5d5d80e
+[2021-01-21 11:48:04,115] multiqc                                            [DEBUG  ]  File ignored by rseqc/junction_annotation because it exceeded search pattern filesize limit: 194ba1317653210367464546de62d9f5d5d80e
+[2021-01-21 11:48:04,115] multiqc                                            [DEBUG  ]  File ignored by rseqc/read_distribution because it exceeded search pattern filesize limit: 194ba1317653210367464546de62d9f5d5d80e
+[2021-01-21 11:48:04,115] multiqc                                            [DEBUG  ]  File ignored by rseqc/infer_experiment because it exceeded search pattern filesize limit: 194ba1317653210367464546de62d9f5d5d80e
+[2021-01-21 11:48:04,115] multiqc                                            [DEBUG  ]  File ignored by stacks/sumstats because it exceeded search pattern filesize limit: 194ba1317653210367464546de62d9f5d5d80e
+[2021-01-21 11:48:04,149] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 10ac0c03b7549590787e9347fcbfdcc01e1bc7
+[2021-01-21 11:48:04,151] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 10ac0c03b7549590787e9347fcbfdcc01e1bc7
+[2021-01-21 11:48:04,179] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 0f2762050735723af54faeff45a7da3e66ce0e
+[2021-01-21 11:48:04,181] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 0f2762050735723af54faeff45a7da3e66ce0e
+[2021-01-21 11:48:04,216] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 00b0ea1f309f6c4bb17b86d5623a1ec5375d55
+[2021-01-21 11:48:04,218] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 00b0ea1f309f6c4bb17b86d5623a1ec5375d55
+[2021-01-21 11:48:04,256] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 5b1eb02d22f61103b21d673ed22b50cb765ad6
+[2021-01-21 11:48:04,258] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 5b1eb02d22f61103b21d673ed22b50cb765ad6
+[2021-01-21 11:48:04,266] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 30b30555ab5df975db7d0874657bc31e24f664
+[2021-01-21 11:48:04,268] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 30b30555ab5df975db7d0874657bc31e24f664
+[2021-01-21 11:48:04,278] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 7a942e13d51e891fba1a0383d9a1fcacc7ac06
+[2021-01-21 11:48:04,325] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: b2d7c66b6113a48b45ab51e5e74c2a9707e26e
+[2021-01-21 11:48:04,362] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 539b54c3751a6d9adb44c8e3a45ba5a73b77f0
+[2021-01-21 11:48:04,364] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 539b54c3751a6d9adb44c8e3a45ba5a73b77f0
+[2021-01-21 11:48:04,415] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: ff4308aab2d37e4865b69658f2b67bf1251e25
+[2021-01-21 11:48:04,417] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: ff4308aab2d37e4865b69658f2b67bf1251e25
+[2021-01-21 11:48:04,426] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: c85302ce171e309f14c8272b8452610593e8e5
+[2021-01-21 11:48:04,428] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: c85302ce171e309f14c8272b8452610593e8e5
+[2021-01-21 11:48:04,540] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 1ab4927a22207551aa65d71d17c9126e3b6bfe
+[2021-01-21 11:48:04,542] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 1ab4927a22207551aa65d71d17c9126e3b6bfe
+[2021-01-21 11:48:04,595] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 1504c25a234f6c913ce8b701c52c0e2833dbdc
+[2021-01-21 11:48:04,597] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 1504c25a234f6c913ce8b701c52c0e2833dbdc
+[2021-01-21 11:48:04,605] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 5e76a736537a0652ceb3d2b02fe6e28e290214
+[2021-01-21 11:48:04,607] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 5e76a736537a0652ceb3d2b02fe6e28e290214
+[2021-01-21 11:48:04,625] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 3a4953fff68df523aa7656497ee339d6026d64
+[2021-01-21 11:48:04,627] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 3a4953fff68df523aa7656497ee339d6026d64
+[2021-01-21 11:48:04,643] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 63f6bcc8e256460ae701f762ac46f34da3e2b4
+[2021-01-21 11:48:04,645] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 63f6bcc8e256460ae701f762ac46f34da3e2b4
+[2021-01-21 11:48:04,671] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 446db7524b8a5e2d470a1b2a015550592bb8d5
+[2021-01-21 11:48:04,673] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 446db7524b8a5e2d470a1b2a015550592bb8d5
+[2021-01-21 11:48:04,745] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: e7274610ddfa54055df761b4ea2d8905d09278
+[2021-01-21 11:48:04,746] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: e7274610ddfa54055df761b4ea2d8905d09278
+[2021-01-21 11:48:04,819] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 3d33224b2312965bad2319d7aec6f9111154a9
+[2021-01-21 11:48:04,827] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 78b54ffa28b9fb71e92a31d9a37b7a85e243e7
+[2021-01-21 11:48:04,828] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 78b54ffa28b9fb71e92a31d9a37b7a85e243e7
+[2021-01-21 11:48:04,855] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 54eb966c30a13d3a9cfd804eb0f7cab51ef0ec
+[2021-01-21 11:48:04,857] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 54eb966c30a13d3a9cfd804eb0f7cab51ef0ec
+[2021-01-21 11:48:04,874] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 41f59a9d637e2b34b052d26bd4929a4384afff
+[2021-01-21 11:48:04,875] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 41f59a9d637e2b34b052d26bd4929a4384afff
+[2021-01-21 11:48:04,930] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 862645902c7056cb33a0c8a6c3e1bcbe921f18
+[2021-01-21 11:48:04,966] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 1971f360cb72a12773a0c35f76cc0081a24382
+[2021-01-21 11:48:04,992] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 183c711967b49479cd696ffe88e6d584ff2af3
+[2021-01-21 11:48:04,993] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 183c711967b49479cd696ffe88e6d584ff2af3
+[2021-01-21 11:48:05,067] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 0442e54f8fe519251b79a72c40af1d59820c91
+[2021-01-21 11:48:05,069] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 0442e54f8fe519251b79a72c40af1d59820c91
+[2021-01-21 11:48:05,095] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 9443af8fee0b8ea31bb5f222c8fa49f634c051
+[2021-01-21 11:48:05,097] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 9443af8fee0b8ea31bb5f222c8fa49f634c051
+[2021-01-21 11:48:05,107] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: cefb723f5a65eb1613e84b8664a28cc5f1d87f
+[2021-01-21 11:48:05,133] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: c91cf48f0d1f8f2f25c1c97b4b06c9ee4b6191
+[2021-01-21 11:48:05,135] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: c91cf48f0d1f8f2f25c1c97b4b06c9ee4b6191
+[2021-01-21 11:48:05,180] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 7c5d5d7972d4c802a8fecbc0f0535bc2bfe360
+[2021-01-21 11:48:05,206] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 8d1ef3e57049094e7904a2b42706dbf8d8ba29
+[2021-01-21 11:48:05,208] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 8d1ef3e57049094e7904a2b42706dbf8d8ba29
+[2021-01-21 11:48:05,226] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: e75a47fcf514eb04c9f89faa9301d9d1073174
+[2021-01-21 11:48:05,243] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 6d1e66a786c00ac3e2592ac25ac18b3edd66be
+[2021-01-21 11:48:05,245] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 6d1e66a786c00ac3e2592ac25ac18b3edd66be
+[2021-01-21 11:48:05,345] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 13fc609ab6f21774de0cb7e01360095584f65b
+[2021-01-21 11:48:05,347] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 13fc609ab6f21774de0cb7e01360095584f65b
+[2021-01-21 11:48:05,374] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: 08bf626e94d1a93564e381b83af6b01789bf3f
+[2021-01-21 11:48:05,376] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: 08bf626e94d1a93564e381b83af6b01789bf3f
+[2021-01-21 11:48:05,393] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: c17520d403fad8f9340b7d86ea960afbdf0f4c
+[2021-01-21 11:48:05,395] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: c17520d403fad8f9340b7d86ea960afbdf0f4c
+[2021-01-21 11:48:05,413] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: HEAD
+[2021-01-21 11:48:05,423] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: master
+[2021-01-21 11:48:05,433] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: master
+[2021-01-21 11:48:05,451] multiqc                                            [DEBUG  ]  File ignored by hicexplorer because it exceeded search pattern filesize limit: pre-rebase.sample
+[2021-01-21 11:48:05,453] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: pre-rebase.sample
+[2021-01-21 11:48:05,488] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: fsmonitor-watchman.sample
+[2021-01-21 11:48:05,560] multiqc                                            [DEBUG  ]  File ignored by longranger/invocation because it exceeded search pattern filesize limit: update.sample
+[2021-01-21 11:48:05,843] multiqc.plots.bargraph                             [DEBUG  ]  Using matplotlib version 3.2.2
+[2021-01-21 11:48:05,843] multiqc.plots.linegraph                            [DEBUG  ]  Using matplotlib version 3.2.2
+[2021-01-21 11:48:05,890] multiqc                                            [DEBUG  ]  No samples found: adapterRemoval
+[2021-01-21 11:48:05,894] multiqc                                            [DEBUG  ]  No samples found: afterqc
+[2021-01-21 11:48:05,898] multiqc                                            [DEBUG  ]  No samples found: bamtools
+[2021-01-21 11:48:05,905] multiqc                                            [DEBUG  ]  No samples found: bbmap
+[2021-01-21 11:48:05,909] multiqc                                            [DEBUG  ]  No samples found: bcftools
+[2021-01-21 11:48:05,913] multiqc                                            [DEBUG  ]  No samples found: bcl2fastq
+[2021-01-21 11:48:05,923] multiqc                                            [DEBUG  ]  No samples found: biobambam2
+[2021-01-21 11:48:05,926] multiqc                                            [DEBUG  ]  No samples found: biobloomtools
+[2021-01-21 11:48:05,930] multiqc                                            [DEBUG  ]  No samples found: biscuit
+[2021-01-21 11:48:05,935] multiqc                                            [DEBUG  ]  No samples found: bismark
+[2021-01-21 11:48:05,939] multiqc                                            [DEBUG  ]  No samples found: bowtie1
+[2021-01-21 11:48:05,943] multiqc                                            [DEBUG  ]  No samples found: bowtie2
+[2021-01-21 11:48:05,946] multiqc                                            [DEBUG  ]  No samples found: busco
+[2021-01-21 11:48:05,949] multiqc                                            [DEBUG  ]  No samples found: clipandmerge
+[2021-01-21 11:48:05,953] multiqc                                            [DEBUG  ]  No samples found: clusterflow
+[2021-01-21 11:48:05,957] multiqc                                            [DEBUG  ]  No samples found: conpair
+[2021-01-21 11:48:05,961] multiqc                                            [DEBUG  ]  No samples found: custom_content
+[2021-01-21 11:48:05,966] multiqc                                            [DEBUG  ]  No samples found: cutadapt
+[2021-01-21 11:48:05,970] multiqc                                            [DEBUG  ]  No samples found: damageprofiler
+[2021-01-21 11:48:05,973] multiqc                                            [DEBUG  ]  No samples found: dedup
+[2021-01-21 11:48:05,980] multiqc                                            [DEBUG  ]  No samples found: deeptools
+[2021-01-21 11:48:05,983] multiqc                                            [DEBUG  ]  No samples found: disambiguate
+[2021-01-21 11:48:05,991] multiqc                                            [DEBUG  ]  No samples found: dragen
+[2021-01-21 11:48:05,995] multiqc                                            [DEBUG  ]  No samples found: fastp
+[2021-01-21 11:48:05,998] multiqc                                            [DEBUG  ]  No samples found: featureCounts
+[2021-01-21 11:48:06,002] multiqc                                            [DEBUG  ]  No samples found: fgbio
+[2021-01-21 11:48:06,006] multiqc                                            [DEBUG  ]  No samples found: flash
+[2021-01-21 11:48:06,010] multiqc                                            [DEBUG  ]  No samples found: flexbar
+[2021-01-21 11:48:06,015] multiqc                                            [DEBUG  ]  No samples found: gatk
+[2021-01-21 11:48:06,019] multiqc                                            [DEBUG  ]  No samples found: goleft_indexcov
+[2021-01-21 11:48:06,022] multiqc                                            [DEBUG  ]  No samples found: happy
+[2021-01-21 11:48:06,026] multiqc                                            [DEBUG  ]  No samples found: hicexplorer
+[2021-01-21 11:48:06,030] multiqc                                            [DEBUG  ]  No samples found: hicpro
+[2021-01-21 11:48:06,033] multiqc                                            [DEBUG  ]  No samples found: hicup
+[2021-01-21 11:48:06,037] multiqc                                            [DEBUG  ]  No samples found: hisat2
+[2021-01-21 11:48:06,041] multiqc                                            [DEBUG  ]  No samples found: homer
+[2021-01-21 11:48:06,045] multiqc                                            [DEBUG  ]  No samples found: htseq
+[2021-01-21 11:48:06,049] multiqc                                            [DEBUG  ]  No samples found: interop
+[2021-01-21 11:48:06,053] multiqc                                            [DEBUG  ]  No samples found: ivar
+[2021-01-21 11:48:06,056] multiqc                                            [DEBUG  ]  No samples found: jellyfish
+[2021-01-21 11:48:06,060] multiqc                                            [DEBUG  ]  No samples found: kaiju
+[2021-01-21 11:48:06,063] multiqc                                            [DEBUG  ]  No samples found: kallisto
+[2021-01-21 11:48:06,067] multiqc                                            [DEBUG  ]  No samples found: kat
+[2021-01-21 11:48:06,070] multiqc                                            [DEBUG  ]  No samples found: kraken
+[2021-01-21 11:48:06,074] multiqc                                            [DEBUG  ]  No samples found: leehom
+[2021-01-21 11:48:06,078] multiqc                                            [DEBUG  ]  No samples found: longranger
+[2021-01-21 11:48:06,081] multiqc                                            [DEBUG  ]  No samples found: macs2
+[2021-01-21 11:48:06,085] multiqc                                            [DEBUG  ]  No samples found: malt
+[2021-01-21 11:48:06,089] multiqc                                            [DEBUG  ]  No samples found: methylQA
+[2021-01-21 11:48:06,093] multiqc                                            [DEBUG  ]  No samples found: minionqc
+[2021-01-21 11:48:06,096] multiqc                                            [DEBUG  ]  No samples found: mirtop
+[2021-01-21 11:48:06,100] multiqc                                            [DEBUG  ]  No samples found: mirtrace
+[2021-01-21 11:48:06,103] multiqc                                            [DEBUG  ]  No samples found: mosdepth
+[2021-01-21 11:48:06,107] multiqc                                            [DEBUG  ]  No samples found: mtnucratio
+[2021-01-21 11:48:06,111] multiqc                                            [DEBUG  ]  No samples found: multivcfanalyzer
+[2021-01-21 11:48:06,114] multiqc                                            [DEBUG  ]  No samples found: peddy
+[2021-01-21 11:48:06,118] multiqc                                            [DEBUG  ]  No samples found: phantompeakqualtools
+[2021-01-21 11:48:06,121] multiqc                                            [DEBUG  ]  No samples found: picard
+[2021-01-21 11:48:06,125] multiqc                                            [DEBUG  ]  No samples found: preseq
+[2021-01-21 11:48:06,128] multiqc                                            [DEBUG  ]  No samples found: prokka
+[2021-01-21 11:48:06,133] multiqc                                            [DEBUG  ]  No samples found: pycoqc
+[2021-01-21 11:48:06,136] multiqc                                            [DEBUG  ]  No samples found: qorts
+[2021-01-21 11:48:06,140] multiqc                                            [DEBUG  ]  No samples found: quast
+[2021-01-21 11:48:06,144] multiqc                                            [DEBUG  ]  No samples found: rna_seqc
+[2021-01-21 11:48:06,147] multiqc                                            [DEBUG  ]  No samples found: rockhopper
+[2021-01-21 11:48:06,151] multiqc                                            [DEBUG  ]  No samples found: rsem
+[2021-01-21 11:48:06,157] multiqc                                            [DEBUG  ]  No samples found: rseqc
+[2021-01-21 11:48:06,161] multiqc                                            [DEBUG  ]  No samples found: salmon
+[2021-01-21 11:48:06,165] multiqc                                            [DEBUG  ]  No samples found: samblaster
+[2021-01-21 11:48:06,169] multiqc                                            [DEBUG  ]  No samples found: samtools
+[2021-01-21 11:48:06,173] multiqc                                            [DEBUG  ]  No samples found: sargasso
+[2021-01-21 11:48:06,177] multiqc                                            [DEBUG  ]  No samples found: seqyclean
+[2021-01-21 11:48:06,181] multiqc                                            [DEBUG  ]  No samples found: sexdeterrmine
+[2021-01-21 11:48:06,184] multiqc                                            [DEBUG  ]  No samples found: sickle
+[2021-01-21 11:48:06,187] multiqc                                            [DEBUG  ]  No samples found: skewer
+[2021-01-21 11:48:06,191] multiqc                                            [DEBUG  ]  No samples found: slamdunk
+[2021-01-21 11:48:06,195] multiqc                                            [DEBUG  ]  No samples found: snpeff
+[2021-01-21 11:48:06,199] multiqc                                            [DEBUG  ]  No samples found: snpsplit
+[2021-01-21 11:48:06,202] multiqc                                            [DEBUG  ]  No samples found: somalier
+[2021-01-21 11:48:06,206] multiqc                                            [DEBUG  ]  No samples found: sortmerna
+[2021-01-21 11:48:06,209] multiqc                                            [DEBUG  ]  No samples found: stacks
+[2021-01-21 11:48:06,214] multiqc                                            [DEBUG  ]  No samples found: star
+[2021-01-21 11:48:06,218] multiqc                                            [DEBUG  ]  No samples found: supernova
+[2021-01-21 11:48:06,221] multiqc                                            [DEBUG  ]  No samples found: theta2
+[2021-01-21 11:48:06,225] multiqc                                            [DEBUG  ]  No samples found: tophat
+[2021-01-21 11:48:06,228] multiqc                                            [DEBUG  ]  No samples found: trimmomatic
+[2021-01-21 11:48:06,232] multiqc                                            [DEBUG  ]  No samples found: varscan2
+[2021-01-21 11:48:06,237] multiqc                                            [DEBUG  ]  No samples found: vcftools
+[2021-01-21 11:48:06,240] multiqc                                            [DEBUG  ]  No samples found: verifybamid
+[2021-01-21 11:48:07,613] multiqc                                            [ERROR  ]  Oops! The 'rnaseq_data_generation_information' MultiQC module broke... 
+  Please copy the following traceback and report it at https://github.com/ewels/MultiQC/issues 
+  If possible, please include a log file that triggers the error - the last file found was:
+    None
+============================================================
+Module rnaseq_data_generation_information raised an exception: Traceback (most recent call last):
+  File "/Users/stead/miniconda3/envs/multiqc/lib/python3.6/site-packages/multiqc/multiqc.py", line 569, in run
+    output = mod()
+  File "/Users/stead/JS_data/source_tree/project_code/plan_publish/chinese_quartet/report/MultiReport/quartet_rnaseq_report/modules/rnaseq_data_generation_information/data_generation_information.py", line 37, in __init__
+    if len(information) != 0:
+UnboundLocalError: local variable 'information' referenced before assignment
+============================================================
+[2021-01-21 11:48:07,618] multiqc                                            [DEBUG  ]  No file matched: quality_score - quality_score.txt
+[2021-01-21 11:48:07,618] multiqc                                            [DEBUG  ]  No file matched: deg_performance_summary_table - deg_performance_summary.txt
+[2021-01-21 11:48:07,618] multiqc                                            [DEBUG  ]  No file matched: performance_of_absolute - performance_of_absolute_exp.txt
+[2021-01-21 11:48:07,618] multiqc                                            [DEBUG  ]  No file matched: performance_of_relative - performance_of_relative_exp.txt
+[2021-01-21 11:48:07,618] multiqc                                            [DEBUG  ]  No file matched: snr_pca_point - studydesign_snr.txt
+[2021-01-21 11:48:07,618] multiqc                                            [DEBUG  ]  No file matched: rel_cor_plot - relative_exp_correlation.txt
+[2021-01-21 11:48:07,618] multiqc                                            [ERROR  ]  Oops! The 'rnaseq_performance_assessment' MultiQC module broke... 
+  Please copy the following traceback and report it at https://github.com/ewels/MultiQC/issues 
+  If possible, please include a log file that triggers the error - the last file found was:
+    None
+============================================================
+Module rnaseq_performance_assessment raised an exception: Traceback (most recent call last):
+  File "/Users/stead/miniconda3/envs/multiqc/lib/python3.6/site-packages/multiqc/multiqc.py", line 569, in run
+    output = mod()
+  File "/Users/stead/JS_data/source_tree/project_code/plan_publish/chinese_quartet/report/MultiReport/quartet_rnaseq_report/modules/rnaseq_performance_assessment/performance_assessment.py", line 138, in __init__
+    if len(abs_exp_data) != 0:
+UnboundLocalError: local variable 'abs_exp_data' referenced before assignment
+============================================================
+[2021-01-21 11:48:07,623] multiqc                                            [DEBUG  ]  No samples found: rnaseq_raw_qc
+[2021-01-21 11:48:07,637] multiqc                                            [ERROR  ]  Oops! The 'rnaseq_post_alignment_qc' MultiQC module broke... 
+  Please copy the following traceback and report it at https://github.com/ewels/MultiQC/issues 
+  If possible, please include a log file that triggers the error - the last file found was:
+    None
+============================================================
+Module rnaseq_post_alignment_qc raised an exception: Traceback (most recent call last):
+  File "/Users/stead/miniconda3/envs/multiqc/lib/python3.6/site-packages/multiqc/multiqc.py", line 569, in run
+    output = mod()
+  File "/Users/stead/JS_data/source_tree/project_code/plan_publish/chinese_quartet/report/MultiReport/quartet_rnaseq_report/modules/rnaseq_post_alignment_qc/post_alignment_qc.py", line 50, in __init__
+    self.add_qm_rnaseq_stats_data()
+  File "/Users/stead/JS_data/source_tree/project_code/plan_publish/chinese_quartet/report/MultiReport/quartet_rnaseq_report/modules/rnaseq_post_alignment_qc/post_alignment_qc.py", line 146, in add_qm_rnaseq_stats_data
+    'rnaseq_post_alignment_qc/rnaseq/rnaseq_results'):
+  File "/Users/stead/miniconda3/envs/multiqc/lib/python3.6/site-packages/multiqc/modules/base_module.py", line 97, in find_log_files
+    for f in report.files[sp_key]:
+KeyError: 'rnaseq_post_alignment_qc/rnaseq/rnaseq_results'
+============================================================
+[2021-01-21 11:48:07,643] multiqc                                            [INFO   ]  Compressing plot data
+[2021-01-21 11:48:07,644] multiqc                                            [WARNING]  Previous MultiQC output found! Adjusting filenames..
+[2021-01-21 11:48:07,644] multiqc                                            [WARNING]  Use -f or --force to overwrite existing reports instead
+[2021-01-21 11:48:07,644] multiqc                                            [INFO   ]  Report      : multiqc_report_1.html
+[2021-01-21 11:48:07,644] multiqc                                            [INFO   ]  Data        : multiqc_data_1
+[2021-01-21 11:48:07,644] multiqc                                            [DEBUG  ]  Moving data file from '/var/folders/xb/0qd_rsj103n5y_lxv1cs9s700000gn/T/tmp0qd954sf/multiqc_data' to '/Users/stead/JS_data/source_tree/project_code/plan_publish/chinese_quartet/report/MultiReport/multiqc_data_1'
+[2021-01-21 11:48:07,801] multiqc                                            [INFO   ]  MultiQC complete
