@@ -1,5 +1,3 @@
 #
-*quartet_rnaseq_report.egg-info/
-*quartet_rnaseq_report.egg-info/**/
-*quartet_rnaseq_report.egg-info/**/*
-test/*
+**/quartet_rnaseq_report.egg-info/**/*
+**/test/**/*
