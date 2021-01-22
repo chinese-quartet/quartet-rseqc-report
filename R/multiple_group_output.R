@@ -10,13 +10,17 @@
 #' @importFrom ggplot2 guide_legend
 #' @importFrom ggplot2 geom_boxplot
 #' @importFrom ggplot2 coord_flip
+#' @importFrom ggplot2 scale_fill_viridis_c
 #' @importFrom cowplot ggdraw
 #' @importFrom cowplot insert_xaxis_grob
 #' @importFrom cowplot insert_yaxis_grob
+#' @importFrom cowplot plot_grid
 #' @importFrom ggthemes theme_few
 #' @importFrom ggplot2 theme_classic
 #' @importFrom dplyr bind_rows
 #' @importFrom scales rescale
+#' @importFrom data.table rbindlist
+#' @importFrom utils combn
 
 make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, result_dir, 
                                   abs_cor_median, pt_abs_median_cor) {
