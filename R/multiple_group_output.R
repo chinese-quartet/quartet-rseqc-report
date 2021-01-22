@@ -21,8 +21,8 @@
 #' @importFrom scales rescale
 #' @importFrom data.table rbindlist
 #' @importFrom data.table fwrite
+#' @importFrom data.table ":="
 #' @importFrom utils combn
-#' @importFrom data.table :=
 
 make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, result_dir, 
                                   abs_cor_median, pt_abs_median_cor) {
@@ -178,7 +178,7 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
       protocol = protocol
     ))
   }) %>%  rbindlist()
-  dt_cor_logfc_combine[, protocol:=dt_rel_protocol$protocol]
+  dt_cor_logfc_combine[, protocol := dt_rel_protocol$protocol]
   dt_cor_logfc_combine_h <- dt_cor_logfc_combine[DataQual != "LowQual"]
   
   ### relative performance -----------------------------------
