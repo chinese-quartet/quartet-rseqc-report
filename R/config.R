@@ -153,7 +153,7 @@ get_pca_list <- function(expr_mat_forsignoise, exp_design, dt_meta) {
   PC1_ratio = round(summary(pca_prcomp)$importance[2, 1] * 100, digits = 2)
   PC2_ratio = round(summary(pca_prcomp)$importance[2, 2] * 100, digits = 2)
   PC3_ratio = round(summary(pca_prcomp)$importance[2, 3] * 100, digits = 2)
-  SNR = round(calc_signoise_ratio(pca_prcomp, exp_design = exp_design), digits = 2)
+  SNR = round(calc_signoise_ratio(pca_prcomp, exp_design = exp_design), digits = 1)
   gene_num = dim(expr_mat_forsignoise)[1]
   pca_list = cbind(pcs_add_meta, PC1_ratio, PC2_ratio, PC3_ratio, SNR, gene_num)
   return(pca_list)

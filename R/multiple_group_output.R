@@ -171,7 +171,7 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   
   # combine new relative correlation value and logfc correlation value from reference to reference data
   dt_cor_logfc_new <- logfc_corr_with_ref[dt_rel_cor_mean, on = .(compare)]
-  dt_cor_logfc_combine <- rbind(refqc_202011_forplot, dt_cor_logfc_new)
+  dt_cor_logfc_combine <- data.table(rbind(refqc_202011_forplot, dt_cor_logfc_new))
   dt_rel_protocol <- lapply(as.character(dt_cor_logfc_combine$Batch), function(x){
     protocol = strsplit(x, '_')[[1]][1]
     return(list(
@@ -227,7 +227,7 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   rel_cor_median <- median(dt_rel_cor$cor_value)
   dt_snr_abs_rel_cor_new <- data.table(batch = 'QC_test', SNR = snr_value, LIR = abs_cor_median, 
                                        LRR2 = rel_cor_median, DataQual = 'Test')
-  dt_snr_abs_rel_cor_combine <- rbind(qcintra_forplot, dt_snr_abs_rel_cor_new)
+  dt_snr_abs_rel_cor_combine <- as.data.table(rbind(qcintra_forplot, dt_snr_abs_rel_cor_new))
   dt_abs_protocol <- lapply(as.character(dt_snr_abs_rel_cor_combine$batch), function(x){
     protocol = strsplit(x, '_')[[1]][1]
     return(list(
