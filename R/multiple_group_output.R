@@ -20,6 +20,7 @@
 #' @importFrom dplyr bind_rows
 #' @importFrom scales rescale
 #' @importFrom data.table rbindlist
+#' @importFrom data.table fwrite
 #' @importFrom utils combn
 
 make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, result_dir, 
