@@ -45,6 +45,7 @@ exp2qcdt <- function(exp_table_file, count_table_file, phenotype_file, result_di
     colnames(dt_fpkm) <- colnames(dt_counts)
   } 
   
+  # expression data type must be numeric
   change_cols <- colnames(dt_fpkm[, !'gene_id'])
   dt_fpkm[, (change_cols):= lapply(.SD, as.numeric), .SDcols = change_cols]
   dt_counts[, (change_cols):= lapply(.SD, as.numeric), .SDcols = change_cols]
