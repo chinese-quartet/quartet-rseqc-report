@@ -81,9 +81,11 @@ make_theme <- function() {
 #' Make scatter and box figure
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 scale_color_manual
+#' @importFrom ggplot2 aes_string
 #' @importFrom ggthemes theme_few
 #' @importFrom cowplot insert_xaxis_grob
 #' @export
+
 plot_scatter_box <- function(dt_sb, var_x, var_y, col_g, xlab, ylab, title_lab){
   colors_fill = c(P = "#2f5c85", R = "#7ba1c7", QC = "red")
   pmain <- ggplot(dt_sb, aes_string(x = var_x, y = var_y, color = col_g)) +
@@ -113,7 +115,9 @@ plot_scatter_box <- function(dt_sb, var_x, var_y, col_g, xlab, ylab, title_lab){
 #' S1-6 SNR
 #'
 #' @importFrom data.table setkey
+#' @importFrom stats predict
 #' @export
+#'
 calc_signoise_ratio <- function(pca_prcomp, exp_design) {
   
   pcs <- as.data.frame(predict(pca_prcomp))

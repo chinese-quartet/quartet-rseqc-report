@@ -24,6 +24,7 @@ make_directories <- function(workdir) {
 #' @importFrom reshape2 dcast
 #' @importFrom utils combn
 #' @export
+
 exp2qcdt <- function(exp_table_file, count_table_file, phenotype_file, result_dir) {
   ref_data_dir <- paste(system.file(package = "exp2qcdt"), "/data", sep = "")
   # Global variable
@@ -43,6 +44,10 @@ exp2qcdt <- function(exp_table_file, count_table_file, phenotype_file, result_di
   if(!all(colnames(dt_counts) == colnames(dt_fpkm))){
     colnames(dt_fpkm) <- colnames(dt_counts)
   } 
+  
+  change_cols <- colnames(dt_fpkm[, !'gene_id'])
+  dt_fpkm[, (change_cols):= lapply(.SD, as.numeric), .SDcols = change_cols]
+  dt_counts[, (change_cols):= lapply(.SD, as.numeric), .SDcols = change_cols]
   
   dt_fpkm_log <- data.table(apply(dt_fpkm[, !'gene_id'], 2, function(x)(log2(x + 0.01))))
   dt_fpkm_log[, gene_id := dt_fpkm$gene_id]
