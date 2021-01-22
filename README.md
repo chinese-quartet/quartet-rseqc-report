@@ -32,6 +32,8 @@ exp2qcdt("~/Downloads/exp2qcdt/test/fpkm_table.txt", "~/Downloads/exp2qcdt/test/
 | Quartet_RNA_BGI_BGI2000_PolyA_BGI_M8_2_20200618 | M8_2  | M8     |
 | Quartet_RNA_BGI_BGI2000_PolyA_BGI_M8_3_20200618 | M8_3  | M8     |
 
+fpkm 和 counts library ID 需要和 photype 要完全一致
+
 ## reference data
 
 1.refqc_202011_forplot.rds
