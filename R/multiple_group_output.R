@@ -22,6 +22,7 @@
 #' @importFrom data.table rbindlist
 #' @importFrom data.table fwrite
 #' @importFrom utils combn
+#' @importFrom data.table :=
 
 make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, result_dir, 
                                   abs_cor_median, pt_abs_median_cor) {
@@ -122,7 +123,7 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
     theme_few() + 
     theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5)) +
     labs(title = 'Two Group: Relative Correlation',
-         subtitle = paste('Correlation = ', rel_cor_pt, ' N = (', dim(dt_rel_scatter)[1], ')'),
+         subtitle = paste('Correlation = ', rel_cor_pt, ' (N = ', dim(dt_rel_scatter)[1], ')'),
          x = xlab_rel_cor,
          y = ylab_rel_cor)
   

@@ -74,7 +74,7 @@ get_one_group <- function(dt_fpkm_log, dt_counts, dt_meta, result_dir) {
     theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5)) +
     scale_fill_viridis_c(name = "density") +
     labs(title = 'One Group: Absolute Correlation',
-         subtitle = paste('Correlation = ', cor_vlaue_pt, ' N = (', gene_num, ')'),
+         subtitle = paste('Correlation = ', cor_vlaue_pt, ' (N = ', gene_num, ')'),
          x = xlab_abs_cor,
          y = ylab_abs_cor)
   

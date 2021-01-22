@@ -23,6 +23,7 @@ make_directories <- function(workdir) {
 #' @importFrom reshape2 melt
 #' @importFrom reshape2 dcast
 #' @importFrom utils combn
+#' @importFrom data.table :=
 #' @export
 
 exp2qcdt <- function(exp_table_file, count_table_file, phenotype_file, result_dir) {
