@@ -21,6 +21,10 @@ class MultiqcModule(BaseMultiqcModule):
     files to reflect this and help with code organisation. """
     def __init__(self):
 
+        # Halt execution if we've disabled the plugin
+        if config.kwargs.get('disable_plugin', True):
+            return None
+
         # Initialise the parent object
         super(MultiqcModule, self).__init__(
             name='Post Alignment QC',

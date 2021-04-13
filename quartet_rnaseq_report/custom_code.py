@@ -29,8 +29,8 @@ def quartet_rnaseq_report_execution_start():
     """
 
     # Halt execution if we've disabled the plugin
-    # if config.kwargs.get('disable_plugin', True):
-    #    return None
+    if config.kwargs.get('disable_plugin', True):
+        return None
 
     log.info("Running Example MultiQC Plugin v{}".format(
         config.quartet_rnaseq_report_version))
