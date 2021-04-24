@@ -42,8 +42,12 @@ exp2qcdt <- function(exp_table_file, count_table_file, phenotype_file, result_di
     colnames(dt_fpkm)[1] = 'gene_id'
   }
   
+  if(colnames(dt_counts)[1] != 'gene_id'){
+    colnames(dt_counts)[1] = 'gene_id'
+  }
+  
   if(!all(colnames(dt_counts) == colnames(dt_fpkm))){
-    colnames(dt_fpkm) <- colnames(dt_counts)
+    stop('Please ensure that sample id of fpkm, counts and meta files in the same order')
   } 
   
   # expression data type must be numeric
