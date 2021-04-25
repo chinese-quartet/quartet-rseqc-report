@@ -38,11 +38,8 @@ exp2qcdt <- function(exp_table_file, count_table_file, phenotype_file, result_di
   # Prepare directories
   make_directories(result_dir)
 
-  if(colnames(dt_fpkm)[1] != 'gene_id'){
+  if(colnames(dt_fpkm)[1] != 'gene_id'|colnames(dt_counts)[1] != 'gene_id'){
     colnames(dt_fpkm)[1] = 'gene_id'
-  }
-  
-  if(colnames(dt_counts)[1] != 'gene_id'){
     colnames(dt_counts)[1] = 'gene_id'
   }
   
