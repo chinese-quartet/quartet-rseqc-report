@@ -73,7 +73,7 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   
   ### relative replicates correlation of median group ----------------------
   # scatter plot and data between two replicates of one sample
-  dt_rel_cor_median <- dt_rel_cor[with(dt_rel_cor, which.min(abs(dt_rel_cor$cor_value - median(dt_rel_cor$cor_value))))]
+  dt_rel_cor_median <- dt_rel_cor[with(dt_rel_cor, which.min(abs(dt_rel_cor$cor_value - median(dt_rel_cor$cor_value, na.rm=T))))]
   output_rel_rep_res <- function(dt_rel_cor, dt_fpkm_log, dt_counts, dt_meta){
     compare_name_median <- dt_rel_cor_median[['comapre_id']]
     # obtain median relative correlation group
