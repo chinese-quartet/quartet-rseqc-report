@@ -12,5 +12,5 @@ rnaseq_raw_qc = quartet_rnaseq_report.modules.rnaseq_raw_qc:MultiqcModule
 rnaseq_supplementary = quartet_rnaseq_report.modules.rnaseq_supplementary:MultiqcModule
 
 [multiqc.templates.v1]
-default = quartet_rnaseq_report.templates.default
+quartet_rnaseq_report = quartet_rnaseq_report.templates.default
 

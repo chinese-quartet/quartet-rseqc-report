@@ -108,3 +108,5 @@ venv.bak/
 
 # Mac
 .DS_Store
+*.egg-info
+__pycache__

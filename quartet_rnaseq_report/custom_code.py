@@ -9,14 +9,13 @@ from __future__ import print_function
 from pkg_resources import get_distribution
 import logging
 
-from multiqc.utils import report, util_functions, config
+from multiqc.utils import config
 
 # Initialise the main MultiQC logger
 log = logging.getLogger('multiqc')
 
 # Save this plugin's version number (defined in setup.py) to the MultiQC config
-config.quartet_rnaseq_report_version = get_distribution(
-    "quartet_rnaseq_report").version
+config.quartet_rnaseq_report_version = get_distribution("quartet_rnaseq_report").version
 
 
 # Add default config options for the things that are used in MultiQC_NGI
@@ -40,16 +39,16 @@ def quartet_rnaseq_report_execution_start():
     #   so we check whether the value is already set. This is to avoid
     #   clobbering values that have been customised by users.
 
-    ### Module-rnaseq_data_generation_information
+    # Module-rnaseq_data_generation_information
     if 'rnaseq_data_generation_information/information' not in config.sp:
         config.update_dict(
             config.sp, {
                 'rnaseq_data_generation_information/information': {
-                    'fn_re': '^information.json$'
+                    'fn_re': '^general-info.json$'
                 }
             })
 
-    ### Module-rnaseq_performance_assessment
+    # Module-rnaseq_performance_assessment
     if 'rnaseq_performance_assessment/quality_score' not in config.sp:
         config.update_dict(
             config.sp, {
@@ -105,7 +104,7 @@ def quartet_rnaseq_report_execution_start():
                     'fn_re': '^qc_metrics_summary.txt$'
                 }
             })
-    ### Module-rnaseq_raw_qc
+    # Module-rnaseq_raw_qc
     if 'rnaseq_raw_qc/zip' not in config.sp:
         config.update_dict(config.sp,
                            {'rnaseq_raw_qc/zip': {
@@ -123,7 +122,7 @@ def quartet_rnaseq_report_execution_start():
             config.sp, {'rnaseq_raw_qc/fastq_screen': {
                 'fn': '*_screen.txt'
             }})
-    ### Module-post_alignment_qc_modules
+    # Module-post_alignment_qc_modules
     if 'rnaseq_post_alignment_qc/bam_qc/genome_results' not in config.sp:
         config.update_dict(
             config.sp, {

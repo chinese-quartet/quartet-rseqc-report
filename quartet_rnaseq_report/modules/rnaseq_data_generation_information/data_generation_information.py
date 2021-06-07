@@ -29,11 +29,11 @@ class MultiqcModule(BaseMultiqcModule):
             name='Data Generation Information',
             target='data_generation_information',
             anchor='data_generation_information',
-            href='https://github.com/clinico-omics/quartet-dnaseq-report',
-            info=
-            ' is an report module to show the basic information about the sequencing data.'
+            href='https://github.com/clinico-omics/quartet-rnaseq-report',
+            info=' is an report module to show the basic information about the sequencing data.'
         )
 
+        information = []
         # Find and load any input files for data_generation_information
         for f in self.find_log_files(
                 'rnaseq_data_generation_information/information'):
@@ -43,7 +43,7 @@ class MultiqcModule(BaseMultiqcModule):
             self.plot_information('data_generation_information', information)
         else:
             log.debug(
-                'No file matched: data_generation_information - data_generation_information.txt'
+                'No file matched: data_generation_information - general-info.json'
             )
 
     def plot_information(self,

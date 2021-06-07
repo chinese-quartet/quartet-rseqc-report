@@ -21,7 +21,7 @@ class MultiqcModule(BaseMultiqcModule):
             name='Supplementary',
             target='supplementary',
             anchor='supplementary',
-            href='https://github.com/clinico-omics/quartet-dnaseq-report',
+            href='https://github.com/clinico-omics/quartet-rnaseq-report',
             info=
             ' is a module to show the additional information about this quality assessment report.'
         )

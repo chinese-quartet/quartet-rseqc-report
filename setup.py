@@ -37,7 +37,7 @@ setup(
             'execution_start = quartet_rnaseq_report.custom_code:quartet_rnaseq_report_execution_start'
         ],
         'multiqc.templates.v1':
-        ['default = quartet_rnaseq_report.templates.default']
+        ['quartet_rnaseq_report = quartet_rnaseq_report.templates.default']
     },
     classifiers=[
         'Development Status :: 4 - Beta',
