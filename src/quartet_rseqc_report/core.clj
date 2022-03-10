@@ -1,14 +1,14 @@
-(ns quartet-protqc-report.core
+(ns quartet-rseqc-report.core
   (:require [tservice-core.tasks.http :as http-task]
-            [quartet-protqc-report.spec :as spec]
-            [quartet-protqc-report.task :as task]))
+            [quartet-rseqc-report.spec :as spec]
+            [quartet-rseqc-report.task :as task]))
 
 (def metadata
-  (http-task/make-routes "quartet-protqc-report" :ReportPlugin
+  (http-task/make-routes "quartet-rseqc-report" :ReportPlugin
                          {:method-type :post
-                          :endpoint "quartet-protqc-report"
+                          :endpoint "quartet-rseqc-report"
                           :summary "Generate the QC Report for Quartet Proteomics data."
-                          :body-schema spec/quartet-protqc-report-params-body
+                          :body-schema spec/quartet-rseqc-report-params-body
                           :response-schema any?
                           :handler task/post-handler}))
 

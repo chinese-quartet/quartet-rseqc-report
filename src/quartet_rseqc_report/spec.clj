@@ -1,4 +1,4 @@
-(ns quartet-protqc-report.spec
+(ns quartet-rseqc-report.spec
   (:require [clojure.spec.alpha :as s]
             [spec-tools.core :as st]))
 
@@ -34,7 +34,7 @@
     :swagger/default     ""
     :reason              "Not a valid description."}))
 
-(def quartet-protqc-report-params-body
+(def quartet-rseqc-report-params-body
   "A spec for the body parameters."
   (s/keys :req-un [::name ::data_file ::metadata_file]
           :opt-un [::description]))

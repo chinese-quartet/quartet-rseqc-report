@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# A wrapper for protqc r package
+# A wrapper for exp2qcdt r package
 #
 # Author: Jingcheng Yang
 # Email: yjcyxky@163.com
@@ -20,17 +20,21 @@ set -o pipefail
 
 show_help() {
 	cat <<EOF
-usage: $(echo $0) [-d <DATA_FILE>] [-m <META_FILE>] [-o <RESULT_DIR>]
-       -d DATA_FILE Proteomics profiled data.
+usage: $(echo $0) [-e <FPKM_FILE>] [-c <COUNT_FILE>][-m <META_FILE>] [-o <RESULT_DIR>]
+       -e FPKM_FILE Fpkm table file.
+       -c COUNT_FILE Count table file
        -m META_FILE Metadata file.
        -o RESULT_DIR A directory for result files.
 EOF
 }
 
-while getopts ":hd:m:o:" arg; do
+while getopts ":he:c:m:o:" arg; do
 	case "$arg" in
-	"d")
-		DATA_FILE="$OPTARG"
+	"e")
+		FPKM_FILE="$OPTARG"
+		;;
+	"c")
+		COUNT_FILE="$OPTARG"
 		;;
 	"m")
 		META_FILE="$OPTARG"
@@ -57,14 +61,24 @@ while getopts ":hd:m:o:" arg; do
 	esac
 done
 
-if [ -z "$DATA_FILE" ]; then
-	echo "-d argument is not specified."
+if [ -z "$FPKM_FILE" ]; then
+	echo "-e argument is not specified."
 	exit 1
-elif [ ! -f "$DATA_FILE" ]; then
-	echo "$DATA_FILE is not a valid file."
+elif [ ! -f "$FPKM_FILE" ]; then
+	echo "$FPKM_FILE is not a valid file."
 	exit 1
 else
-	DATA_FILE=$(realpath $DATA_FILE)
+	FPKM_FILE=$(realpath $FPKM_FILE)
+fi
+
+if [ -z "$COUNT_FILE" ]; then
+	echo "-c argument is not specified."
+	exit 1
+elif [ ! -f "$COUNT_FILE" ]; then
+	echo "$COUNT_FILE is not a valid file."
+	exit 1
+else
+	COUNT_FILE=$(realpath $COUNT_FILE)
 fi
 
 if [ -z "$META_FILE" ]; then
@@ -90,18 +104,15 @@ fi
 TEMP=$(mktemp)
 
 echo "Run script: $TEMP"
-
 cat <<EOF >"$TEMP"
 #!/usr/bin/env Rscript
 
 run <- function() {
 	# Print traceback message
 	on.exit(traceback())
-	library(ProtQC)
+	library(exp2qcdt)
 	print("Running...")
-	ProtQC::plot_pca("$DATA_FILE", "$META_FILE", "$RESULT_DIR")
-  ProtQC::plot_corr("$DATA_FILE", "$META_FILE", "$RESULT_DIR")
-  ProtQC::table_conclusion("$DATA_FILE", "$META_FILE", "$RESULT_DIR")
+	exp2qcdt("$FPKM_FILE", "$COUNT_FILE", "$META_FILE", "$RESULT_DIR")
 }
 
 run()

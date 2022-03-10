@@ -1,4 +1,4 @@
-# quartet-protqc-report
+# quartet-rseqc-report
 
 Visualizes Quality Control(QC) results for Quartet Project.
 
@@ -14,11 +14,11 @@ Visualizes Quality Control(QC) results for Quartet Project.
 
 ```
 # Clone the repo
-git clone https://github.com/chinese-quartet/quartet-protqc-report
+git clone https://github.com/chinese-quartet/quartet-rseqc-report
 
-cd quartet-protqc-report
+cd quartet-rseqc-report
 
-# Build the environment and compile the quartet-protqc-report
+# Build the environment and compile the quartet-rseqc-report
 make
 ```
 
@@ -26,7 +26,7 @@ make
 
 ```bash
 source .env/bin/activate
-java -jar target/uberjar/quartet-protqc-report-*-standalone.jar -h
+java -jar target/uberjar/quartet-rseqc-report-*-standalone.jar -h
 ```
 
 ## Plugin Mode
@@ -38,7 +38,7 @@ Please access [Quartet Service](https://github.com/chinese-quartet/quartet-servi
 ### Installation
 
 ```bash
-copm-cli install -n quartet-protqc-report -V v0.1.2 -d plugins
+copm-cli install -n quartet-rseqc-report -V v0.1.2 -d plugins
 ```
 
 ## Examples
@@ -47,7 +47,7 @@ copm-cli install -n quartet-protqc-report -V v0.1.2 -d plugins
 
 ## Contributions
 
-- [ProtQC](./protqc) developed by [Qiaochu Chen](https://github.com/QiaochuChen)
+- [RSeQC](./rseqc) developed by [Qiaochu Chen](https://github.com/QiaochuChen)
 - [MultiReport](./report) developed by [Yaqing Liu](https://github.com/lyaqing)
 
 ## License

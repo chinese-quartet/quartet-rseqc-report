@@ -1,17 +1,17 @@
-(ns quartet-protqc-report.cli
+(ns quartet-rseqc-report.cli
   (:gen-class)
-  (:require [quartet-protqc-report.task :refer [make-report!]]
+  (:require [quartet-rseqc-report.task :refer [make-report!]]
             [local-fs.core :refer [file? directory?]]
             [clojure.string :as clj-str]
             [clojure.tools.cli :refer [parse-opts]]
-            [quartet-protqc-report.version :refer [version]]))
+            [quartet-rseqc-report.version :refer [version]]))
 
 (def cli-options
-  [["-d" "--data PATH" "Data file"
-    :validate [#(file? %) "Must be a valid file."]]
+  [["-d" "--data PATH" "Data Directory"
+    :validate [#(directory? %) "Must be a valid directory"]]
    ["-m" "--metadata PATH" "Metadata file"
     :validate [#(file? %) "Must be a valid file."]]
-   ["-o" "--output PATH" "Data file"
+   ["-o" "--output PATH" "Result Directory"
     :validate [#(directory? %) "Must be a valid directory."]]
    ["-n" "--name NAME" "Report name"
     :default "report"]
@@ -21,9 +21,9 @@
    ["-h" "--help"]])
 
 (defn usage [options-summary]
-  (->> ["Protqc - Visualizes Quality Control(QC) results for Quartet Project."
+  (->> ["RSeQC - Visualizes Quality Control(QC) results for Quartet Project."
         ""
-        "Usage: protqc [options]"
+        "Usage: rseqc [options]"
         ""
         "Options:"
         options-summary
@@ -72,18 +72,18 @@
   (System/exit status))
 
 (defn -main
-  "Generate ProtQC report for quartet project."
+  "Generate RSeQC report for quartet project."
   [& args]
   (let [{:keys [options exit-message ok?]} (validate-args args)]
     (if exit-message
       (exit (if ok? 0 1) exit-message)
-      (make-report! {:data-file (:data options)
+      (make-report! {:datadir (:data options)
                      :metadata-file (:metadata options)
                      :dest-dir (:output options)
-                     :metadata {:name (:name options)
-                                :description (:description options)
-                                :plugin-name "quartet-protqc-report"
-                                :plutin-type "ReportPlugin"
-                                :plugin-version version}
+                     :parameters {:name (:name options)
+                                  :description (:description options)
+                                  :plugin-name "quartet-rseqc-report"
+                                  :plutin-type "ReportPlugin"
+                                  :plugin-version version}
                      :task-id nil}))
     (shutdown-agents)))

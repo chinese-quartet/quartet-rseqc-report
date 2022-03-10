@@ -46,18 +46,6 @@
       "Repository": "CRAN",
       "Hash": "08588806cba69f04797dab50627428ed"
     },
-    "ProtQC": {
-      "Package": "ProtQC",
-      "Version": "0.1.4",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "ProtQC",
-      "RemoteUsername": "chinese-quartet",
-      "RemoteRef": "v0.1.4",
-      "RemoteSha": "412e0040e713af756ee1c5381f352b2c04df96f5",
-      "Hash": "7251a9d21c0c5d39f251d4e1a488a203"
-    },
     "R6": {
       "Package": "R6",
       "Version": "2.5.1",
@@ -170,6 +158,13 @@
       "Repository": "CRAN",
       "Hash": "0f22be39ec1d141fd03683c06f3a6e67"
     },
+    "cowplot": {
+      "Package": "cowplot",
+      "Version": "1.1.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "b418e8423699d11c7f2087c2bfd07da2"
+    },
     "crayon": {
       "Package": "crayon",
       "Version": "1.4.1",
@@ -252,6 +247,18 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "ec8ca05cffcc70569eaaad8469d2a3a7"
+    },
+    "exp2qcdt": {
+      "Package": "exp2qcdt",
+      "Version": "0.2.4",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "exp2qcdt",
+      "RemoteUsername": "clinico-omics",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "e2e75426e193ad0dd918ed01817de6ef94624acc",
+      "Hash": "0efa00adb40481ceec08fc4585681237"
     },
     "fansi": {
       "Package": "fansi",
@@ -511,6 +518,13 @@
       "Repository": "CRAN",
       "Hash": "463642747f81879e6752485aefb831cf"
     },
+    "plyr": {
+      "Package": "plyr",
+      "Version": "1.8.6",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "ec0e5ab4e5f851f6ef32cd1d1984957f"
+    },
     "praise": {
       "Package": "praise",
       "Version": "1.0.0",
@@ -580,6 +594,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "9f10d9db5b50400c348920c5c603385e"
+    },
+    "reshape2": {
+      "Package": "reshape2",
+      "Version": "1.4.4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "bb5996d0bd962d214a11140d77589917"
     },
     "rlang": {
       "Package": "rlang",

@@ -1,1 +1,1 @@
-git+git://github.com/chinese-quartet/quartet-protqc-report.git#subdirectory=report
+git+git://github.com/chinese-quartet/quartet-rseqc-report.git#subdirectory=report
