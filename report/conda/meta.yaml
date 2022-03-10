@@ -1,0 +1,54 @@
+{% set name = "quartet-rnaseq-report" %}
+{% set version = "0.1.2" %}
+
+package:
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
+
+source:
+  url: "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz"
+  sha256: 5618432bb3a9f22611eebe9c897155c17221cf99ecce96b39bc1da1b1ffd04b2
+
+build:
+  number: 0
+  script: "{{ PYTHON }} -m pip install . -vv"
+
+requirements:
+  host:
+    - multiqc ==1.9
+    - pandas ==1.1.0
+    - pip
+    - plotly ==4.9.0
+    - python
+    - setuptools
+  run:
+    - multiqc ==1.9
+    - pandas ==1.1.0
+    - plotly ==4.9.0
+    - python
+    - setuptools
+
+test:
+  imports:
+    - quartet_rnaseq_report
+    - quartet_rnaseq_report.modules
+    - quartet_rnaseq_report.modules.rnaseq_data_generation_information
+    - quartet_rnaseq_report.modules.rnaseq_performance_assessment
+    - quartet_rnaseq_report.modules.rnaseq_post_alignment_qc
+    - quartet_rnaseq_report.modules.rnaseq_raw_qc
+    - quartet_rnaseq_report.modules.rnaseq_supplementary
+    - quartet_rnaseq_report.templates
+    - quartet_rnaseq_report.templates.default
+
+about:
+  home: "https://github.com/clinico-omics/quartet-rnaseq-report"
+  license: MIT
+  license_family: MIT
+  license_file: 
+  summary: "MultiReport for Quartet RNA-Seq Pipeline."
+  doc_url: 
+  dev_url: 
+
+extra:
+  recipe-maintainers:
+    - your-github-id-here
