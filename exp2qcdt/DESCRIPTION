@@ -1,0 +1,28 @@
+Package: exp2qcdt
+Type: Package
+Title: Convert expression table to qc datatable for quartet project
+Version: 0.2.4
+Date: 2021-06-05
+Author: Jun Shang, Jingcheng Yang
+Maintainer: Jun Shang <shangjunv@163.com>
+Description: More about what it does (maybe more than one line)
+License: GPL-2 | file LICENSE
+Depends:
+  R (>= 3.2)
+Imports: 
+  data.table,
+  cowplot,
+  magrittr,
+  ggplot2,
+  RColorBrewer,
+  ggthemes,
+  cowplot,
+  dplyr,
+  stats,
+  edgeR,
+  ggthemes,
+  limma,
+  magrittr,
+  reshape2
+RoxygenNote: 7.1.1
+Encoding: UTF-8
