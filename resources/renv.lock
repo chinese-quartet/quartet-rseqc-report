@@ -254,11 +254,12 @@
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
-      "RemoteRepo": "exp2qcdt",
-      "RemoteUsername": "clinico-omics",
+      "RemoteRepo": "quartet-rseqc-report",
+      "RemoteUsername": "chinese-quartet",
       "RemoteRef": "HEAD",
-      "RemoteSha": "e2e75426e193ad0dd918ed01817de6ef94624acc",
-      "Hash": "0efa00adb40481ceec08fc4585681237"
+      "RemoteSha": "0ffc9c39d355e505b0bacd9ee8c0386b7f3ff723",
+      "RemoteSubdir": "exp2qcdt",
+      "Hash": "b3d8afd740a2b04e5f00a1120d3a1ac3"
     },
     "fansi": {
       "Package": "fansi",
