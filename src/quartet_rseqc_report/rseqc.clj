@@ -132,7 +132,7 @@
 
 (defn decompression-tar
   [filepath]
-  (shell/with-sh-env {:PATH   (add-env-to-path "quartet-rnaseq-report")
+  (shell/with-sh-env {:PATH   (add-env-to-path "quartet-rseqc-report")
                       :LC_ALL "en_US.utf-8"
                       :LANG   "en_US.utf-8"}
     (let [command ["bash" "-c"

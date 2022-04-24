@@ -141,7 +141,7 @@
                                            (rseqc/multiqc result-dir dest-dir {:config config-path
                                                                                :template "quartet_rnaseq_report"
                                                                                :title "Quartet RNA report"
-                                                                               :env {:PATH (add-env-to-path "quartet-rnaseq-report")}}))]
+                                                                               :env {:PATH (add-env-to-path "quartet-rseqc-report")}}))]
                                         (fn [result] (= (:status result) "Success")))
             status (:status (last results))
             msg (apply str (map :msg results))
