@@ -1,9 +1,10 @@
 (ns quartet-rseqc-report.task
   (:require [quartet-rseqc-report.rseqc :as rseqc]
             [local-fs.core :as fs-lib]
-            [tservice-core.plugins.env :refer [get-workdir add-env-to-path create-task! update-task!]]
+            [tservice-core.plugins.env :refer [get-workdir make-remote-link add-env-to-path create-task! update-task!]]
             [tservice-core.plugins.util :as util]
             [clojure.data.json :as json]
+            [clojure.string :as clj-str]
             [clojure.tools.logging :as log]
             [tservice-core.tasks.async :refer [publish-event! make-events-init]]
             [quartet-rseqc-report.version :as v]))
@@ -32,18 +33,16 @@
   (update-process! task-id process))
 
 (defn post-handler
-  [{{:keys [name data_dir metadata_file description owner plugin-context]
-     :or {description (format "Quality control report for %s" name)}
-     :as payload} :body}]
-  (log/info (format "Create a report %s with %s" name payload))
-  (let [workdir (get-workdir)
-        uuid (fs-lib/basename workdir)
-        payload (merge {:description description} payload)
-        data-dir (rseqc/correct-filepath data_dir)
-        metadata-file (rseqc/correct-filepath metadata_file)
+  [{:keys [body owner plugin-context uuid workdir]
+    :as payload}]
+  (log/info (format "Create a report with %s" payload))
+  (let [{:keys [name filepath description metadata]
+         :or {description (format "Quality control report for %s" name)}} body
+        payload (merge {:description description} (:body payload))
+        data-dir (str (clj-str/replace (rseqc/correct-filepath filepath) #"/$" "") "/")
         log-path (fs-lib/join-paths workdir "log")
-        response {:report (format "%s/multiqc_report.html" workdir)
-                  :log log-path}
+        response {:report (make-remote-link (format "%s/multiqc_report.html" workdir))
+                  :log (make-remote-link log-path)}
         task-id (create-task! {:id             uuid
                                :name           name
                                :description    description
@@ -60,14 +59,14 @@
     (update-process! task-id 0)
     (publish-event! "quartet_rseqc_report"
                     {:data-dir data-dir
-                     :metadata-file metadata-file
+                     :metadata metadata
                      :dest-dir workdir
                      :task-id task-id
-                     :metadata {:name name
-                                :description description
-                                :plugin-name v/plugin-name
-                                :plutin-type "ReportPlugin"
-                                :plugin-version (:plugin-version plugin-context)}})
+                     :parameters {:name name
+                                  :description description
+                                  :plugin-name v/plugin-name
+                                  :plutin-type "ReportPlugin"
+                                  :plugin-version (:plugin-version plugin-context)}})
     response))
 
 (defn- filter-mkdir-copy
@@ -79,11 +78,23 @@
       (log/warn (format "Cannot find any files with pattern %s, please check your data." fmc-patterns))
       (rseqc/copy-files! files-keep files-keep-dir {:replace-existing true}))))
 
+(defn copy-files-to-dir
+  [data-dir dest-dir]
+  (filter-mkdir-copy (format "%s%s" data-dir "ballgown") [".*.txt"] dest-dir "ballgown")
+  (filter-mkdir-copy (format "%s%s" data-dir "count") [".*gene_count_matrix.csv"] dest-dir "count")
+  (filter-mkdir-copy (format "%s%s" data-dir "qualimapBAMqc") [".*tar.gz"] dest-dir "results/post_alignment_qc/bam_qc")
+  (filter-mkdir-copy (format "%s%s" data-dir "qualimapRNAseq") [".*tar.gz"] dest-dir "results/post_alignment_qc/rnaseq_qc")
+  (filter-mkdir-copy (format "%s%s" data-dir "fastqc") [".*.zip"] dest-dir "results/rawqc/fastqc")
+  (filter-mkdir-copy (format "%s%s" data-dir "fastqscreen") [".*.txt"] dest-dir "results/rawqc/fastq_screen"))
+
 (defn make-report!
   "Chaining Pipeline: filter-files -> copy-files -> merge_exp_file -> exp2qcdt -> multiqc."
-  [{:keys [datadir parameters metadata-file dest-dir task-id]}]
-  (log/info "Generate quartet rnaseq report: " datadir parameters metadata-file dest-dir)
-  (let [parameters-file (fs-lib/join-paths dest-dir
+  [{:keys [data-dir parameters metadata dest-dir task-id]}]
+  (log/info "Generate quartet rnaseq report: " data-dir parameters metadata dest-dir)
+  (let [metadata-file (fs-lib/join-paths dest-dir
+                                         "results"
+                                         "metadata.csv")
+        parameters-file (fs-lib/join-paths dest-dir
                                            "results"
                                            "general-info.json")
         ballgown-dir (fs-lib/join-paths dest-dir "ballgown")
@@ -92,20 +103,18 @@
         exp-count-filepath (fs-lib/join-paths dest-dir "count.csv")
         result-dir (fs-lib/join-paths dest-dir "results")
         log-path (fs-lib/join-paths dest-dir "log")
-        config-path (fs-lib/join-paths dest-dir "results", "quartet_rnaseq_report.yaml")]
+        config-path (fs-lib/join-paths dest-dir "results", "quartet_rnaseq_report.yaml")
+        subdirs (rseqc/list-dirs data-dir)]
     (try
       (fs-lib/create-directories! result-dir)
+      (doseq [subdir subdirs]
+        (copy-files-to-dir subdir dest-dir))
       (log/info "Merge gene experiment files from ballgown directory to a experiment table: " ballgown-dir exp-fpkm-filepath)
       (log/info "Merge gene experiment files from count directory to a experiment table: " count-dir exp-count-filepath)
-      (filter-mkdir-copy datadir [".*ballgown/.*.txt"] dest-dir "ballgown")
-      (filter-mkdir-copy datadir [".*count/.*gene_count_matrix.csv"] dest-dir "count")
-      (filter-mkdir-copy datadir [".*qualimapBAMqc/.*tar.gz"] dest-dir "results/post_alignment_qc/bam_qc")
-      (filter-mkdir-copy datadir [".*qualimapRNAseq/.*tar.gz"] dest-dir "results/post_alignment_qc/rnaseq_qc")
-      (filter-mkdir-copy datadir [".*fastqc/.*.zip"] dest-dir "results/rawqc/fastqc")
-      (filter-mkdir-copy datadir [".*fastqscreen/.*.txt"] dest-dir "results/rawqc/fastq_screen")
       (update-process! task-id 10)
       (rseqc/merge-exp-files! (rseqc/list-files ballgown-dir {:mode "file"}) exp-fpkm-filepath)
       (rseqc/merge-exp-files! (rseqc/list-files count-dir {:mode "file"}) exp-count-filepath)
+      (rseqc/write-csv! metadata-file metadata)
       ;;(decompression-tar files-qualimap-bam)
       ;;(decompression-tar files-qualimap-RNA)
       (doseq [files-qualimap-bam-tar (rseqc/batch-filter-files (fs-lib/join-paths dest-dir "results/post_alignment_qc/bam_qc") [".*tar.gz"])]

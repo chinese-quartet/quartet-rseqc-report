@@ -202,6 +202,12 @@
            (map #(.getAbsolutePath %))
            (filter #((filter-local-fn mode) %))))))
 
+(defn list-dirs
+  [path]
+  (let [{:keys [protocol bucket prefix]} (parse-path path)]
+    (map #(format "%s://%s/%s" protocol bucket (:key %))
+         (remote-fs/with-conn protocol (remote-fs/list-objects bucket prefix false)))))
+
 (defn make-pattern-fn
   [patterns]
   (map #(re-pattern %) patterns))

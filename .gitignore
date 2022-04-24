@@ -11,3 +11,5 @@ pom.xml.asc
 .hg/
 .clj-kondo
 *.tar.gz
+.Rproj.user
+examples
