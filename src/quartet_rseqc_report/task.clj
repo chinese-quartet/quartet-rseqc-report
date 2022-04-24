@@ -80,12 +80,12 @@
 
 (defn copy-files-to-dir
   [data-dir dest-dir]
-  (filter-mkdir-copy (format "%s%s" data-dir "ballgown") [".*.txt"] dest-dir "ballgown")
-  (filter-mkdir-copy (format "%s%s" data-dir "count") [".*gene_count_matrix.csv"] dest-dir "count")
-  (filter-mkdir-copy (format "%s%s" data-dir "qualimapBAMqc") [".*tar.gz"] dest-dir "results/post_alignment_qc/bam_qc")
-  (filter-mkdir-copy (format "%s%s" data-dir "qualimapRNAseq") [".*tar.gz"] dest-dir "results/post_alignment_qc/rnaseq_qc")
-  (filter-mkdir-copy (format "%s%s" data-dir "fastqc") [".*.zip"] dest-dir "results/rawqc/fastqc")
-  (filter-mkdir-copy (format "%s%s" data-dir "fastqscreen") [".*.txt"] dest-dir "results/rawqc/fastq_screen"))
+  (filter-mkdir-copy (format "%s%s" data-dir "call-ballgown") [".*.txt"] dest-dir "ballgown")
+  (filter-mkdir-copy (format "%s%s" data-dir "call-count") [".*gene_count_matrix.csv"] dest-dir "count")
+  (filter-mkdir-copy (format "%s%s" data-dir "call-qualimapBAMqc") [".*tar.gz"] dest-dir "results/post_alignment_qc/bam_qc")
+  (filter-mkdir-copy (format "%s%s" data-dir "call-qualimapRNAseq") [".*tar.gz"] dest-dir "results/post_alignment_qc/rnaseq_qc")
+  (filter-mkdir-copy (format "%s%s" data-dir "call-fastqc") [".*.zip"] dest-dir "results/rawqc/fastqc")
+  (filter-mkdir-copy (format "%s%s" data-dir "call-fastqscreen") [".*.txt"] dest-dir "results/rawqc/fastq_screen"))
 
 (defn make-report!
   "Chaining Pipeline: filter-files -> copy-files -> merge_exp_file -> exp2qcdt -> multiqc."
