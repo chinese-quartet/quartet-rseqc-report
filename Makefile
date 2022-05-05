@@ -6,7 +6,7 @@ all: clean install-report install-exp2qcdt
 clean:
 	@echo "Clean the environment..."
 	@bin/lein clean
-	@rm -rf .env .lsp .clj-kondo report/dist report/quartet-proteome-report.egg-info exp2qcdt.tar.gz resources/renv/library resources/renv/staging
+	@rm -rf .env .lsp .clj-kondo report/dist report/quartet-rseqc-report.egg-info exp2qcdt.tar.gz resources/renv/library resources/renv/staging
 
 make-env:
 	virtualenv -p python3 .env
@@ -17,5 +17,7 @@ install-report: make-env
 	cd report && python3 setup.py sdist && pip3 install dist/*.tar.gz
 
 install-exp2qcdt:
-	tar czvf exp2qcdt.tar.gz exp2qcdt
-	R CMD INSTALL exp2qcdt.tar.gz
+	cp -R resources/* .env/
+	tar czvf .env/exp2qcdt.tar.gz exp2qcdt
+	@echo 'renv::activate(".env"); renv::restore();' > .env/Rprofile
+	export R_PROFILE_USER=.env/Rprofile && Rscript -e 'install.packages(".env/exp2qcdt.tar.gz", repos = NULL, type="source")'

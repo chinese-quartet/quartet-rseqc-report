@@ -105,6 +105,7 @@
         log-path (fs-lib/join-paths dest-dir "log")
         config-path (fs-lib/join-paths dest-dir "results", "quartet_rnaseq_report.yaml")
         subdirs (rseqc/list-dirs data-dir)]
+    (log/info "List subdirs: " subdirs)
     (try
       (fs-lib/create-directories! result-dir)
       (doseq [subdir subdirs]

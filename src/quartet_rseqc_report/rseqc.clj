@@ -21,17 +21,28 @@
    result-dir: A directory for result files.
   "
   [exp-file cnt-file meta-file result-dir]
-  (shell/with-sh-env {:PATH   (add-env-to-path v/plugin-name)
-                      :R_PROFILE_USER (fs-lib/join-paths (get-context-path :env v/plugin-name) "Rprofile")
-                      :LC_ALL "en_US.utf-8"
-                      :LANG   "en_US.utf-8"}
-    (let [command ["bash" "-c"
-                   (format "exp2qcdt.sh -e %s -c %s -m %s -o %s" exp-file cnt-file meta-file result-dir)]
-          result  (apply sh command)
-          status (if (= (:exit result) 0) "Success" "Error")
-          msg (str (:out result) "\n" (:err result))]
-      {:status status
-       :msg msg})))
+  (let [r-profile-user (fs-lib/join-paths (get-context-path :env v/plugin-name) "Rprofile")
+        path (add-env-to-path v/plugin-name)
+        ;; When you are in local mode, the context-path doesn't exist.
+        r-profile-user (if (= r-profile-user (format "%s/Rprofile" v/plugin-name))
+                         (System/getProperty "R_PROFILE_USER")
+                         r-profile-user)
+        path (if (= path (format "%s/bin" v/plugin-name))
+               (System/getenv "PATH")
+               path)]
+    (log/info "Rprofile: " r-profile-user)
+    (log/info "PATH: " path)
+    (shell/with-sh-env {:PATH path
+                        :R_PROFILE_USER r-profile-user
+                        :LC_ALL "en_US.utf-8"
+                        :LANG "en_US.utf-8"}
+      (let [command ["bash" "-c"
+                     (format "exp2qcdt.sh -e %s -c %s -m %s -o %s" exp-file cnt-file meta-file result-dir)]
+            result  (apply sh command)
+            status (if (= (:exit result) 0) "Success" "Error")
+            msg (str (:out result) "\n" (:err result))]
+        {:status status
+         :msg msg}))))
 
 (defn sort-exp-data
   [coll]
@@ -204,9 +215,11 @@
 
 (defn list-dirs
   [path]
-  (let [{:keys [protocol bucket prefix]} (parse-path path)]
-    (map #(format "%s://%s/%s" protocol bucket (:key %))
-         (remote-fs/with-conn protocol (remote-fs/list-objects bucket prefix false)))))
+  (if (fs-service? path)
+    (let [{:keys [protocol bucket prefix]} (parse-path path)]
+      (map #(format "%s://%s/%s" protocol bucket (:key %))
+           (remote-fs/with-conn protocol (remote-fs/list-objects bucket prefix false))))
+    (map #(str (.getAbsolutePath %) "/") (filter #(fs-lib/directory? %) (fs-lib/list-dir path)))))
 
 (defn make-pattern-fn
   [patterns]
@@ -275,26 +288,6 @@
     (if (fs-service? file-path)
       (copy-remote-file! file-path dest-dir options)
       (copy-local-file! file-path dest-dir options))))
-
-(defn call-rseqc!
-  "Call rseqc bash script. more details on https://github.com/chinese-quartet/ProtQC
-   exp-file: Proteomics profiled data. 
-   meta-file: proteomics metadata.
-   result-dir: A directory for result files."
-  [exp-file meta-file result-dir]
-  (let [command ["bash" "-c"
-                 (format "rseqc.sh -d %s -m %s -o %s" exp-file meta-file result-dir)]
-        path-var (add-env-to-path v/plugin-name)
-        rprofile (fs-lib/join-paths (get-context-path :env v/plugin-name) "Rprofile")]
-    (log/info "PATH variable: " path-var)
-    (log/info "Rprofile file is in " rprofile)
-    (shell/with-sh-env {:PATH   path-var
-                        :R_PROFILE_USER rprofile
-                        :LC_ALL "en_US.utf-8"
-                        :LANG   "en_US.utf-8"}
-      (let [result (apply sh command)]
-        {:status (if (= (:exit result) 0) "Success" "Error")
-         :msg (str (:out result) "\n" (:err result))}))))
 
 (defn multiqc
   "A multiqc wrapper for generating multiqc report:
