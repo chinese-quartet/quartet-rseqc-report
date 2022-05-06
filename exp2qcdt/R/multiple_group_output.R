@@ -179,11 +179,10 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
     ))
   }) %>%  rbindlist()
   dt_cor_logfc_combine[, protocol := dt_rel_protocol$protocol]
-  dt_cor_logfc_combine_h <- dt_cor_logfc_combine[DataQual != "LowQual"]
   
   ### relative performance -----------------------------------
   # relative performance output data
-  fwrite(dt_cor_logfc_combine_h, file = paste(result_dir, "/performance_assessment/performance_of_relative_exp.txt", sep = ""), sep = "\t")
+  fwrite(dt_cor_logfc_combine, file = paste(result_dir, "/performance_assessment/performance_of_relative_exp.txt", sep = ""), sep = "\t")
   
   ### SNR performance -----------------------------------------
   ## obtain SNR results
@@ -248,12 +247,12 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   # Plot scatter and box combined plot
   dt_snr_abs_rel_cor_combine$protocol <- factor(dt_snr_abs_rel_cor_combine$protocol,
                                             levels = c('P','R', 'QC'),ordered = TRUE)
-  dt_cor_logfc_combine_h$protocol <- factor(dt_cor_logfc_combine_h$protocol,
+  dt_cor_logfc_combine$protocol <- factor(dt_cor_logfc_combine$protocol,
                                             levels = c('P','R', 'QC'),ordered = TRUE)
   pt_snr_abs_cor <- plot_scatter_box(dt_snr_abs_rel_cor_combine, var_x = 'SNR', var_y = 'LIR', 
                                      col_g = 'protocol', xlab = 'SNR', ylab = 'Absolute correlation', 
                                      title_lab = 'Performance evaluation on the intra-batch level')
-  pt_rel_cor <- plot_scatter_box(dt_cor_logfc_combine_h, var_x = 'corr_ref', var_y = 'corr_FC', 
+  pt_rel_cor <- plot_scatter_box(dt_cor_logfc_combine, var_x = 'corr_ref', var_y = 'corr_FC', 
                                      col_g = 'protocol', xlab = 'Reference datasets based on relative correlation', 
                                      ylab = 'Relative correlation', 
                                      title_lab = 'Performance evaluation in relative expression')
@@ -276,8 +275,8 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   fwrite(dt_metric_summary, file = paste(result_dir, "/performance_assessment/qc_metrics_summary.txt", sep = ""), sep = "\t")
   
   ### output total quality score ---
-  dt_cor_logfc_combine_h_mean <- lapply(unique(as.character(dt_cor_logfc_combine_h$Batch)), function(x){
-    corr_ref_mean <- mean(dt_cor_logfc_combine_h[x, on = .(Batch)][['corr_ref']])
+  dt_cor_logfc_combine_mean <- lapply(unique(as.character(dt_cor_logfc_combine$Batch)), function(x){
+    corr_ref_mean <- mean(dt_cor_logfc_combine[x, on = .(Batch)][['corr_ref']])
     
     return(
       list(
@@ -287,7 +286,7 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
     )
   }) %>% rbindlist()
   
-  dt_hq_score <- dt_snr_abs_rel_cor_combine[dt_cor_logfc_combine_h_mean, on = "batch==Batch"]
+  dt_hq_score <- dt_snr_abs_rel_cor_combine[dt_cor_logfc_combine_mean, on = "batch==Batch"]
   dt_hq_score_scale <- data.table(apply(dt_hq_score[, c('SNR','LIR', 'LRR2','corr_ref_mean'), with = F], 2, 
         function(x){rescale(x, c(1, 10))}))
   dt_hq_score_scale[, batch := dt_hq_score$batch]
