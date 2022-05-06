@@ -47,8 +47,7 @@ copm-cli install -n quartet-rseqc-report -V v0.1.2 -d plugins
 
 ## Contributions
 
-- [RSeQC](./rseqc) developed by [Qiaochu Chen](https://github.com/QiaochuChen)
-- [MultiReport](./report) developed by [Yaqing Liu](https://github.com/lyaqing)
+Quartet QC Report for RNA-Seq Data developed by [Jun Shang](https://github.com/stead99) <[exp2qcdt](./exp2qcdt)  & [report](./report)>
 
 ## License
 
