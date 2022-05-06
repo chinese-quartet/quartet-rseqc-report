@@ -9,7 +9,7 @@ Visualizes Quality Control(QC) results for Quartet Project.
 - Python3 >= 3.7
 - virtualenv
 - pip3
-- R >= 3.6.3
+- R >= 3.6.3 (**NOTE: Not supported in R >= 4.0.0**)
 ### Installation
 
 ```
@@ -19,7 +19,7 @@ git clone https://github.com/chinese-quartet/quartet-rseqc-report
 cd quartet-rseqc-report
 
 # Build the environment and compile the quartet-rseqc-report
-make
+make all
 ```
 
 ### Usage
