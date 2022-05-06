@@ -61,6 +61,16 @@ while getopts ":he:c:m:o:" arg; do
 	esac
 done
 
+realpath_internal() {
+	[[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+}
+
+realpath=$(which realpath)
+if [ "$?" -ne 0 ]; then
+	echo "realpath not found"
+	realpath=realpath_internal
+fi
+
 if [ -z "$FPKM_FILE" ]; then
 	echo "-e argument is not specified."
 	exit 1
