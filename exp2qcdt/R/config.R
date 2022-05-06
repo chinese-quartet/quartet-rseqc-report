@@ -13,7 +13,7 @@ read_ref_data <- function(ref_data_dir) {
   # Returns:
   #   ref_data
   ref_data <- list()
-  ref_data$qcintra_forplot <- readRDS(paste0(ref_data_dir, "/qcintra_forplot.rds"))
+  ref_data$qcintra_forplot <- fread(paste0(ref_data_dir, "/ref_data_qc_value.csv"))
   ref_data$corr_ref <- fread(paste0(ref_data_dir, "/TableS2_ReferenceDatasets.csv"), drop = 'V1')
   ref_data$refqc_202011_forplot <- readRDS(paste0(ref_data_dir, "/refqc_202011_forplot.rds"))
 
@@ -138,7 +138,8 @@ calc_signoise_ratio <- function(pca_prcomp, exp_design) {
   dt_dist_stats <- dt_dist[, .(Avg.Dist = mean(Dist)), by = .(Type)]
   setkey(dt_dist_stats, Type)
   signoise <- dt_dist_stats["Inter"]$Avg.Dist / dt_dist_stats["Intra"]$Avg.Dist
-  return(signoise)
+  signoise_db <- 10*log10(signoise)
+  return(signoise_db)
 }
 
 #' Get PCA list
