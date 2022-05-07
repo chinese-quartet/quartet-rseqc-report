@@ -87,7 +87,7 @@ class MultiqcModule(BaseMultiqcModule):
             intergenic_mean.append(
                 self.general_stats_data[k]['reads_aligned_intergenic'])
 
-        self.general_stats_data['Batch average value'] = {
+        self.general_stats_data['Batch Average Value'] = {
             'general_error_rate':
             sum(error_rate_mean) / len(error_rate_mean),
             'avg_gc':
@@ -102,9 +102,6 @@ class MultiqcModule(BaseMultiqcModule):
             sum(intergenic_mean) / len(intergenic_mean)
         }
 
-        self.general_stats_data['Historical value'] = {
-            'general_error_rate': '0.01±0.01'
-        }
 
         self.add_section(name='Post alignment stats',
                          anchor='post_alignment_stats',
