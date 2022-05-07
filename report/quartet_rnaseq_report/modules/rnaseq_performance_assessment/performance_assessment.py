@@ -17,7 +17,6 @@ from quartet_rnaseq_report.modules.plotly import plot as plotly_plot
 # Initialise the main MultiQC logger
 log = logging.getLogger('multiqc')
 
-
 class MultiqcModule(BaseMultiqcModule):
     def __init__(self):
 
@@ -43,7 +42,6 @@ class MultiqcModule(BaseMultiqcModule):
         if len(quality_score) != 0:
             ## Now add each section in order
             quality_score_df = self.list2df(quality_score)
-            print(quality_score_df)
             quality_score_df.astype({'quality_score': float})
             test_score = quality_score_df.loc[
                 quality_score_df['batch'] ==
@@ -52,8 +50,6 @@ class MultiqcModule(BaseMultiqcModule):
                 float(i)
                 for i in quality_score_df['SNR'].values.tolist()
             ]]
-            print(test_score)
-            print(quality_score_list)
             self.plot_quality_score('plot_quality_score', quality_score_list,
                                     test_score)
         else:
@@ -69,7 +65,6 @@ class MultiqcModule(BaseMultiqcModule):
             ## Now add each section in order
             qc_metrics_summary_df = self.list2df(qc_metrics_summary)
             table_qc_metrics_dic = qc_metrics_summary_df.set_index('qc_metrics').T.to_dict()
-            print(table_qc_metrics_dic)
             self.plot_qc_metrics_table(id = 'qc_metrics_summary_table',
                                        qc_metrics_summary_list = table_qc_metrics_dic)
         else:
@@ -214,7 +209,7 @@ class MultiqcModule(BaseMultiqcModule):
             'namespace': 'conclusion_summary',
             'id': id,
             'table_title': '',
-            'col1_header': 'Quality Metric(s)',
+            'col1_header': 'Quality Metric (s)',
             'no_beeswarm': True,
             'sortRows': False
             }

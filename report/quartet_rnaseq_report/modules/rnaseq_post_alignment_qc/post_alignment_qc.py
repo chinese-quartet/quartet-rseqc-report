@@ -66,42 +66,6 @@ class MultiqcModule(BaseMultiqcModule):
     def post_alignment_stats(self):
         """ Add some single-number stats to the basic statistics
         table at the top of the report """
-        # Prep the data
-        error_rate_mean = []
-        gc_mean = []
-        median_insert_size_mean = []
-        exonic_mean = []
-        intronic_mean = []
-        intergenic_mean = []
-
-        for k in self.general_stats_data.keys():
-            error_rate_mean.append(
-                self.general_stats_data[k]['general_error_rate'])
-            gc_mean.append(self.general_stats_data[k]['avg_gc'])
-            median_insert_size_mean.append(
-                self.general_stats_data[k]['median_insert_size'])
-            exonic_mean.append(
-                self.general_stats_data[k]['reads_aligned_exonic'])
-            intronic_mean.append(
-                self.general_stats_data[k]['reads_aligned_intronic'])
-            intergenic_mean.append(
-                self.general_stats_data[k]['reads_aligned_intergenic'])
-
-        self.general_stats_data['Batch Average Value'] = {
-            'general_error_rate':
-            sum(error_rate_mean) / len(error_rate_mean),
-            'avg_gc':
-            sum(gc_mean) / len(gc_mean),
-            'median_insert_size':
-            sum(median_insert_size_mean) / len(median_insert_size_mean),
-            'reads_aligned_exonic':
-            sum(exonic_mean) / len(exonic_mean),
-            'reads_aligned_intronic':
-            sum(intronic_mean) / len(intronic_mean),
-            'reads_aligned_intergenic':
-            sum(intergenic_mean) / len(intergenic_mean)
-        }
-
 
         self.add_section(name='Post alignment stats',
                          anchor='post_alignment_stats',

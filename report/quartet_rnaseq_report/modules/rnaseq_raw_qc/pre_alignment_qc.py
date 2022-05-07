@@ -83,6 +83,7 @@ class MultiqcModule(BaseMultiqcModule):
             raise UserWarning
 
         log.info("Found {} reports".format(len(self.fastqc_data)))
+        
         # Write the summary stats to a file
         data = dict()
         for s_name in self.fastqc_data:
@@ -95,11 +96,13 @@ class MultiqcModule(BaseMultiqcModule):
         self.num_orgs = 0
         for f in self.find_log_files('rnaseq_raw_qc/fastq_screen',
                                      filehandles=True):
-            parsed_data = self.parse_fqscreen(f)
-            if s_name.endswith('_screen.txt'):
-                f['s_name'] = f['s_name'][:-11]
-            print(s_name)
             
+            parsed_data = self.parse_fqscreen(f)
+            
+            if f['s_name'].endswith('_screen'):
+                f['s_name'] = f['s_name'][:-7]
+                print(f['s_name'])
+                
             if parsed_data is not None:
                 if f['s_name'] in self.fq_screen_data:
                     log.debug(
@@ -259,15 +262,6 @@ class MultiqcModule(BaseMultiqcModule):
             except KeyError:
                 log.warning("Sample had zero reads: '{}'".format(s_name))
                 data[s_name] = {'total_sequences': 0, 'percent_gc': 0}
-        ts_mean = []
-        gc_mean = []
-        for k in data.keys():
-            ts_mean.append(data[k]['total_sequences'])
-            gc_mean.append(data[k]['percent_gc'])
-        data['Batch Average Value'] = {
-            'total_sequences': sum(ts_mean) / len(ts_mean),
-            'percent_gc': sum(gc_mean) / len(gc_mean)
-        }
 
         headers = OrderedDict()
         headers['total_sequences'] = {
@@ -505,43 +499,4 @@ class MultiqcModule(BaseMultiqcModule):
                                            0)
                 except KeyError:
                     pass
-        human_mean = []
-        mouse_mean = []
-        ercc_mean = []
-        ecoli_mean = []
-        adapter_mean = []
-        vector_mean = []
-        rrna_mean = []
-        virus_mean = []
-        yeast_mean = []
-        mitoch_mean = []
-        phix_mean = []
-        no_hits_mean = []
-        for k in totals.keys():
-            human_mean.append(totals[k]['Human percentage'])
-            mouse_mean.append(totals[k]['Mouse percentage'])
-            ercc_mean.append(totals[k]['ERCC percentage'])
-            ecoli_mean.append(totals[k]['EColi percentage'])
-            adapter_mean.append(totals[k]['Adapter percentage'])
-            vector_mean.append(totals[k]['Vector percentage'])
-            rrna_mean.append(totals[k]['rRNA percentage'])
-            virus_mean.append(totals[k]['Virus percentage'])
-            yeast_mean.append(totals[k]['Yeast percentage'])
-            mitoch_mean.append(totals[k]['Mitoch percentage'])
-            phix_mean.append(totals[k]['Phix percentage'])
-            no_hits_mean.append(totals[k]['No hits percentage'])
-        totals['Batch Average Value'] = {
-            'Human percentage': sum(human_mean) / len(human_mean),
-            'Mouse percentage': sum(mouse_mean) / len(mouse_mean),
-            'ERCC percentage': sum(ercc_mean) / len(ercc_mean),
-            'EColi percentage': sum(ecoli_mean) / len(ecoli_mean),
-            'Adapter percentage': sum(adapter_mean) / len(adapter_mean),
-            'Vector percentage': sum(vector_mean) / len(vector_mean),
-            'rRNA percentage': sum(rrna_mean) / len(rrna_mean),
-            'Virus percentage': sum(virus_mean) / len(virus_mean),
-            'Yeast percentage': sum(yeast_mean) / len(yeast_mean),
-            'Mitoch percentage': sum(mitoch_mean) / len(mitoch_mean),
-            'Phix percentage': sum(phix_mean) / len(phix_mean),
-            'No hits percentage': sum(no_hits_mean) / len(no_hits_mean),
-        }
         return totals
