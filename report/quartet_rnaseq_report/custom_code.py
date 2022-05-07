@@ -57,22 +57,6 @@ def quartet_rnaseq_report_execution_start():
                 }
             })
 
-    if 'rnaseq_performance_assessment/performance_of_absolute_exp' not in config.sp:
-        config.update_dict(
-            config.sp, {
-                'rnaseq_performance_assessment/performance_of_absolute_exp': {
-                    'fn_re': '^performance_of_absolute_exp.txt$'
-                }
-            })
-
-    if 'rnaseq_performance_assessment/performance_of_relative_exp' not in config.sp:
-        config.update_dict(
-            config.sp, {
-                'rnaseq_performance_assessment/performance_of_relative_exp': {
-                    'fn_re': '^performance_of_relative_exp.txt$'
-                }
-            })
-
     if 'rnaseq_performance_assessment/pca_with_snr' not in config.sp:
         config.update_dict(
             config.sp, {
@@ -81,21 +65,6 @@ def quartet_rnaseq_report_execution_start():
                 }
             })
 
-    if 'rnaseq_performance_assessment/relative_exp_correlation' not in config.sp:
-        config.update_dict(
-            config.sp, {
-                'rnaseq_performance_assessment/relative_exp_correlation': {
-                    'fn_re': '^relative_exp_correlation.txt$'
-                }
-            })
-
-    if 'rnaseq_performance_assessment/absolute_exp_correlation' not in config.sp:
-        config.update_dict(
-            config.sp, {
-                'rnaseq_performance_assessment/absolute_exp_correlation': {
-                    'fn_re': '^absolute_exp_correlation.txt$'
-                }
-            })
 
     if 'rnaseq_performance_assessment/qc_metrics_summary' not in config.sp:
         config.update_dict(
