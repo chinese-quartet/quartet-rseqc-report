@@ -3,6 +3,7 @@
 Visualizes Quality Control(QC) results for Quartet Project.
 
 ## Standalone Mode
+
 ### Prerequisite
 
 - Bash
@@ -10,6 +11,7 @@ Visualizes Quality Control(QC) results for Quartet Project.
 - virtualenv
 - pip3
 - R >= 3.6.3 (**NOTE: Not supported in R >= 4.0.0**)
+
 ### Installation
 
 ```
@@ -33,7 +35,7 @@ java -jar target/uberjar/quartet-rseqc-report-*-standalone.jar -h
 
 ### Prerequisite
 
-Please access [Quartet Service](https://github.com/chinese-quartet/quartet-service) for more details 
+Please access [Quartet Service](https://github.com/chinese-quartet/quartet-service) for more details
 
 ### Installation
 
@@ -47,7 +49,7 @@ copm-cli install -n quartet-rseqc-report -V v0.1.2 -d plugins
 
 ## Contributions
 
-Quartet QC Report for RNA-Seq Data developed by [Jun Shang](https://github.com/stead99) <[exp2qcdt](./exp2qcdt)  & [report](./report)>
+Quartet QC Report for RNA-Seq Data developed by [Jun Shang](https://github.com/stead99) <[exp2qcdt](./exp2qcdt) & [report](./report)>
 
 ## License
 
