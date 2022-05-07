@@ -391,7 +391,7 @@ class MultiqcModule(BaseMultiqcModule):
             original sample (<a href="https://doi.org/10.1186/s13059-016-0881-8"
             target="_blank">Conesa et al. 2016</a>).'''
             self.add_section(
-                name='Gene Coverage Profile',
+                name='Gene coverage profile',
                 anchor='qualimap-genome-fraction-coverage',
                 description=
                 'Mean distribution of coverage depth across the length of all mapped transcripts.',

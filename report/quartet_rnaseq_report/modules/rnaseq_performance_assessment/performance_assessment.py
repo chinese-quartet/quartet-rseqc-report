@@ -46,10 +46,10 @@ class MultiqcModule(BaseMultiqcModule):
             quality_score_df.astype({'quality_score': float})
             test_score = quality_score_df.loc[
                 quality_score_df['batch'] ==
-                'QC_test']['quality_score'].values[0]
+                'QC_test']['SNR'].values[0]
             quality_score_list = [[
                 float(i)
-                for i in quality_score_df['quality_score'].values.tolist()
+                for i in quality_score_df['SNR'].values.tolist()
             ]]
             self.plot_quality_score('plot_quality_score', quality_score_list,
                                     test_score)
@@ -160,7 +160,7 @@ class MultiqcModule(BaseMultiqcModule):
 
         # Add a report section with the scatter plot
         self.add_section(
-            name='Quality Score',
+            name='Quality score',
             anchor=id + '_anchor',
             description=description if description else
             'Performance metrics and thresholds using reference RNA',
@@ -197,7 +197,7 @@ class MultiqcModule(BaseMultiqcModule):
 
         # Add a report section with the scatter plot
         self.add_section(
-            name='QC Metrics Summary',
+            name='QC metrics summary',
             anchor=id + '_anchor',
             description=description if description else
             'Performance metrics and thresholds using reference RNAs',

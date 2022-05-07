@@ -369,7 +369,7 @@ class MultiqcModule(BaseMultiqcModule):
             ]
         }
         self.add_section(
-            name='Sequence Quality Histograms',
+            name='Sequence quality histograms',
             anchor='fastqc_per_base_sequence_quality',
             description=
             'The mean quality value across each base position in the read.',
