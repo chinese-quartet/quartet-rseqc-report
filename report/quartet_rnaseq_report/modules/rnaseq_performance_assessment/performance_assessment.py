@@ -10,7 +10,7 @@ import plotly.express as px
 import plotly.figure_factory as ff
 
 from multiqc import config
-from multiqc.plots import scatter
+from multiqc.plots import scatter, table
 from multiqc.modules.base_module import BaseMultiqcModule
 from quartet_rnaseq_report.modules.plotly import plot as plotly_plot
 
@@ -43,6 +43,7 @@ class MultiqcModule(BaseMultiqcModule):
         if len(quality_score) != 0:
             ## Now add each section in order
             quality_score_df = self.list2df(quality_score)
+            print(quality_score_df)
             quality_score_df.astype({'quality_score': float})
             test_score = quality_score_df.loc[
                 quality_score_df['batch'] ==
@@ -51,6 +52,8 @@ class MultiqcModule(BaseMultiqcModule):
                 float(i)
                 for i in quality_score_df['SNR'].values.tolist()
             ]]
+            print(test_score)
+            print(quality_score_list)
             self.plot_quality_score('plot_quality_score', quality_score_list,
                                     test_score)
         else:
@@ -65,11 +68,10 @@ class MultiqcModule(BaseMultiqcModule):
         if len(qc_metrics_summary) != 0:
             ## Now add each section in order
             qc_metrics_summary_df = self.list2df(qc_metrics_summary)
-            qc_metrics_summary_list = [
-                qc_metrics_summary_df.columns.values.tolist()
-            ] + qc_metrics_summary_df.values.tolist()
-            self.plot_qc_metrics_table('qc_metrics_summary_table',
-                                       qc_metrics_summary_list)
+            table_qc_metrics_dic = qc_metrics_summary_df.set_index('qc_metrics').T.to_dict()
+            print(table_qc_metrics_dic)
+            self.plot_qc_metrics_table(id = 'qc_metrics_summary_table',
+                                       qc_metrics_summary_list = table_qc_metrics_dic)
         else:
             log.debug(
                 "No file matched: deg_performance_summary_table - deg_performance_summary.txt"
@@ -181,19 +183,43 @@ class MultiqcModule(BaseMultiqcModule):
     def plot_qc_metrics_table(self,
                               id,
                               qc_metrics_summary_list,
-                              title="QC Metrics Summary",
-                              section_name=None,
                               description=None,
                               helptext=None):
-        fig = ff.create_table(qc_metrics_summary_list, height_constant=60)
-
-        html = plotly_plot(
-            fig, {
-                'id': id + '_plot',
-                'data_id': id + '_data',
-                'title': title,
-                'auto_margin': True
-            })
+        headers = OrderedDict()
+        headers['category'] = {
+        'title': 'Category',
+        'description': 'ategory',
+        'scale': False,
+        'format': '{0:.3f}'
+        }
+        headers['value'] = {
+        'title': 'Value',
+        'description': 'Value',
+        'scale': False,
+        'format': '{0:.3f}'
+        }
+        headers['historical_value'] = {
+            'title': 'Historical value (mean ± SD)',
+            'description': 'Historical Value (mean ± SD)',
+            'scale': False,
+            'format': '{0:.2f}'
+            }
+        headers['rank'] = {
+            'title': 'Rank',
+            'description': 'Rank',
+            'scale': False,
+            'format': '{:.0f}'
+            }
+        table_config = {
+            'namespace': 'conclusion_summary',
+            'id': id,
+            'table_title': '',
+            'col1_header': 'Quality Metric(s)',
+            'no_beeswarm': True,
+            'sortRows': False
+            }
+        
+        metrics_html = table.plot(qc_metrics_summary_list, headers, table_config)
 
         # Add a report section with the scatter plot
         self.add_section(
@@ -212,7 +238,7 @@ class MultiqcModule(BaseMultiqcModule):
             Doesn't matter if this is copied from documentation - makes it
             easier for people to find quickly.
             ''',
-            plot=html)
+            plot=metrics_html)
 
     # Plot2: SNR performance evaluation
     def plot_snr_pca_point(self,

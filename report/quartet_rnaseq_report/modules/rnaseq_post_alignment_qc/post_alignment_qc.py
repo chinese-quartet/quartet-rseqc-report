@@ -311,7 +311,6 @@ class MultiqcModule(BaseMultiqcModule):
             self.qualimap_rnaseq_cov_hist)
 
         #### Plots
-
         # Genomic Origin Bar Graph
         # NB: Ignore 'Overlapping Exon' in report - these make the numbers add up to > 100%
         if len(self.qualimap_rnaseq_genome_results) > 0:
