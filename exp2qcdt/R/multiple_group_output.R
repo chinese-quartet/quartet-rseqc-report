@@ -72,6 +72,7 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   
   ### relative replicates correlation of median group ----------------------
   # scatter plot and data between two replicates of one sample
+  # remove in the furture
   dt_rel_cor_median <- dt_rel_cor[with(dt_rel_cor, which.min(abs(dt_rel_cor$cor_value - median(dt_rel_cor$cor_value, na.rm=T))))]
   output_rel_rep_res <- function(dt_rel_cor, dt_fpkm_log, dt_counts, dt_meta){
     compare_name_median <- dt_rel_cor_median[['comapre_id']]
@@ -107,6 +108,7 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
     }
   
   # relative expression table of two sample   
+  # remove in the future
   dt_rel_scatter <- output_rel_rep_res(dt_rel_cor, dt_fpkm_log, dt_counts, dt_meta)
   fwrite(dt_rel_scatter, file = paste(result_dir, "/performance_assessment/relative_exp_correlation.txt", sep = ""), sep = "\t" )
   
@@ -275,6 +277,7 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   fwrite(dt_metric_summary, file = paste(result_dir, "/performance_assessment/qc_metrics_summary.txt", sep = ""), sep = "\t")
   
   ### output total quality score ---
+  # remove in the future
   dt_cor_logfc_combine_mean <- lapply(unique(as.character(dt_cor_logfc_combine$Batch)), function(x){
     corr_ref_mean <- mean(dt_cor_logfc_combine[x, on = .(Batch)][['corr_ref']])
     
@@ -286,13 +289,13 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
     )
   }) %>% rbindlist()
   
-  dt_hq_score <- dt_snr_abs_rel_cor_combine[dt_cor_logfc_combine_mean, on = "batch==Batch"]
-  dt_hq_score_scale <- data.table(apply(dt_hq_score[, c('SNR','LIR', 'LRR2','corr_ref_mean'), with = F], 2, 
+  dt_hq_score <- dt_snr_abs_rel_cor_combine # [dt_cor_logfc_combine_mean, on = "batch==Batch"]
+  dt_hq_score_scale <- data.table(apply(dt_hq_score[, c('SNR','LIR', 'LRR2'), with = F], 2, 
         function(x){rescale(x, c(1, 10))}))
-  colnames(dt_hq_score_scale) <- c('SNR_scale','LIR_scale', 'LRR2_scale','corr_ref_mean_scale')
+  colnames(dt_hq_score_scale) <- c('SNR_scale','LIR_scale', 'LRR2_scale')
   dt_hq_score_scale[, batch := dt_hq_score$batch]
   dt_hq_score_scale[, SNR := dt_hq_score$SNR]
-  dt_hq_score_scale[, quality_score := rowMeans(.SD, na.rm = T), .SDcols = c('SNR_scale','LIR_scale', 'LRR2_scale','corr_ref_mean_scale')]
+  dt_hq_score_scale[, quality_score := rowMeans(.SD, na.rm = T), .SDcols = c('SNR_scale','LIR_scale', 'LRR2_scale')]
   dt_hq_score_scale$quality_score <- rescale(dt_hq_score_scale$quality_score, c(0, 1))
   fwrite(dt_hq_score_scale, file = paste(result_dir, "/performance_assessment/quality_score.txt", sep = ""), sep = "\t")
   
