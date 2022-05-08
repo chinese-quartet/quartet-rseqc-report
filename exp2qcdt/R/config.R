@@ -13,8 +13,8 @@ read_ref_data <- function(ref_data_dir) {
   # Returns:
   #   ref_data
   ref_data <- list()
-  ref_data$qcintra_forplot <- fread(paste0(ref_data_dir, "/ref_data_qc_value.csv"))
-  ref_data$corr_ref <- fread(paste0(ref_data_dir, "/TableS2_ReferenceDatasets.csv"), drop = 'V1')
+  ref_data$ref_qc_metrics_value <- fread(paste0(ref_data_dir, "/ref_data_qc_value.csv"))
+  ref_data$ref_fc_value <- fread(paste0(ref_data_dir, "/TableS2_ReferenceDatasets.csv"), drop = 'V1')
   ref_data$refqc_202011_forplot <- readRDS(paste0(ref_data_dir, "/refqc_202011_forplot.rds"))
 
   return(ref_data)

@@ -50,6 +50,7 @@ class MultiqcModule(BaseMultiqcModule):
                 float(i)
                 for i in quality_score_df['SNR'].values.tolist()
             ]]
+            print(quality_score_list)
             self.plot_quality_score('plot_quality_score', quality_score_list,
                                     test_score)
         else:
@@ -107,7 +108,7 @@ class MultiqcModule(BaseMultiqcModule):
                            helptext=None):
         fig = px.imshow(quality_score_list,
                         x=quality_score_list[0],
-                        y=['score'],
+                        y=['SNR'],
                         template="simple_white")
         fig.update_traces(dict(showscale=False,
                                coloraxis=None,

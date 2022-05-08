@@ -28,12 +28,11 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
                                   abs_cor_median, pt_abs_median_cor) {
   
   # import reference data
-  qcintra_forplot <- ref_data$qcintra_forplot
-  corr_ref <- ref_data$corr_ref
+  dt_ref_qc_metrics_value <- ref_data$ref_qc_metrics_value
+  dt_ref_fc_value <- ref_data$ref_fc_value
   refqc_202011_forplot <- ref_data$refqc_202011_forplot
   
   # two group which two replicates are need 
-  
   sample_type_list <- dt_meta[['sample']] %>% unique()
   
   ### obtain relative expression level correlation table ------------------ 
@@ -130,7 +129,8 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   # mean relative correlation 
   logfc_corr_with_ref <- lapply(1:dim(compare_combn)[2], function(x){
     compare_name <- paste(compare_combn[[x]][2], '/', compare_combn[[x]][1], sep = '')
-    corr_ref_compare <- corr_ref[compare_name, on = .(compare)]
+    compare_name_m <- intersect(dt_ref_fc_value$compare, compare_name)
+    corr_ref_compare <- dt_ref_fc_value[compare_name_m, on = .(compare)]
     
     ### at least tow replicate counts >= 3 
     dt_detect_gene <-  data.table(apply(dt_counts[, dt_meta[compare_combn[[x]][1], on = .(sample)][['library']], with = F], 1, function(x){length(which(x >= 3)) >= 2}),
@@ -226,7 +226,7 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   rel_cor_median <- median(dt_rel_cor$cor_value)
   dt_snr_abs_rel_cor_new <- data.table(batch = 'QC_test', SNR = snr_value, LIR = abs_cor_median, 
                                        LRR2 = rel_cor_median)
-  dt_snr_abs_rel_cor_combine <- as.data.table(rbind(qcintra_forplot[, c('batch', 'SNR', 'LIR', 'LRR2'), with = FALSE], dt_snr_abs_rel_cor_new))
+  dt_snr_abs_rel_cor_combine <- as.data.table(rbind(dt_ref_qc_metrics_value[, c('batch', 'SNR', 'LIR', 'LRR2'), with = FALSE], dt_snr_abs_rel_cor_new))
   dt_abs_protocol <- lapply(as.character(dt_snr_abs_rel_cor_combine$batch), function(x){
     protocol = strsplit(x, '_')[[1]][1]
     return(list(
@@ -289,8 +289,10 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   dt_hq_score <- dt_snr_abs_rel_cor_combine[dt_cor_logfc_combine_mean, on = "batch==Batch"]
   dt_hq_score_scale <- data.table(apply(dt_hq_score[, c('SNR','LIR', 'LRR2','corr_ref_mean'), with = F], 2, 
         function(x){rescale(x, c(1, 10))}))
+  colnames(dt_hq_score_scale) <- c('SNR_scale','LIR_scale', 'LRR2_scale','corr_ref_mean_scale')
   dt_hq_score_scale[, batch := dt_hq_score$batch]
-  dt_hq_score_scale[, quality_score := rowMeans(.SD, na.rm = T), .SDcols = c('SNR','LIR', 'LRR2','corr_ref_mean')]
+  dt_hq_score_scale[, SNR := dt_hq_score$SNR]
+  dt_hq_score_scale[, quality_score := rowMeans(.SD, na.rm = T), .SDcols = c('SNR_scale','LIR_scale', 'LRR2_scale','corr_ref_mean_scale')]
   dt_hq_score_scale$quality_score <- rescale(dt_hq_score_scale$quality_score, c(0, 1))
   fwrite(dt_hq_score_scale, file = paste(result_dir, "/performance_assessment/quality_score.txt", sep = ""), sep = "\t")
   
