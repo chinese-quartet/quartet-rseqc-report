@@ -41,7 +41,7 @@ class MultiqcModule(BaseMultiqcModule):
                 )
             }
         ########################find log files#################################
-        # Plot1: Performance Score
+        ### Quality Score Table
         quality_score = []
         for f in self.find_log_files(
                 'rnaseq_performance_assessment/quality_score'):
@@ -49,15 +49,14 @@ class MultiqcModule(BaseMultiqcModule):
 
         if len(quality_score) != 0:
             ## Now add each section in order
-            quality_score_df = self.list2df(quality_score)
+            dt_quality_score = self.list2df(quality_score)
             
         else:
             log.debug("No file matched: quality_score - quality_score.txt")
 
         # Summary Table1: ALL QC metrics summary
         qc_metrics_summary = []
-        for f in self.find_log_files(
-                'rnaseq_performance_assessment/qc_metrics_summary'):
+        for f in self.find_log_files('rnaseq_performance_assessment/qc_metrics_summary'):
             qc_metrics_summary = f['f'].splitlines()
             
         if len(qc_metrics_summary) != 0:
@@ -66,25 +65,40 @@ class MultiqcModule(BaseMultiqcModule):
             table_qc_metrics_dic = qc_metrics_summary_df.set_index('qc_metrics').T.to_dict()
             self.plot_qc_metrics_table(id = 'qc_metrics_summary_table',
                                        qc_metrics_summary_list = table_qc_metrics_dic,
-                                       dt_quality_score = quality_score_df)
+                                       dt_quality_score = dt_quality_score)
         else:
             log.debug(
                 "No file matched: deg_performance_summary_table - deg_performance_summary.txt"
             )
-        print(quality_score_df.loc[quality_score_df['batch'] == 'QC_test', 'rank'].iloc[0])
+        
+        # Plot2: SNR and RC scatter plot
+        self.plot_snr_rc_point('plot_snr_rc_point', dt_quality_score)
 
-        # Plot2: SNR
-        snr_data = []
-        for f in self.find_log_files(
-                'rnaseq_performance_assessment/pca_with_snr'):
-            snr_data = f['f'].splitlines()
+        # Plot3: SNR
+        list_snr = []
+        for f in self.find_log_files('rnaseq_performance_assessment/pca_with_snr'):
+            list_snr = f['f'].splitlines()
 
-        if len(snr_data) != 0:
+        if len(list_snr) != 0:
             ## Now add each section in order
-            snr_data_df = self.list2df(snr_data)
-            self.plot_snr_pca_point('snr_pca_plot', snr_data_df)
+            df_snr = self.list2df(list_snr)
+            self.plot_snr_pca_point('snr_pca_plot', df_snr)
         else:
             log.debug("No file matched: snr_pca_point - studydesign_snr.txt")
+        
+        # Plot4: RC correlation
+        list_rc = []
+        for f in self.find_log_files('rnaseq_performance_assessment/logfc_cor_ref_test'):
+            list_rc = f['f'].splitlines()
+            
+        if len(list_rc) != 0:
+            ## Now add each section in order
+            df_rc = self.list2df(list_rc)
+            self.plot_rc_cor_point('rc_cor_plot', df_rc)
+        else:
+            log.debug(
+                "No file matched: performance_of_relative - logfc_cor_ref_test.txt"
+            )
 
     def list2df(self, data):
         """Convert string list to dataframe"""
@@ -182,7 +196,7 @@ class MultiqcModule(BaseMultiqcModule):
             'namespace': 'conclusion_summary',
             'id': id,
             'table_title': '',
-            'col1_header': 'Quality Metric (s)',
+            'col1_header': 'Quality Metrics',
             'no_beeswarm': True,
             'sortRows': False
             }
@@ -191,7 +205,7 @@ class MultiqcModule(BaseMultiqcModule):
 
         # Add a report section with the scatter plot
         self.add_section(
-            name='QC metric(s) summary',
+            name='QC metrics summary',
             anchor=id + '_anchor',
             description="""
             The total performance score is calculated to measure the overall quality of a dataset generated from a lab for its effectiveness in quantifying the transcriptomic differences among the four Quartet RNA reference materials by summarizing reference dataset-independent quality measurement (SNR) and reference dataset-dependent quality measurement (RC). The total score is expressed as the geometrical mean of SNR and RC. 
@@ -203,12 +217,63 @@ class MultiqcModule(BaseMultiqcModule):
             plot = metrics_summary_html + '\n' +  metrics_table_html
             )
 
-    # Plot2: SNR performance evaluation
+    # Plot2: snr and rc
+    def plot_snr_rc_point(
+            self,
+            id,
+            quality_score,
+            title="SNR and RC",
+            description=None,
+            helptext=None):
+        fig = px.scatter(quality_score, x="SNR", y="RC",
+                         symbol = 'group', 
+                         symbol_map = {"Reference": 0, "Query": 18},
+                         color="group",
+                         color_discrete_map={
+                             "Query": "#bb1616",
+                             "Reference": "#2f5c85"
+                         },
+                         marginal_x="box",
+                         marginal_y="box",
+                         template="simple_white")
+
+        fig.update_layout(xaxis_title='SNR',
+                          yaxis_title='RC',
+                          font=dict(family="Arial, sans-serif",
+                                    size=18,
+                                    color="black"),
+                          template="simple_white")
+
+        html = plotly_plot(
+            fig, {
+                'id': id + '_plot',
+                'data_id': id + '_data',
+                'title': title,
+                'auto_margin': True
+            })
+
+        # Add a report section with the scatter plot
+        self.add_section(
+            name='SNR and RC performance',
+            anchor=id + '_anchor',
+            description=description if description else
+            'Performance metrics and thresholds using reference RNAs',
+            helptext=helptext if helptext else '''
+            This longer description explains what exactly the numbers mean
+            and supports markdown formatting. This means that we can do _this_:
+            * Something important
+            * Something else important
+            * Best of all - some `code`
+            Doesn't matter if this is copied from documentation - makes it
+            easier for people to find quickly.
+            ''',
+            plot=html)
+    
+    # Plot3: SNR performance evaluation
     def plot_snr_pca_point(self,
                            id,
                            snr_data_df,
                            title=None,
-                           section_name=None,
                            description=None,
                            helptext=None):
         SNR_value = 'SNR = ' + snr_data_df.iloc[1].at[
@@ -262,7 +327,7 @@ class MultiqcModule(BaseMultiqcModule):
             name='Signal-to-Noise Ratio',
             anchor=id + '_anchor',
             description=description if description else
-            'Performance metrics and thresholds using reference RNAs',
+            'Signal-to-noise ratio (SNR) is defined as the ratio of the power of a signal to the power of noise',
             helptext=helptext if helptext else '''
             This longer description explains what exactly the numbers mean
             and supports markdown formatting. This means that we can do _this_:
@@ -274,4 +339,56 @@ class MultiqcModule(BaseMultiqcModule):
             Doesn't matter if this is copied from documentation - makes it
             easier for people to find quickly.
             ''',
+            plot=html)
+    
+    # Plot4: RC correlation plot
+    def plot_rc_cor_point(
+            self,
+            id,
+            df_rc,
+            title="Relative Correlation with Reference Datasets",
+            section_name=None,
+            description=None,
+            helptext=None):
+        fig = px.scatter(df_rc,
+                         x="meanlogFC_ref",
+                         y="meanlogFC_test",
+                         color="compare",
+                         color_discrete_map={
+                             "D5/D6": "#4CC3D9",
+                             "F7/D6": "#FFC65D",
+                             "M8/D6": "#F16745"
+                         },
+                         marginal_x="box",
+                         marginal_y="box",
+                         template="simple_white")
+        fig.update_layout(
+            xaxis_title='Reference Datasets',
+            yaxis_title='Query Data',
+            font=dict(family="Arial, sans-serif", size=18, color="black"),
+            template="simple_white")
+
+        html = plotly_plot(
+            fig, {
+                'id': id + '_plot',
+                'data_id': id + '_data',
+                'title': title,
+                'auto_margin': True
+            })
+
+        # Add a report section with the scatter plot
+        self.add_section(
+            name='Relative Correlation with Reference Datasets',
+            anchor=id + '_anchor',
+            description=description if description else
+            'Relative correlation with reference datasets was calculate based on the Pearson correlation coefficient between the relative expression levels of a dataset for a given pair of groups and the corresponding reference fold-change values',
+            helptext=helptext if helptext else '''
+                This longer description explains what exactly the numbers mean
+                and supports markdown formatting. This means that we can do _this_:
+                * Something important
+                * Something else important
+                * Best of all - some `code`
+                Doesn't matter if this is copied from documentation - makes it
+                easier for people to find quickly.
+                ''',
             plot=html)

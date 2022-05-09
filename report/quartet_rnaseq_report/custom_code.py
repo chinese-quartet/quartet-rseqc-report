@@ -73,6 +73,15 @@ def quartet_rnaseq_report_execution_start():
                     'fn_re': '^qc_metrics_summary.txt$'
                 }
             })
+        
+    if 'rnaseq_performance_assessment/logfc_cor_ref_test' not in config.sp:
+        config.update_dict(
+            config.sp, {
+                'rnaseq_performance_assessment/logfc_cor_ref_test': {
+                    'fn_re': '^logfc_cor_ref_test.txt$'
+                }
+            })
+        
     # Module-rnaseq_raw_qc
     if 'rnaseq_raw_qc/zip' not in config.sp:
         config.update_dict(config.sp,
