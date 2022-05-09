@@ -120,11 +120,11 @@ class MultiqcModule(BaseMultiqcModule):
             queried = "%.2f%s" % (int(query_rank)/total_len *200, '%')
         
         # ticks number
-        snr = dt_quality_score.loc[dt_quality_score['batch'] == 'QC_test', 'SNR'].iloc[0]
-        Q0 = dt_quality_score.loc[dt_quality_score['performance'] == 'Poor', 'SNR'].iloc[len_poor -1]
-        Q1 = dt_quality_score.loc[dt_quality_score['performance'] == 'Poor', 'SNR'].iloc[0]
-        Q2 = dt_quality_score.loc[dt_quality_score['performance'] == 'Acceptable', 'SNR'].iloc[0]
-        Q3 = dt_quality_score.loc[dt_quality_score['performance'] == 'Outstanding', 'SNR'].iloc[0]
+        snr = dt_quality_score.loc[dt_quality_score['batch'] == 'QC_test', 'total_score'].iloc[0]
+        Q0 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Poor', 'total_score'].iloc[len_poor -1])
+        Q1 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Poor', 'total_score'].iloc[0])
+        Q2 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Acceptable', 'total_score'].iloc[0])
+        Q3 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Outstanding', 'total_score'].iloc[0])
         
         # Position of ticks
         tick_Q1 = poor
@@ -194,7 +194,8 @@ class MultiqcModule(BaseMultiqcModule):
             name='QC metric(s) summary',
             anchor=id + '_anchor',
             description="""
-            The submitted data to be tested can be divided into 3 levels based on the SNR by comparing with historical batches: <span style="color: #b80d0d;font-weight:bold">Poor</span>, <span style="color: #70c402;font-weight:bold">Acceptable</span>, <span style="color: #0f9115;font-weight:bold">Outstanding</span>.<br>
+            The total performance score is calculated to measure the overall quality of a dataset generated from a lab for its effectiveness in quantifying the transcriptomic differences among the four Quartet RNA reference materials by summarizing reference dataset-independent quality measurement (SNR) and reference dataset-dependent quality measurement (RC). The total score is expressed as the geometrical mean of SNR and RC. 
+            The submitted data to be tested can be divided into 3 levels based on the total score by comparing with historical batches: <span style="color: #b80d0d;font-weight:bold">Poor</span>, <span style="color: #70c402;font-weight:bold">Acceptable</span>, <span style="color: #0f9115;font-weight:bold">Outstanding</span>.<br>
             * _Poor_ - the bottom 20%.
             * _Acceptable_ - between bottom 20% and top 80%.
             * _Outstanding_ - the top 20%.
