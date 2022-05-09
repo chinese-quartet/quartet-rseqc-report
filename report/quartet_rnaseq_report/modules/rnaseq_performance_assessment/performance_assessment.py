@@ -119,22 +119,16 @@ class MultiqcModule(BaseMultiqcModule):
         else:
             queried = "%.2f%s" % (int(query_rank)/total_len *200, '%')
         
-        print({'poor': poor})
-        print({'outstanding': outstanding})
-        print({'queried': queried})
-        
         # ticks number
         snr = dt_quality_score.loc[dt_quality_score['batch'] == 'QC_test', 'SNR'].iloc[0]
         Q0 = dt_quality_score.loc[dt_quality_score['performance'] == 'Poor', 'SNR'].iloc[len_poor -1]
         Q1 = dt_quality_score.loc[dt_quality_score['performance'] == 'Poor', 'SNR'].iloc[0]
         Q2 = dt_quality_score.loc[dt_quality_score['performance'] == 'Acceptable', 'SNR'].iloc[0]
         Q3 = dt_quality_score.loc[dt_quality_score['performance'] == 'Outstanding', 'SNR'].iloc[0]
-        print({'Q1': Q1})
         
         # Position of ticks
         tick_Q1 = poor
         tick_Q2 = "%.2f%s" % ((len_poor + len_acc)/total_len * 100, '%')
-        print(tick_Q2)
         
         metrics_summary_html = """
         <!-- Arrow -->
