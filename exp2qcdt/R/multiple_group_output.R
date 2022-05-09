@@ -266,14 +266,21 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   
   ### output summary table ---
   rank_len = dim(dt_snr_abs_rel_cor_combine)[1]
-  snr_rank <- c(rank(rank_len - dt_snr_abs_rel_cor_combine$SNR)[which(dt_snr_abs_rel_cor_combine$batch == "QC_test")])
-  abs_cor_rank <- c(rank_len - rank(dt_snr_abs_rel_cor_combine$LIR)[which(dt_snr_abs_rel_cor_combine$batch == "QC_test")])
-  rel_cor_rank <- c(rank_len - rank(dt_snr_abs_rel_cor_combine$LRR2)[which(dt_snr_abs_rel_cor_combine$batch == "QC_test")])
+  snr_val <- dt_snr_abs_rel_cor_combine$SNR
+  names(snr_val) <- dt_snr_abs_rel_cor_combine$batch
+  snr_rank <-  which(names(sort(snr_val, decreasing = TRUE)) == 'QC_test')
+  abs_cor_val <- dt_snr_abs_rel_cor_combine$LIR
+  names(abs_cor_val) <- dt_snr_abs_rel_cor_combine$batch
+  abs_cor_rank <-  which(names(sort(abs_cor_val, decreasing = TRUE)) == 'QC_test')
+  rel_cor_val <- dt_snr_abs_rel_cor_combine$LRR2
+  names(rel_cor_val) <- dt_snr_abs_rel_cor_combine$batch
+  rel_cor_rank <-  which(names(sort(rel_cor_val, decreasing = TRUE)) == 'QC_test')
+  
   dt_metric_summary <- data.table(qc_metrics = 'Signal-to-Noise Ratio (SNR)', 
-                                  value = round(snr_value, digits = 3),
+                                  value = round(snr_value, digits = 2),
                                   historical_value = '19.5 ± 7.04', 
-                                  rank = snr_rank)
-  colnames(dt_metric_summary) <- c('Quality Metrics', 'Value', 'Historical Value', 'Rank')
+                                  rank = paste(snr_rank, '/', rank_len, sep = ''))
+  colnames(dt_metric_summary) <- c('qc_metrics', 'value', 'historical_value', 'rank')
   fwrite(dt_metric_summary, file = paste(result_dir, "/performance_assessment/qc_metrics_summary.txt", sep = ""), sep = "\t")
   
   ### output total quality score ---
@@ -297,7 +304,14 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   dt_hq_score_scale[, SNR := dt_hq_score$SNR]
   dt_hq_score_scale[, quality_score := rowMeans(.SD, na.rm = T), .SDcols = c('SNR_scale','LIR_scale', 'LRR2_scale')]
   dt_hq_score_scale$quality_score <- rescale(dt_hq_score_scale$quality_score, c(0, 1))
-  fwrite(dt_hq_score_scale, file = paste(result_dir, "/performance_assessment/quality_score.txt", sep = ""), sep = "\t")
+  
+  # rank and performance
+  dt_hq_score_scale_s <- dt_hq_score_scale[order(dt_hq_score_scale$SNR, decreasing = TRUE)]
+  dt_hq_score_scale_s[, rank := 1: dim(dt_hq_score_scale_s)[1]]
+  dt_hq_score_scale_s[rank <= dim(dt_hq_score_scale_s)[1]/5, performance := 'Outstanding']
+  dt_hq_score_scale_s[dim(dt_hq_score_scale_s)[1]/5 < rank & rank < dim(dt_hq_score_scale_s)[1]*4/5, performance := 'Acceptable']
+  dt_hq_score_scale_s[dim(dt_hq_score_scale_s)[1]*4/5 <=rank & rank <= dim(dt_hq_score_scale_s)[1], performance := 'Poor']
+  fwrite(dt_hq_score_scale_s, file = paste(result_dir, "/performance_assessment/quality_score.txt", sep = ""), sep = "\t")
   
   ### quality score plot ---
   make_score_figure(result_dir, dt_hq_score_scale)

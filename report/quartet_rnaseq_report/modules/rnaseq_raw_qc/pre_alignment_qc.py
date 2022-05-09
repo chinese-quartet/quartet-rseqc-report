@@ -97,11 +97,9 @@ class MultiqcModule(BaseMultiqcModule):
         for f in self.find_log_files('rnaseq_raw_qc/fastq_screen',
                                      filehandles=True):
             
-            parsed_data = self.parse_fqscreen(f)
-            
             if f['s_name'].endswith('_screen'):
                 f['s_name'] = f['s_name'][:-7]
-                print(f['s_name'])
+            parsed_data = self.parse_fqscreen(f)
                 
             if parsed_data is not None:
                 if f['s_name'] in self.fq_screen_data:
