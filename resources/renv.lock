@@ -248,19 +248,6 @@
       "Repository": "CRAN",
       "Hash": "ec8ca05cffcc70569eaaad8469d2a3a7"
     },
-    "exp2qcdt": {
-      "Package": "exp2qcdt",
-      "Version": "0.2.4",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "quartet-rseqc-report",
-      "RemoteUsername": "chinese-quartet",
-      "RemoteRef": "HEAD",
-      "RemoteSha": "0ffc9c39d355e505b0bacd9ee8c0386b7f3ff723",
-      "RemoteSubdir": "exp2qcdt",
-      "Hash": "b3d8afd740a2b04e5f00a1120d3a1ac3"
-    },
     "fansi": {
       "Package": "fansi",
       "Version": "0.5.0",
