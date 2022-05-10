@@ -29,7 +29,7 @@ class MultiqcModule(BaseMultiqcModule):
         super(MultiqcModule, self).__init__(
             name='Post Alignment QC',
             anchor='rnaseq_post_alignment_qc',
-            href='https://github.com/clinico-omics/rnaseq-report',
+            href='https://github.com/chinese-quartet/quartet-rseqc-report',
             info=" is an report module to show the quality of base.")
 
         # Initialise the submodules

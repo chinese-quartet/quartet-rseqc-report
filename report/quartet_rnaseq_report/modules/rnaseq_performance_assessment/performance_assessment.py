@@ -30,7 +30,7 @@ class MultiqcModule(BaseMultiqcModule):
             name='Performance Assessment',
             target="performance_assessment",
             anchor='performance_assessment',
-            href='https://github.com/clinico-omics/quartet-rnaseq-report',
+            href='https://github.com/chinese-quartet/quartet-rseqc-report',
             info=
             " is an report module to show the performance of quartet samples.")
         

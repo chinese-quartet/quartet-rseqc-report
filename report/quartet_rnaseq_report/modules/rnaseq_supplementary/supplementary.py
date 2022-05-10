@@ -12,6 +12,7 @@ def read_image(image):
   with open(image, "rb") as image_file:
     encoded_string = base64.b64encode(image_file.read())
     return encoded_string.decode('utf-8')
+
 class MultiqcModule(BaseMultiqcModule):
     def __init__(self):
 
@@ -22,9 +23,9 @@ class MultiqcModule(BaseMultiqcModule):
         # Initialise the parent module Class object
         super(MultiqcModule, self).__init__(
             name='Supplementary',
-            target='supplementary',
-            anchor='supplementary',
-            href='https://github.com/clinico-omics/quartet-rnaseq-report',
+            target='rnaseq_supplementary',
+            anchor='rnaseq_supplementary',
+            href='https://github.com/chinese-quartet/quartet-rseqc-report',
             info=
             ' is a module to show the additional information about this quality assessment report.'
         )
@@ -73,11 +74,10 @@ class MultiqcModule(BaseMultiqcModule):
             <!-- Contact us -->
             <div class='contact'>
                 <div class='small-12 columns'>
-                <h3 class='section-header black'>Contact Us</h3>
-                <b>Fudan University Pharmacogenomics Research Center</b>
-                <p><strong>Project Manager Zhihui Li</strong></p>
-                <li style='margin-top:1ex'>Phone: 15200852771</li>
-                <li style='margin-top:1ex'>Email: 18210700119@fudan.edu.cn</li>
+                    <h3 class='section-header black'>Contact Us</h3>
+                    <b>Fudan University Pharmacogenomics Research Center</b>
+                    <p><strong>Project Manager: Quartet Team</strong></p>
+                    <li style='margin-top:1ex'>Email: quartet@fudan.edu.cn</li>
                 </div>
             </div>
             <!-- Disclaimer -->

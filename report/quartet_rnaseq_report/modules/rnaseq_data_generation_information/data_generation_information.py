@@ -29,7 +29,7 @@ class MultiqcModule(BaseMultiqcModule):
             name='Data Generation Information',
             target='data_generation_information',
             anchor='data_generation_information',
-            href='https://github.com/clinico-omics/quartet-rnaseq-report',
+            href='https://github.com/chinese-quartet/quartet-rseqc-report',
             info=' is an report module to show the basic information about the sequencing data.'
         )
 

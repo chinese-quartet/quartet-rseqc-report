@@ -35,7 +35,7 @@ class MultiqcModule(BaseMultiqcModule):
             name='Pre Alignment QC',
             target="pre_alignment_qc",
             anchor='pre_alignment_qc',
-            href='https://github.com/clinico-omics/quartet-rnaseq-report',
+            href='https://github.com/chinese-quartet/quartet-rseqc-report',
             info=" is an report module to show the quality of base.")
 
         self.pre_alignment_data_stats = list()
