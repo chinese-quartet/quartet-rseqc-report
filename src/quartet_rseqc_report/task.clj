@@ -103,7 +103,6 @@
         exp-count-filepath (fs-lib/join-paths dest-dir "count.csv")
         result-dir (fs-lib/join-paths dest-dir "results")
         log-path (fs-lib/join-paths dest-dir "log")
-        config-path (fs-lib/join-paths dest-dir "results", "quartet_rnaseq_report.yaml")
         subdirs (rseqc/list-dirs data-dir)]
     (log/info "List subdirs: " subdirs)
     (try
@@ -123,7 +122,6 @@
       (doseq [files-qualimap-RNA-tar (rseqc/batch-filter-files (fs-lib/join-paths dest-dir "results/post_alignment_qc/rnaseq_qc") [".*tar.gz"])]
         (rseqc/decompression-tar files-qualimap-RNA-tar))
       (update-process! task-id 50)
-      (rseqc/gen-multiqc-config config-path)
       (let [results (util/chain-fn-coll [(fn []
                                            (update-process! task-id 60)
                                            (rseqc/call-exp2qcdt! exp-fpkm-filepath exp-count-filepath metadata-file result-dir))
@@ -139,8 +137,7 @@
                                            {:status "Success" :msg ""})
                                          (fn []
                                            (update-process! task-id 80)
-                                           (rseqc/multiqc result-dir dest-dir {:config config-path
-                                                                               :template "quartet_rnaseq_report"
+                                           (rseqc/multiqc result-dir dest-dir {:template "quartet_rnaseq_report"
                                                                                :title "Quartet RNA report"
                                                                                :env {:PATH (add-env-to-path "quartet-rseqc-report")}}))]
                                         (fn [result] (= (:status result) "Success")))

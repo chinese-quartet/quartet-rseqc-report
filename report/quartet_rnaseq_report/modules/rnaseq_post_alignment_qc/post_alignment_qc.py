@@ -29,7 +29,7 @@ class MultiqcModule(BaseMultiqcModule):
         super(MultiqcModule, self).__init__(
             name='Post Alignment QC',
             anchor='rnaseq_post_alignment_qc',
-            href='https://github.com/clinico-omics/rnaseq-report',
+            href='https://github.com/chinese-quartet/quartet-rseqc-report',
             info=" is an report module to show the quality of base.")
 
         # Initialise the submodules
@@ -66,45 +66,6 @@ class MultiqcModule(BaseMultiqcModule):
     def post_alignment_stats(self):
         """ Add some single-number stats to the basic statistics
         table at the top of the report """
-        # Prep the data
-        error_rate_mean = []
-        gc_mean = []
-        median_insert_size_mean = []
-        exonic_mean = []
-        intronic_mean = []
-        intergenic_mean = []
-
-        for k in self.general_stats_data.keys():
-            error_rate_mean.append(
-                self.general_stats_data[k]['general_error_rate'])
-            gc_mean.append(self.general_stats_data[k]['avg_gc'])
-            median_insert_size_mean.append(
-                self.general_stats_data[k]['median_insert_size'])
-            exonic_mean.append(
-                self.general_stats_data[k]['reads_aligned_exonic'])
-            intronic_mean.append(
-                self.general_stats_data[k]['reads_aligned_intronic'])
-            intergenic_mean.append(
-                self.general_stats_data[k]['reads_aligned_intergenic'])
-
-        self.general_stats_data['Batch average value'] = {
-            'general_error_rate':
-            sum(error_rate_mean) / len(error_rate_mean),
-            'avg_gc':
-            sum(gc_mean) / len(gc_mean),
-            'median_insert_size':
-            sum(median_insert_size_mean) / len(median_insert_size_mean),
-            'reads_aligned_exonic':
-            sum(exonic_mean) / len(exonic_mean),
-            'reads_aligned_intronic':
-            sum(intronic_mean) / len(intronic_mean),
-            'reads_aligned_intergenic':
-            sum(intergenic_mean) / len(intergenic_mean)
-        }
-
-        self.general_stats_data['Historical value'] = {
-            'general_error_rate': '0.01±0.01'
-        }
 
         self.add_section(name='Post alignment stats',
                          anchor='post_alignment_stats',
@@ -314,7 +275,6 @@ class MultiqcModule(BaseMultiqcModule):
             self.qualimap_rnaseq_cov_hist)
 
         #### Plots
-
         # Genomic Origin Bar Graph
         # NB: Ignore 'Overlapping Exon' in report - these make the numbers add up to > 100%
         if len(self.qualimap_rnaseq_genome_results) > 0:
@@ -394,7 +354,7 @@ class MultiqcModule(BaseMultiqcModule):
             original sample (<a href="https://doi.org/10.1186/s13059-016-0881-8"
             target="_blank">Conesa et al. 2016</a>).'''
             self.add_section(
-                name='Gene Coverage Profile',
+                name='Gene coverage profile',
                 anchor='qualimap-genome-fraction-coverage',
                 description=
                 'Mean distribution of coverage depth across the length of all mapped transcripts.',

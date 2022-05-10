@@ -35,7 +35,7 @@ class MultiqcModule(BaseMultiqcModule):
             name='Pre Alignment QC',
             target="pre_alignment_qc",
             anchor='pre_alignment_qc',
-            href='https://github.com/clinico-omics/quartet-rnaseq-report',
+            href='https://github.com/chinese-quartet/quartet-rseqc-report',
             info=" is an report module to show the quality of base.")
 
         self.pre_alignment_data_stats = list()
@@ -83,6 +83,7 @@ class MultiqcModule(BaseMultiqcModule):
             raise UserWarning
 
         log.info("Found {} reports".format(len(self.fastqc_data)))
+        
         # Write the summary stats to a file
         data = dict()
         for s_name in self.fastqc_data:
@@ -95,8 +96,11 @@ class MultiqcModule(BaseMultiqcModule):
         self.num_orgs = 0
         for f in self.find_log_files('rnaseq_raw_qc/fastq_screen',
                                      filehandles=True):
+            
+            if f['s_name'].endswith('_screen'):
+                f['s_name'] = f['s_name'][:-7]
             parsed_data = self.parse_fqscreen(f)
-            f['s_name'] = f['s_name'][:-7]
+                
             if parsed_data is not None:
                 if f['s_name'] in self.fq_screen_data:
                     log.debug(
@@ -256,19 +260,6 @@ class MultiqcModule(BaseMultiqcModule):
             except KeyError:
                 log.warning("Sample had zero reads: '{}'".format(s_name))
                 data[s_name] = {'total_sequences': 0, 'percent_gc': 0}
-        ts_mean = []
-        gc_mean = []
-        for k in data.keys():
-            ts_mean.append(data[k]['total_sequences'])
-            gc_mean.append(data[k]['percent_gc'])
-        data['Batch average value'] = {
-            'total_sequences': sum(ts_mean) / len(ts_mean),
-            'percent_gc': sum(gc_mean) / len(gc_mean)
-        }
-        data['Historical value'] = {
-            'total_sequences': 59530000,
-            'percent_gc': 48.82
-        }
 
         headers = OrderedDict()
         headers['total_sequences'] = {
@@ -370,7 +361,7 @@ class MultiqcModule(BaseMultiqcModule):
             ]
         }
         self.add_section(
-            name='Sequence Quality Histograms',
+            name='Sequence quality histograms',
             anchor='fastqc_per_base_sequence_quality',
             description=
             'The mean quality value across each base position in the read.',
@@ -506,49 +497,4 @@ class MultiqcModule(BaseMultiqcModule):
                                            0)
                 except KeyError:
                     pass
-        human_mean = []
-        ercc_mean = []
-        ecoli_mean = []
-        adapter_mean = []
-        vector_mean = []
-        rrna_mean = []
-        virus_mean = []
-        yeast_mean = []
-        mitoch_mean = []
-        no_hits_mean = []
-        for k in totals.keys():
-            human_mean.append(totals[k]['Human percentage'])
-            ercc_mean.append(totals[k]['ERCC percentage'])
-            ecoli_mean.append(totals[k]['EColi percentage'])
-            adapter_mean.append(totals[k]['Adapter percentage'])
-            vector_mean.append(totals[k]['Vector percentage'])
-            rrna_mean.append(totals[k]['rRNA percentage'])
-            virus_mean.append(totals[k]['Virus percentage'])
-            yeast_mean.append(totals[k]['Yeast percentage'])
-            mitoch_mean.append(totals[k]['Mitoch percentage'])
-            no_hits_mean.append(totals[k]['No hits percentage'])
-        totals['Batch average value'] = {
-            'Human percentage': sum(human_mean) / len(human_mean),
-            'ERCC percentage': sum(ercc_mean) / len(ercc_mean),
-            'EColi percentage': sum(ecoli_mean) / len(ecoli_mean),
-            'Adapter percentage': sum(adapter_mean) / len(adapter_mean),
-            'Vector percentage': sum(vector_mean) / len(vector_mean),
-            'rRNA percentage': sum(rrna_mean) / len(rrna_mean),
-            'Virus percentage': sum(virus_mean) / len(virus_mean),
-            'Yeast percentage': sum(yeast_mean) / len(yeast_mean),
-            'Mitoch percentage': sum(mitoch_mean) / len(mitoch_mean),
-            'No hits percentage': sum(no_hits_mean) / len(no_hits_mean),
-        }
-        totals['Historical value'] = {
-            'Human percentage': '98.34±14.33',
-            'ERCC percentage': '0.15±0.02',
-            'EColi percentage': '0.003±0.004',
-            'Adapter percentage': '0.003±0.001',
-            'Vector percentage': '0.19±0.03',
-            'rRNA percentage': '1.97±0.29',
-            'Virus percentage': '0.64±0.09',
-            'Yeast percentage': '0.34±0.05',
-            'Mitoch percentage': '2.70±0.39',
-            'No hits percentage': '0.99±0.14'
-        }
         return totals

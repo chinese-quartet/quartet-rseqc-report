@@ -3,20 +3,20 @@
 
 from __future__ import print_function
 from collections import OrderedDict
-import logging
+import logging, os
+import random
 import pandas as pd
 import numpy as np
 import plotly.express as px
 import plotly.figure_factory as ff
 
-from multiqc import config
-from multiqc.plots import scatter
+from multiqc.utils import config, report
+from multiqc.plots import scatter, table, heatmap
 from multiqc.modules.base_module import BaseMultiqcModule
 from quartet_rnaseq_report.modules.plotly import plot as plotly_plot
 
 # Initialise the main MultiQC logger
 log = logging.getLogger('multiqc')
-
 
 class MultiqcModule(BaseMultiqcModule):
     def __init__(self):
@@ -30,11 +30,18 @@ class MultiqcModule(BaseMultiqcModule):
             name='Performance Assessment',
             target="performance_assessment",
             anchor='performance_assessment',
-            href='https://github.com/clinico-omics/quartet-rnaseq-report',
+            href='https://github.com/chinese-quartet/quartet-rseqc-report',
             info=
             " is an report module to show the performance of quartet samples.")
+        
+        # Add to self.css and self.js to be included in template
+        self.css = {
+            "assets/css/rank.css": os.path.join(
+                os.path.dirname(__file__), "assets", "css", "rank.css"
+                )
+            }
         ########################find log files#################################
-        # Plot0: Performance Score
+        ### Quality Score Table
         quality_score = []
         for f in self.find_log_files(
                 'rnaseq_performance_assessment/quality_score'):
@@ -42,111 +49,56 @@ class MultiqcModule(BaseMultiqcModule):
 
         if len(quality_score) != 0:
             ## Now add each section in order
-            quality_score_df = self.list2df(quality_score)
-            quality_score_df.astype({'quality_score': float})
-            test_score = quality_score_df.loc[
-                quality_score_df['batch'] ==
-                'QC_test']['quality_score'].values[0]
-            quality_score_list = [[
-                float(i)
-                for i in quality_score_df['quality_score'].values.tolist()
-            ]]
-            self.plot_quality_score('plot_quality_score', quality_score_list,
-                                    test_score)
+            dt_quality_score = self.list2df(quality_score)
+            
         else:
             log.debug("No file matched: quality_score - quality_score.txt")
 
         # Summary Table1: ALL QC metrics summary
         qc_metrics_summary = []
-        for f in self.find_log_files(
-                'rnaseq_performance_assessment/qc_metrics_summary'):
+        for f in self.find_log_files('rnaseq_performance_assessment/qc_metrics_summary'):
             qc_metrics_summary = f['f'].splitlines()
-
+            
         if len(qc_metrics_summary) != 0:
             ## Now add each section in order
             qc_metrics_summary_df = self.list2df(qc_metrics_summary)
-            qc_metrics_summary_list = [
-                qc_metrics_summary_df.columns.values.tolist()
-            ] + qc_metrics_summary_df.values.tolist()
-            self.plot_qc_metrics_table('qc_metrics_summary_table',
-                                       qc_metrics_summary_list)
+            table_qc_metrics_dic = qc_metrics_summary_df.set_index('qc_metrics').T.to_dict()
+            self.plot_qc_metrics_table(id = 'qc_metrics_summary_table',
+                                       qc_metrics_summary_list = table_qc_metrics_dic,
+                                       dt_quality_score = dt_quality_score)
         else:
             log.debug(
                 "No file matched: deg_performance_summary_table - deg_performance_summary.txt"
             )
-
-        # Plot1: performance of absolute expression
-        dt_abs_exp_evaluate = []
-        for f in self.find_log_files(
-                'rnaseq_performance_assessment/performance_of_absolute_exp'):
-            dt_abs_exp_evaluate = f['f'].splitlines()
-
-        if len(dt_abs_exp_evaluate) != 0:
-            ## Now add each section in order
-            abs_exp_evaluate_df = self.list2df(dt_abs_exp_evaluate)
-            self.plot_abs_exp_evaluate_point('abs_exp_evaluate_plot',
-                                             abs_exp_evaluate_df)
-        else:
-            log.debug(
-                "No file matched: performance_of_absolute - performance_of_absolute_exp.txt"
-            )
-
-        # Plot2: performance of relative expression
-        dt_rel_exp_evaluate = []
-        for f in self.find_log_files(
-                'rnaseq_performance_assessment/performance_of_relative_exp'):
-            dt_rel_exp_evaluate = f['f'].splitlines()
-
-        if len(dt_rel_exp_evaluate) != 0:
-            ## Now add each section in order
-            rel_exp_evaluate_df = self.list2df(dt_rel_exp_evaluate)
-            self.plot_rel_exp_evaluate_point('el_exp_evaluate_plot',
-                                             rel_exp_evaluate_df)
-        else:
-            log.debug(
-                "No file matched: performance_of_relative - performance_of_relative_exp.txt"
-            )
+        
+        # Plot2: SNR and RC scatter plot
+        self.plot_snr_rc_point('plot_snr_rc_point', dt_quality_score)
 
         # Plot3: SNR
-        snr_data = []
-        for f in self.find_log_files(
-                'rnaseq_performance_assessment/pca_with_snr'):
-            snr_data = f['f'].splitlines()
+        list_snr = []
+        for f in self.find_log_files('rnaseq_performance_assessment/pca_with_snr'):
+            list_snr = f['f'].splitlines()
 
-        if len(snr_data) != 0:
+        if len(list_snr) != 0:
             ## Now add each section in order
-            snr_data_df = self.list2df(snr_data)
-            self.plot_snr_pca_point('snr_pca_plot', snr_data_df)
+            df_snr = self.list2df(list_snr)
+            self.plot_snr_pca_point('snr_pca_plot', df_snr)
         else:
             log.debug("No file matched: snr_pca_point - studydesign_snr.txt")
-
-        # Plot4: Relative correlation
-        rel_exp_data = []
-        for f in self.find_log_files(
-                'rnaseq_performance_assessment/relative_exp_correlation'):
-            rel_exp_data = f['f'].splitlines()
-
-        if len(rel_exp_data) != 0:
+        
+        # Plot4: RC correlation
+        list_rc = []
+        for f in self.find_log_files('rnaseq_performance_assessment/logfc_cor_ref_test'):
+            list_rc = f['f'].splitlines()
+            
+        if len(list_rc) != 0:
             ## Now add each section in order
-            rel_exp_data_df = self.list2df(rel_exp_data)
-            self.plot_rel_cor_point('rel_cor_plot', rel_exp_data_df)
+            df_rc = self.list2df(list_rc)
+            self.plot_rc_cor_point('rc_cor_plot', df_rc)
         else:
             log.debug(
-                "No file matched: rel_cor_plot - relative_exp_correlation.txt")
-
-        # Plot5: Abosolute correlation
-        abs_exp_data = []
-        for f in self.find_log_files(
-                'rnaseq_performance_assessment/absolute_exp_correlation'):
-            abs_exp_data = f['f'].splitlines()
-
-        if len(abs_exp_data) != 0:
-            ## Now add each section in order
-            abs_exp_data_df = self.list2df(abs_exp_data)
-            self.plot_abs_cor_point('abs_cor_plot', abs_exp_data_df)
-        else:
-            log.debug(
-                "No file matched: abs_cor_plot - absolute_exp_correlation.txt")
+                "No file matched: performance_of_relative - logfc_cor_ref_test.txt"
+            )
 
     def list2df(self, data):
         """Convert string list to dataframe"""
@@ -158,145 +110,135 @@ class MultiqcModule(BaseMultiqcModule):
         return df
 
     #######################add section#################################
-    ###Plot0: quality score
-    def plot_quality_score(self,
-                           id,
-                           quality_score_list,
-                           test_score,
-                           title=None,
-                           section_name=None,
-                           description=None,
-                           helptext=None):
-        fig = px.imshow(quality_score_list,
-                        x=quality_score_list[0],
-                        y=['score'],
-                        template="simple_white")
-        fig.update_traces(dict(showscale=False,
-                               coloraxis=None,
-                               colorscale='RdYlGn'),
-                          selector={'type': 'heatmap'})
-        fig.update_layout(showlegend=False,
-                          annotations=[
-                              dict(x=test_score,
-                                   y=-2.5,
-                                   xref="x",
-                                   yref="y",
-                                   text=str(test_score)[0:4],
-                                   textangle=0,
-                                   showarrow=True,
-                                   font=dict(family="Arial, sans-serif",
-                                             size=45,
-                                             color="black"),
-                                   align="center",
-                                   arrowhead=1,
-                                   arrowsize=4,
-                                   arrowwidth=3,
-                                   arrowside="end",
-                                   arrowcolor="grey",
-                                   ax=0,
-                                   ay=-60,
-                                   yshift=-145)
-                          ])
-        fig.update_xaxes(ticks="outside",
-                         tickwidth=2,
-                         tickcolor='black',
-                         ticklen=10,
-                         showline=True,
-                         linewidth=2,
-                         linecolor='black',
-                         tickfont=dict(family='Arial, sans-serif',
-                                       color='black',
-                                       size=20))
-        fig.update_yaxes(showline=False, showticklabels=False, showgrid=False)
-
-        html = plotly_plot(
-            fig, {
-                'id': id + '_plot',
-                'data_id': id + '_data',
-                'title': title,
-                'auto_margin': True
-            })
-
-        # Add a report section with the scatter plot
-        self.add_section(
-            name='Quality Score',
-            anchor=id + '_anchor',
-            description=description if description else
-            'Performance metrics and thresholds using reference RNA',
-            helptext=helptext if helptext else '''
-            This longer description explains what exactly the numbers mean
-            and supports markdown formatting. This means that we can do _this_:
-
-            * Something important
-            * Something else important
-            * Best of all - some `code`
-
-            Doesn't matter if this is copied from documentation - makes it
-            easier for people to find quickly.
-            ''',
-            plot=html)
-
-    ##Table1: QC metrics performance summary
+    ##Summary Plot1 and Table1: QC metrics performance summary
     def plot_qc_metrics_table(self,
                               id,
                               qc_metrics_summary_list,
-                              title="QC Metrics Summary",
-                              section_name=None,
-                              description=None,
-                              helptext=None):
-        fig = ff.create_table(qc_metrics_summary_list, height_constant=60)
+                              dt_quality_score):
+        
+        # heatmap
+        # progress and arrow
+        total_len = dt_quality_score.shape[0]
+        len_poor = len(dt_quality_score[dt_quality_score["performance"]=='Poor'])
+        len_acc = len(dt_quality_score[dt_quality_score["performance"]=='Acceptable'])
+        len_out = len(dt_quality_score[dt_quality_score["performance"]=='Outstanding'])
+        query_rank = total_len + 1 - int(dt_quality_score.loc[dt_quality_score['batch'] == 'QC_test', 'rank'].iloc[0])
+        poor = "%.2f%s" % (len_poor/total_len * 100, '%')
+        acceptable = "%.2f%s" % (len_acc/total_len * 100, '%')
+        outstanding = "%.2f%s" % (len_out/total_len * 100, '%')
+        if query_rank == 1:
+            queried = "%.2f%s" % (0, '%')
+        elif query_rank == total_len + 1:
+            queried = "%.2f%s" % (200, '%')
+        else:
+            queried = "%.2f%s" % (int(query_rank)/total_len *200, '%')
+        
+        # ticks number
+        snr = dt_quality_score.loc[dt_quality_score['batch'] == 'QC_test', 'total_score'].iloc[0]
+        Q0 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Poor', 'total_score'].iloc[len_poor -1])
+        Q1 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Poor', 'total_score'].iloc[0])
+        Q2 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Acceptable', 'total_score'].iloc[0])
+        Q3 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Outstanding', 'total_score'].iloc[0])
+        
+        # Position of ticks
+        tick_Q1 = poor
+        tick_Q2 = "%.2f%s" % ((len_poor + len_acc)/total_len * 100, '%')
+        
+        metrics_summary_html = """
+        <!-- Arrow -->
+        <div class="arrow" style="width: {queried}; margin-top:10px; height: 35px;">
+        <svg class="lower-tangle" transform="translate(0, 18)"></svg>
+        <span class="lower-label" style="margin-bottom: 25px;"><b> {snr} </b></span>
+        </div>
+        
+        <!-- Progress bar -->
+        <div class="progress">
+          <div class="progress-bar progress-bar-poor" style="width: {poor}" data-toggle="tooltip" title="" data-original-title="">Poor</div>
+          <div class="progress-bar progress-bar-acceptable" style="width: {acceptable}" data-toggle="tooltip" title="" data-original-title="">Acceptable</div>
+          <div class="progress-bar progress-bar-outstanding" style="width: {outstanding}" data-toggle="tooltip" title="" data-original-title="">Outstanding</div>
+        </div>
+        
+        <!-- Scale interval -->
+        <span style="float:left; left:0%; position:relative; margin-top:-20px; color: #9F9FA3; font-size: 14px; text-align: center; display: inline-block">{Q0}</span>
+        <span style="float:left; left:{tick_Q1}; position:relative; margin-top:-20px; color: #9F9FA3; font-size: 14px; text-align: center; display: inline-block">{Q1}</span>
+        <span style="float:left; left:{tick_Q2}; position:relative; margin-top:-20px; color: #9F9FA3; font-size: 14px; text-align: center; display: inline-block">{Q2}</span>
+        <span style="float:left; left:99%; position:relative; margin-top:-20px; color: #9F9FA3; font-size: 14px; text-align: center; display: inline-block">{Q3}</span>
+        <br>
+        """.format(acceptable=acceptable, outstanding=outstanding, queried=queried, snr=snr, poor=poor, tick_Q1=tick_Q1, tick_Q2=tick_Q2, Q0=Q0, Q1=Q1, Q2=Q2, Q3=Q3)
 
-        html = plotly_plot(
-            fig, {
-                'id': id + '_plot',
-                'data_id': id + '_data',
-                'title': title,
-                'auto_margin': True
-            })
+        # table
+        headers = OrderedDict()
+        headers['category'] = {
+        'title': 'Category',
+        'description': 'ategory',
+        'scale': False,
+        'format': '{0:.0f}'
+        }
+        headers['value'] = {
+        'title': 'Value',
+        'description': 'Value',
+        'scale': False,
+        'format': '{0:.2f}'
+        }
+        headers['historical_value'] = {
+            'title': 'Historical value (mean ± SD)',
+            'description': 'Historical Value (mean ± SD)',
+            'scale': False,
+            'format': '{0:.2f}'
+            }
+        headers['rank'] = {
+            'title': 'Rank',
+            'description': 'Rank',
+            'scale': False,
+            'format': '{:.0f}'
+            }
+        table_config = {
+            'namespace': 'conclusion_summary',
+            'id': id,
+            'table_title': '',
+            'col1_header': 'Quality Metrics',
+            'no_beeswarm': True,
+            'sortRows': False
+            }
+        
+        metrics_table_html = table.plot(qc_metrics_summary_list, headers, table_config)
 
         # Add a report section with the scatter plot
         self.add_section(
-            name='QC Metrics Summary',
+            name='QC metrics summary',
             anchor=id + '_anchor',
-            description=description if description else
-            'Performance metrics and thresholds using reference RNAs',
-            helptext=helptext if helptext else '''
-            This longer description explains what exactly the numbers mean
-            and supports markdown formatting. This means that we can do _this_:
+            description="""
+            The total performance score is calculated to measure the overall quality of a dataset generated from a lab for its effectiveness in quantifying the transcriptomic differences among the four Quartet RNA reference materials by summarizing reference dataset-independent quality measurement (SNR) and reference dataset-dependent quality measurement (RC). The total score is expressed as the geometrical mean of SNR and RC. 
+            The submitted data to be tested can be divided into 3 levels based on the total score by comparing with historical batches: <span style="color: #b80d0d;font-weight:bold">Poor</span>, <span style="color: #70c402;font-weight:bold">Acceptable</span>, <span style="color: #0f9115;font-weight:bold">Outstanding</span>.<br>
+            * _Poor_ - the bottom 20%.
+            * _Acceptable_ - between bottom 20% and top 80%.
+            * _Outstanding_ - the top 20%.
+            """,
+            plot = metrics_summary_html + '\n' +  metrics_table_html
+            )
 
-            * Something important
-            * Something else important
-            * Best of all - some `code`
-
-            Doesn't matter if this is copied from documentation - makes it
-            easier for people to find quickly.
-            ''',
-            plot=html)
-
-    # Plot1: Abosolute expression performance evaluation
-    def plot_abs_exp_evaluate_point(
+    # Plot2: snr and rc
+    def plot_snr_rc_point(
             self,
             id,
-            abs_exp_evaluate_df,
-            title="Performance evaluation on the intra-batch level",
-            section_name=None,
+            quality_score,
+            title="SNR and RC",
             description=None,
             helptext=None):
-        fig = px.scatter(abs_exp_evaluate_df,
-                         x="SNR",
-                         y="LIR",
-                         color="protocol",
+        fig = px.scatter(quality_score, x="SNR", y="RC",
+                         symbol = 'group', 
+                         symbol_map = {"Reference": 0, "Query": 18},
+                         color="group",
                          color_discrete_map={
-                             "P": "#2f5c85",
-                             "R": "#7ba1c7",
-                             "QC": "red"
+                             "Query": "#bb1616",
+                             "Reference": "#2f5c85"
                          },
                          marginal_x="box",
                          marginal_y="box",
                          template="simple_white")
 
         fig.update_layout(xaxis_title='SNR',
-                          yaxis_title='Absolute correlation',
+                          yaxis_title='RC',
                           font=dict(family="Arial, sans-serif",
                                     size=18,
                                     color="black"),
@@ -312,83 +254,26 @@ class MultiqcModule(BaseMultiqcModule):
 
         # Add a report section with the scatter plot
         self.add_section(
-            name='Performance evaluation on the intra-batch level',
+            name='SNR and RC performance',
             anchor=id + '_anchor',
             description=description if description else
             'Performance metrics and thresholds using reference RNAs',
             helptext=helptext if helptext else '''
             This longer description explains what exactly the numbers mean
             and supports markdown formatting. This means that we can do _this_:
-
             * Something important
             * Something else important
             * Best of all - some `code`
-
             Doesn't matter if this is copied from documentation - makes it
             easier for people to find quickly.
             ''',
             plot=html)
-
-    # Plot2: Relative expression performance evaluation
-    def plot_rel_exp_evaluate_point(
-            self,
-            id,
-            rel_exp_evaluate_df,
-            title="Performance evaluation in relative expression",
-            section_name=None,
-            description=None,
-            helptext=None):
-        fig = px.scatter(rel_exp_evaluate_df,
-                         x="corr_ref",
-                         y="corr_FC",
-                         color="protocol",
-                         color_discrete_map={
-                             "P": "#2f5c85",
-                             "R": "#7ba1c7",
-                             "QC": "red"
-                         },
-                         marginal_x="box",
-                         marginal_y="box",
-                         template="simple_white")
-        fig.update_layout(
-            xaxis_title='Reference datasets based on relative correlation',
-            yaxis_title='Relative correlation',
-            font=dict(family="Arial, sans-serif", size=18, color="black"),
-            template="simple_white")
-
-        html = plotly_plot(
-            fig, {
-                'id': id + '_plot',
-                'data_id': id + '_data',
-                'title': title,
-                'auto_margin': True
-            })
-
-        # Add a report section with the scatter plot
-        self.add_section(
-            name='Performance evaluation in relative expression',
-            anchor=id + '_anchor',
-            description=description if description else
-            'Performance metrics and thresholds using reference RNAs',
-            helptext=helptext if helptext else '''
-                This longer description explains what exactly the numbers mean
-                and supports markdown formatting. This means that we can do _this_:
-
-                * Something important
-                * Something else important
-                * Best of all - some `code`
-
-                Doesn't matter if this is copied from documentation - makes it
-                easier for people to find quickly.
-                ''',
-            plot=html)
-
+    
     # Plot3: SNR performance evaluation
     def plot_snr_pca_point(self,
                            id,
                            snr_data_df,
                            title=None,
-                           section_name=None,
                            description=None,
                            helptext=None):
         SNR_value = 'SNR = ' + snr_data_df.iloc[1].at[
@@ -442,7 +327,7 @@ class MultiqcModule(BaseMultiqcModule):
             name='Signal-to-Noise Ratio',
             anchor=id + '_anchor',
             description=description if description else
-            'Performance metrics and thresholds using reference RNAs',
+            'Signal-to-noise ratio (SNR) is defined as the ratio of the power of a signal to the power of noise',
             helptext=helptext if helptext else '''
             This longer description explains what exactly the numbers mean
             and supports markdown formatting. This means that we can do _this_:
@@ -455,47 +340,33 @@ class MultiqcModule(BaseMultiqcModule):
             easier for people to find quickly.
             ''',
             plot=html)
-
-    # Plot4: Relative Correlation figure
-    def plot_rel_cor_point(self,
-                           id,
-                           rel_exp_data_df,
-                           title=None,
-                           section_name=None,
-                           description=None,
-                           helptext=None):
-        pccs_rel = str(
-            round(
-                rel_exp_data_df.iloc[:, 0].astype(float).corr(
-                    rel_exp_data_df.iloc[:, 1].astype(float)), 3))
-        gene_num = str(len(rel_exp_data_df))
-        fig = px.scatter(rel_exp_data_df,
-                         x=rel_exp_data_df.iloc[:, 0],
-                         y=rel_exp_data_df.iloc[:, 1],
-                         color_discrete_sequence=['#7BC8A4'],
-                         hover_name='gene_id',
+    
+    # Plot4: RC correlation plot
+    def plot_rc_cor_point(
+            self,
+            id,
+            df_rc,
+            title="Relative Correlation with Reference Datasets",
+            section_name=None,
+            description=None,
+            helptext=None):
+        fig = px.scatter(df_rc,
+                         x="meanlogFC_ref",
+                         y="meanlogFC_test",
+                         color="compare",
+                         color_discrete_map={
+                             "D5/D6": "#4CC3D9",
+                             "F7/D6": "#FFC65D",
+                             "M8/D6": "#F16745"
+                         },
+                         marginal_x="box",
+                         marginal_y="box",
                          template="simple_white")
-        fig.update_layout(title='cor = ' + pccs_rel + ' (N = ' + gene_num +
-                          ')',
-                          xaxis_title=rel_exp_data_df.columns[0],
-                          yaxis_title=rel_exp_data_df.columns[1],
-                          font=dict(family="Arial, sans-serif",
-                                    size=18,
-                                    color="black"))
-        fig.update_layout(title={
-            'y': 0.99,
-            'x': 0.5,
-            'xanchor': 'center',
-            'yanchor': 'top'
-        })
-        fig.update_xaxes(showline=True,
-                         linewidth=1,
-                         linecolor='black',
-                         mirror=True)
-        fig.update_yaxes(showline=True,
-                         linewidth=1,
-                         linecolor='black',
-                         mirror=True)
+        fig.update_layout(
+            xaxis_title='Reference Datasets',
+            yaxis_title='Query Data',
+            font=dict(family="Arial, sans-serif", size=18, color="black"),
+            template="simple_white")
 
         html = plotly_plot(
             fig, {
@@ -507,87 +378,17 @@ class MultiqcModule(BaseMultiqcModule):
 
         # Add a report section with the scatter plot
         self.add_section(
-            name='Relative Correlation',
+            name='Relative Correlation with Reference Datasets',
             anchor=id + '_anchor',
             description=description if description else
-            'Performance metrics and thresholds using reference RNAs',
+            'Relative correlation with reference datasets was calculate based on the Pearson correlation coefficient between the relative expression levels of a dataset for a given pair of groups and the corresponding reference fold-change values',
             helptext=helptext if helptext else '''
-            This longer description explains what exactly the numbers mean
-            and supports markdown formatting. This means that we can do _this_:
-
-            * Something important
-            * Something else important
-            * Best of all - some `code`
-
-            Doesn't matter if this is copied from documentation - makes it
-            easier for people to find quickly.
-            ''',
-            plot=html)
-
-    # Plot5: Abosolute Correlation figure
-
-    def plot_abs_cor_point(self,
-                           id,
-                           abs_exp_data_df,
-                           title=None,
-                           section_name=None,
-                           description=None,
-                           helptext=None):
-        pccs_abs = str(
-            round(
-                abs_exp_data_df.iloc[:, 1].astype(float).corr(
-                    abs_exp_data_df.iloc[:, 2].astype(float)), 3))
-        gene_num = str(len(abs_exp_data_df))
-        fig = px.scatter(abs_exp_data_df,
-                         x=abs_exp_data_df.iloc[:, 1],
-                         y=abs_exp_data_df.iloc[:, 2],
-                         hover_name='gene_id',
-                         template="simple_white")
-        fig.update_layout(title='cor = ' + pccs_abs + ' (N = ' + gene_num +
-                          ')',
-                          xaxis_title=abs_exp_data_df.columns[1],
-                          yaxis_title=abs_exp_data_df.columns[2],
-                          font=dict(family="Arial, sans-serif",
-                                    size=18,
-                                    color="black"))
-        fig.update_layout(title={
-            'y': 0.99,
-            'x': 0.5,
-            'xanchor': 'center',
-            'yanchor': 'top'
-        })
-        fig.update_xaxes(showline=True,
-                         linewidth=1,
-                         linecolor='black',
-                         mirror=True)
-        fig.update_yaxes(showline=True,
-                         linewidth=1,
-                         linecolor='black',
-                         mirror=True)
-
-        html = plotly_plot(
-            fig, {
-                'id': id + '_plot',
-                'data_id': id + '_data',
-                'title': title,
-                'auto_margin': True
-            })
-
-        # Add a report section with the scatter plot
-        self.add_section(
-            name='Abosolute Correlation',
-            anchor=id + '_anchor',
-            description=description if description else
-            'Performance metrics and thresholds using reference RNAs',
-            helptext=helptext if helptext else '''
-            This longer description explains what exactly the numbers mean
-            and supports markdown formatting. This means that we can do _this_:
-
-            * Something important
-            * Something else important
-            * Best of all - some `code`
-
-            Doesn't matter if this is copied from documentation - makes it
-            easier for people to find quickly.
-            ''',
+                This longer description explains what exactly the numbers mean
+                and supports markdown formatting. This means that we can do _this_:
+                * Something important
+                * Something else important
+                * Best of all - some `code`
+                Doesn't matter if this is copied from documentation - makes it
+                easier for people to find quickly.
+                ''',
             plot=html)
