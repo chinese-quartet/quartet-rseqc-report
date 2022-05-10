@@ -13,9 +13,9 @@ read_ref_data <- function(ref_data_dir) {
   # Returns:
   #   ref_data
   ref_data <- list()
-  ref_data$qcintra_forplot <- fread(paste0(ref_data_dir, "/ref_data_qc_value.csv"))
-  ref_data$corr_ref <- fread(paste0(ref_data_dir, "/TableS2_ReferenceDatasets.csv"), drop = 'V1')
-  ref_data$refqc_202011_forplot <- readRDS(paste0(ref_data_dir, "/refqc_202011_forplot.rds"))
+  ref_data$ref_qc_metrics_value <- fread(paste0(ref_data_dir, "/ref_data_qc_value.csv"))
+  ref_data$ref_fc_value <- fread(paste0(ref_data_dir, "/ref_data_fc_value.csv"))
+  ref_data$refqc_202011_forplot <- readRDS(paste0(ref_data_dir, "/refqc_202011_forplot.rds")) # will remove in the furture
 
   return(ref_data)
 }
@@ -87,7 +87,7 @@ make_theme <- function() {
 #' @export
 
 plot_scatter_box <- function(dt_sb, var_x, var_y, col_g, xlab, ylab, title_lab){
-  colors_fill = c(P = "#2f5c85", R = "#7ba1c7", QC = "red")
+  colors_fill = c(Reference= "#2f5c85", QC = "#7ba1c7", Query = "red")
   pmain <- ggplot(dt_sb, aes_string(x = var_x, y = var_y, color = col_g)) +
     geom_point() +
     scale_color_manual(values = colors_fill) +
@@ -185,21 +185,21 @@ get_pca_list <- function(expr_mat_forsignoise, exp_design, dt_meta) {
 
 make_score_figure <- function(result_dir, dt_hq_score_scale) {
   # dt_hq_score_scale shold contain batch colname and quality score
-  dt_hq_score_scale_order <- dt_hq_score_scale[order(dt_hq_score_scale$quality_score, decreasing = TRUE),]
-  dt_pscore <- data.table(cbind("score", dt_hq_score_scale_order[, .(quality_score, batch)]))
+  dt_hq_score_scale_order <- dt_hq_score_scale[order(dt_hq_score_scale$total_score, decreasing = TRUE),]
+  dt_pscore <- data.table(cbind("score", dt_hq_score_scale_order[, .(total_score, batch)]))
   setnames(dt_pscore, "V1", "type")
-  dt_pscore$quality_score <- as.character(round(dt_pscore$quality_score, digits = 2))
-  test_score <- dt_pscore[.("QC_test"), on = .(batch)][["quality_score"]]
+  dt_pscore$total_score <- as.character(round(dt_pscore$total_score, digits = 2))
+  test_score <- dt_pscore[.("QC_test"), on = .(batch)][["total_score"]]
   
   # plot
   pdf(paste(result_dir, "/performance_assessment/performance_score.pdf", sep = ""), 4, 4)
-  pt <- ggplot(dt_pscore, aes(x = quality_score, y = type, fill = quality_score)) +
+  pt <- ggplot(dt_pscore, aes(x = total_score, y = type, fill = total_score)) +
     geom_tile(color = "white", show.legend = FALSE) +
     scale_fill_manual(values = colorRampPalette(brewer.pal(9, "RdYlGn"))(21)) +
     annotate(geom = "curve", x = test_score,
              y = 2.5, xend = test_score, curvature = 0,
              yend = 1.5, arrow = arrow(angle = 45, length = unit(9, "mm"), type = "closed"), color = "grey") +
-    annotate(geom = "text", x = dt_pscore[.("QC_test"), on = .(batch)][["quality_score"]],
+    annotate(geom = "text", x = dt_pscore[.("QC_test"), on = .(batch)][["total_score"]],
              y = 2.2, label = test_score, hjust = "center", size = 10, fontface = "bold") +
     theme_void() +
     theme(plot.margin = margin(3, 0, 4, 0, "cm"))

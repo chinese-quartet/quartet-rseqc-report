@@ -8,9 +8,13 @@ Visualizes Quality Control(QC) results for Quartet Project.
 
 - Bash
 - Python3 >= 3.7
-- virtualenv
 - pip3
-- R >= 3.6.3 (**NOTE: Not supported in R >= 4.0.0**)
+- Java
+- R >= 3.6.3
+
+```
+conda create -c conda-forge -c bioconda -n quartet-rseqc-report python=3.9 openjdk=8.0.312
+```
 
 ### Installation
 
@@ -40,7 +44,7 @@ Please access [Quartet Service](https://github.com/chinese-quartet/quartet-servi
 ### Installation
 
 ```bash
-copm-cli install -n quartet-rseqc-report -V v0.1.2 -d plugins
+copm-cli install -n quartet-rseqc-report -V v0.1.4 -d plugins
 ```
 
 ## Examples

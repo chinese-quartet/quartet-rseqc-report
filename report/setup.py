@@ -5,7 +5,7 @@ MultiReport for Quartet RNAseq Report.
 
 from setuptools import setup, find_packages
 
-version = '0.1.2'
+version = '0.1.4'
 
 setup(
     name='quartet-rnaseq-report',
@@ -15,13 +15,13 @@ setup(
     description="MultiReport for Quartet RNA-Seq Pipeline.",
     long_description=__doc__,
     keywords='bioinformatics',
-    url='https://github.com/clinico-omics/quartet-rnaseq-report',
+    url='https://github.com/chinese-quartet/quartet-rseqc-report',
     download_url=
-    'https://github.com/clinico-omics/quartet-rnaseq-report/releases',
+    'https://github.com/chinese-quartet/quartet-rseqc-report/releases',
     license='MIT',
     packages=find_packages(),
     include_package_data=True,
-    install_requires=['multiqc==1.9', 'plotly==4.9.0', 'pandas==1.1.0'],
+    install_requires=['multiqc==1.11', 'plotly>=4.9.0', 'pandas>=1.1.0'],
     entry_points={
         'multiqc.modules.v1': [
             'rnaseq_data_generation_information = quartet_rnaseq_report.modules.rnaseq_data_generation_information:MultiqcModule',

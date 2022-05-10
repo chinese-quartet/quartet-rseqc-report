@@ -1,5 +1,5 @@
 {% set name = "quartet-rnaseq-report" %}
-{% set version = "0.1.2" %}
+{% set version = "0.1.4" %}
 
 package:
   name: "{{ name|lower }}"
@@ -41,7 +41,7 @@ test:
     - quartet_rnaseq_report.templates.default
 
 about:
-  home: "https://github.com/clinico-omics/quartet-rnaseq-report"
+  home: "https://github.com/chinese-quartet/quartet-rseqc-report"
   license: MIT
   license_family: MIT
   license_file: 

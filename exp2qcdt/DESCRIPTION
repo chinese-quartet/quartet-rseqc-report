@@ -10,19 +10,16 @@ License: GPL-2 | file LICENSE
 Depends:
   R (>= 3.2)
 Imports: 
-  data.table,
-  cowplot,
-  magrittr,
-  ggplot2,
-  RColorBrewer,
-  ggthemes,
-  cowplot,
-  dplyr,
-  stats,
-  edgeR,
-  ggthemes,
-  limma,
-  magrittr,
-  reshape2
+  data.table (>= 1.13.6),
+  cowplot (>= 1.1.1),
+  magrittr (>= 2.0.1),
+  ggplot2 (>= 3.3.5),
+  RColorBrewer (>= 1.1-2),
+  ggthemes (>= 4.2.4),
+  dplyr (>= 1.0.7),
+  edgeR (>= 3.28.1),
+  limma (>= 3.42.2),
+  reshape2 (>= 1.4.4),
+  stats
 RoxygenNote: 7.1.1
 Encoding: UTF-8

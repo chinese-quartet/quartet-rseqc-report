@@ -1,13 +1,17 @@
 """ Quartet DNAseq Report plugin module """
 
 from __future__ import print_function
-import logging
+import logging, base64, os
 from multiqc import config
 from multiqc.modules.base_module import BaseMultiqcModule
 
 # Initialise the main MultiQC logger
 log = logging.getLogger('multiqc')
 
+def read_image(image):
+  with open(image, "rb") as image_file:
+    encoded_string = base64.b64encode(image_file.read())
+    return encoded_string.decode('utf-8')
 
 class MultiqcModule(BaseMultiqcModule):
     def __init__(self):
@@ -19,9 +23,9 @@ class MultiqcModule(BaseMultiqcModule):
         # Initialise the parent module Class object
         super(MultiqcModule, self).__init__(
             name='Supplementary',
-            target='supplementary',
-            anchor='supplementary',
-            href='https://github.com/clinico-omics/quartet-rnaseq-report',
+            target='rnaseq_supplementary',
+            anchor='rnaseq_supplementary',
+            href='https://github.com/chinese-quartet/quartet-rseqc-report',
             info=
             ' is a module to show the additional information about this quality assessment report.'
         )
@@ -31,7 +35,7 @@ class MultiqcModule(BaseMultiqcModule):
             <div class='method'>
                 <div class='small-12 columns'>
                     <h3 class='section-header black'>Method</h3>
-                    <img src='quartet_dnaseq_report/modules/supplementary/assets/img/overall_process_of_data_analysis' title='overall process of data analysis' width='70%' height='70%'/>
+                    <img src="data:image/png;base64,{image}" title='quartet-dna-pipeline' width='100%' height='100%'/>
                     <p>
                         We use FastQC, FastQ Screen, Qualimap and MultiQC to evaluate the quality of sequencing data. [<a class='reference' href='#ref-1'>1</a>] RNA-seq quality control consists of pre-alignment, post-alignment and quantification quality control.
                     </p>
@@ -70,11 +74,10 @@ class MultiqcModule(BaseMultiqcModule):
             <!-- Contact us -->
             <div class='contact'>
                 <div class='small-12 columns'>
-                <h3 class='section-header black'>Contact Us</h3>
-                <b>Fudan University Pharmacogenomics Research Center</b>
-                <p><strong>Project Manager Zhihui Li</strong></p>
-                <li style='margin-top:1ex'>Phone: 15200852771</li>
-                <li style='margin-top:1ex'>Email: 18210700119@fudan.edu.cn</li>
+                    <h3 class='section-header black'>Contact Us</h3>
+                    <b>Fudan University Pharmacogenomics Research Center</b>
+                    <p><strong>Project Manager: Quartet Team</strong></p>
+                    <li style='margin-top:1ex'>Email: quartet@fudan.edu.cn</li>
                 </div>
             </div>
             <!-- Disclaimer -->
@@ -84,6 +87,7 @@ class MultiqcModule(BaseMultiqcModule):
                 <p>This quality control report is only for this specific test data set and doesn’t represent an evaluation of the business level of the sequencing company. This report is only used for scientific research, not for clinical or commercial use. We don’t bear any economic and legal liabilities for any benefits or losses (direct or indirect) from using the results of this report.</p>
                 </div>
             </div>
-            '''
+            '''.format(image=read_image(os.path.join(os.path.dirname(__file__), 'assets', 'img', 'workflow.jpg')))
+
 
         self.add_section(name='', anchor='', description='', plot=html)
