@@ -13,12 +13,15 @@ Visualizes Quality Control(QC) results for Quartet Project.
 - R >= 3.6.3
 
 ```
-conda create -c conda-forge -c bioconda -n quartet-rseqc-report python=3.9 openjdk=8.0.312
+conda create -c conda-forge -c bioconda -n quartet-rseqc-report python=3.9 openjdk=8.0.312 r-base=3.6.3
 ```
 
 ### Installation
 
 ```
+# Activate conda environment
+conda activate quartet-rseqc-report
+
 # Clone the repo
 git clone https://github.com/chinese-quartet/quartet-rseqc-report
 
