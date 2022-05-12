@@ -16,7 +16,6 @@ conda create -n multiqc multiqc
 conda activate multiqc
 git clone https://github.com/chinese-quartet/quartet-rnaseq-report.git
 cd rnaseq-report
-pip install -r requirements.txt
 pip install -e .
 
 # 使用Multiqc命令

@@ -171,9 +171,10 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   # rank qc metrics value and output
   dt_ref_qc_metrics_value_s <- dt_ref_qc_metrics_value[order(dt_ref_qc_metrics_value$total_score, decreasing = TRUE)]
   dt_ref_qc_metrics_value_s[, rank := 1: dim(dt_ref_qc_metrics_value_s)[1]]
-  dt_ref_qc_metrics_value_s[rank <= dim(dt_ref_qc_metrics_value_s)[1]/5, performance := 'Outstanding']
-  dt_ref_qc_metrics_value_s[dim(dt_ref_qc_metrics_value_s)[1]/5 < rank & rank < dim(dt_ref_qc_metrics_value_s)[1]*4/5, performance := 'Acceptable']
-  dt_ref_qc_metrics_value_s[dim(dt_ref_qc_metrics_value_s)[1]*4/5 <=rank & rank <= dim(dt_ref_qc_metrics_value_s)[1], performance := 'Poor']
+  dt_ref_qc_metrics_value_s[rank < dim(dt_ref_qc_metrics_value_s)[1]/5, performance := 'Great']
+  dt_ref_qc_metrics_value_s[dim(dt_ref_qc_metrics_value_s)[1]/5 <= rank & rank <= dim(dt_ref_qc_metrics_value_s)[1]*1/2, performance := 'Good']
+  dt_ref_qc_metrics_value_s[dim(dt_ref_qc_metrics_value_s)[1]/5 < rev(rank) & rev(rank) <= dim(dt_ref_qc_metrics_value_s)[1]*1/2, performance := 'Fair']
+  dt_ref_qc_metrics_value_s[rev(rank) < dim(dt_ref_qc_metrics_value_s)[1]/5, performance := 'Bad']
   fwrite(dt_ref_qc_metrics_value_s, paste(result_dir, "/performance_assessment/quality_score.txt", sep = ""), sep = "\t")
   
   ### quality score plot ---
