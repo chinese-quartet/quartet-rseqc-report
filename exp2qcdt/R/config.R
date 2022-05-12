@@ -15,8 +15,7 @@ read_ref_data <- function(ref_data_dir) {
   ref_data <- list()
   ref_data$ref_qc_metrics_value <- fread(paste0(ref_data_dir, "/ref_data_qc_value.csv"))
   ref_data$ref_fc_value <- fread(paste0(ref_data_dir, "/ref_data_fc_value.csv"))
-  ref_data$refqc_202011_forplot <- readRDS(paste0(ref_data_dir, "/refqc_202011_forplot.rds")) # will remove in the furture
-
+  
   return(ref_data)
 }
 
@@ -133,7 +132,7 @@ calc_signoise_ratio <- function(pca_prcomp, exp_design) {
   
   dt_dist[, Type := ifelse(ID.A == ID.B, "Same",
                            ifelse(Group.A == Group.B, "Intra", "Inter"))]
-  dt_dist[, Dist := sqrt(dt_perc_pcs[1]$Percent * (pcs[ID.A, 1] - pcs[ID.B, 1]) ^ 2 + dt_perc_pcs[2]$Percent * (pcs[ID.A, 2] - pcs[ID.B, 2]) ^ 2)]
+  dt_dist[, Dist := dt_perc_pcs[1]$Percent * (pcs[ID.A, 1] - pcs[ID.B, 1]) ^ 2 + dt_perc_pcs[2]$Percent * (pcs[ID.A, 2] - pcs[ID.B, 2]) ^ 2]
   
   dt_dist_stats <- dt_dist[, .(Avg.Dist = mean(Dist)), by = .(Type)]
   setkey(dt_dist_stats, Type)
@@ -154,7 +153,7 @@ get_pca_list <- function(expr_mat_forsignoise, exp_design, dt_meta) {
   PC1_ratio = round(summary(pca_prcomp)$importance[2, 1] * 100, digits = 2)
   PC2_ratio = round(summary(pca_prcomp)$importance[2, 2] * 100, digits = 2)
   PC3_ratio = round(summary(pca_prcomp)$importance[2, 3] * 100, digits = 2)
-  SNR = round(calc_signoise_ratio(pca_prcomp, exp_design = exp_design), digits = 1)
+  SNR = format(round(calc_signoise_ratio(pca_prcomp, exp_design = exp_design), digits = 3), nsmall = 3) 
   gene_num = dim(expr_mat_forsignoise)[1]
   pca_list = cbind(pcs_add_meta, PC1_ratio, PC2_ratio, PC3_ratio, SNR, gene_num)
   return(pca_list)

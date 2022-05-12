@@ -119,13 +119,15 @@ class MultiqcModule(BaseMultiqcModule):
         # heatmap
         # progress and arrow
         total_len = dt_quality_score.shape[0]
-        len_poor = len(dt_quality_score[dt_quality_score["performance"]=='Poor'])
-        len_acc = len(dt_quality_score[dt_quality_score["performance"]=='Acceptable'])
-        len_out = len(dt_quality_score[dt_quality_score["performance"]=='Outstanding'])
+        len_bad = len(dt_quality_score[dt_quality_score["performance"]=='Bad'])
+        len_fair = len(dt_quality_score[dt_quality_score["performance"]=='Fair'])
+        len_good = len(dt_quality_score[dt_quality_score["performance"]=='Good'])
+        len_great = len(dt_quality_score[dt_quality_score["performance"]=='Great'])
         query_rank = total_len + 1 - int(dt_quality_score.loc[dt_quality_score['batch'] == 'QC_test', 'rank'].iloc[0])
-        poor = "%.2f%s" % (len_poor/total_len * 100, '%')
-        acceptable = "%.2f%s" % (len_acc/total_len * 100, '%')
-        outstanding = "%.2f%s" % (len_out/total_len * 100, '%')
+        bad = "%.2f%s" % (len_bad/total_len * 100, '%')
+        fair = "%.2f%s" % (len_fair/total_len * 100, '%')
+        good = "%.2f%s" % (len_good/total_len * 100, '%')
+        great = "%.2f%s" % (len_great/total_len * 100, '%')
         if query_rank == 1:
             queried = "%.2f%s" % (0, '%')
         elif query_rank == total_len + 1:
@@ -135,14 +137,16 @@ class MultiqcModule(BaseMultiqcModule):
         
         # ticks number
         snr = dt_quality_score.loc[dt_quality_score['batch'] == 'QC_test', 'total_score'].iloc[0]
-        Q0 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Poor', 'total_score'].iloc[len_poor -1])
-        Q1 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Poor', 'total_score'].iloc[0])
-        Q2 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Acceptable', 'total_score'].iloc[0])
-        Q3 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Outstanding', 'total_score'].iloc[0])
+        Q0 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Bad', 'total_score'].iloc[len_bad -1])
+        Q1 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Bad', 'total_score'].iloc[0])
+        Q2 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Fair', 'total_score'].iloc[0])
+        Q3 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Good', 'total_score'].iloc[0])
+        Q4 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Great', 'total_score'].iloc[0])
         
         # Position of ticks
-        tick_Q1 = poor
-        tick_Q2 = "%.2f%s" % ((len_poor + len_acc)/total_len * 100, '%')
+        tick_Q1 = "%.2f%s" % (len_bad/total_len * 100, '%')
+        tick_Q2 = "%.2f%s" % ((len_bad + len_fair)/total_len * 100, '%')
+        tick_Q3 = "%.2f%s" % ((len_bad + len_fair +  len_good)/total_len * 100, '%')
         
         metrics_summary_html = """
         <!-- Arrow -->
@@ -153,18 +157,20 @@ class MultiqcModule(BaseMultiqcModule):
         
         <!-- Progress bar -->
         <div class="progress">
-          <div class="progress-bar progress-bar-poor" style="width: {poor}" data-toggle="tooltip" title="" data-original-title="">Poor</div>
-          <div class="progress-bar progress-bar-acceptable" style="width: {acceptable}" data-toggle="tooltip" title="" data-original-title="">Acceptable</div>
-          <div class="progress-bar progress-bar-outstanding" style="width: {outstanding}" data-toggle="tooltip" title="" data-original-title="">Outstanding</div>
+          <div class="progress-bar progress-bar-bad" style="width: {bad}" data-toggle="tooltip" title="" data-original-title="">Bad</div>
+          <div class="progress-bar progress-bar-fair" style="width: {fair}" data-toggle="tooltip" title="" data-original-title="">Fair</div>
+          <div class="progress-bar progress-bar-good" style="width: {good}" data-toggle="tooltip" title="" data-original-title="">Good</div>
+          <div class="progress-bar progress-bar-great" style="width: {great}" data-toggle="tooltip" title="" data-original-title="">Great</div>
         </div>
         
         <!-- Scale interval -->
         <span style="float:left; left:0%; position:relative; margin-top:-20px; color: #9F9FA3; font-size: 14px; text-align: center; display: inline-block">{Q0}</span>
         <span style="float:left; left:{tick_Q1}; position:relative; margin-top:-20px; color: #9F9FA3; font-size: 14px; text-align: center; display: inline-block">{Q1}</span>
         <span style="float:left; left:{tick_Q2}; position:relative; margin-top:-20px; color: #9F9FA3; font-size: 14px; text-align: center; display: inline-block">{Q2}</span>
-        <span style="float:left; left:99%; position:relative; margin-top:-20px; color: #9F9FA3; font-size: 14px; text-align: center; display: inline-block">{Q3}</span>
+        <span style="float:left; left:{tick_Q3}; position:relative; margin-top:-20px; color: #9F9FA3; font-size: 14px; text-align: center; display: inline-block">{Q3}</span>
+        <span style="float:left; left:99%; position:relative; margin-top:-20px; color: #9F9FA3; font-size: 14px; text-align: center; display: inline-block">{Q4}</span>
         <br>
-        """.format(acceptable=acceptable, outstanding=outstanding, queried=queried, snr=snr, poor=poor, tick_Q1=tick_Q1, tick_Q2=tick_Q2, Q0=Q0, Q1=Q1, Q2=Q2, Q3=Q3)
+        """.format(bad=bad, fair=fair, good=good, great=great, queried=queried, snr=snr, tick_Q1=tick_Q1, tick_Q2=tick_Q2, tick_Q3=tick_Q3, Q0=Q0, Q1=Q1, Q2=Q2, Q3=Q3, Q4=Q4)
 
         # table
         headers = OrderedDict()
@@ -178,13 +184,13 @@ class MultiqcModule(BaseMultiqcModule):
         'title': 'Value',
         'description': 'Value',
         'scale': False,
-        'format': '{0:.2f}'
+        'format': '{0:.3f}'
         }
         headers['historical_value'] = {
             'title': 'Historical value (mean ± SD)',
             'description': 'Historical Value (mean ± SD)',
             'scale': False,
-            'format': '{0:.2f}'
+            'format': '{0:.3f}'
             }
         headers['rank'] = {
             'title': 'Rank',
@@ -209,10 +215,11 @@ class MultiqcModule(BaseMultiqcModule):
             anchor=id + '_anchor',
             description="""
             The total performance score is calculated to measure the overall quality of a dataset generated from a lab for its effectiveness in quantifying the transcriptomic differences among the four Quartet RNA reference materials by summarizing reference dataset-independent quality measurement (SNR) and reference dataset-dependent quality measurement (RC). The total score is expressed as the geometrical mean of SNR and RC. 
-            The submitted data to be tested can be divided into 3 levels based on the total score by comparing with historical batches: <span style="color: #b80d0d;font-weight:bold">Poor</span>, <span style="color: #70c402;font-weight:bold">Acceptable</span>, <span style="color: #0f9115;font-weight:bold">Outstanding</span>.<br>
-            * _Poor_ - the bottom 20%.
-            * _Acceptable_ - between bottom 20% and top 80%.
-            * _Outstanding_ - the top 20%.
+            The submitted data to be tested can be divided into 4 levels based on the total score by comparing with historical batches: <span style="color: #b80d0d;font-weight:bold">Bad</span>, <span style="color: #d97c11;font-weight:bold">Fair</span>, <span style="color: #70c402;font-weight:bold">Good</span>, <span style="color: #0f9115;font-weight:bold">Great</span>.<br>
+            * _Bad_ - the bottom 20%.
+            * _Fair_ - between bottom 20% and bottom 50%.
+            * _Good_ - between top 50% and top 20%.
+            * _Great_ - the top 20%.
             """,
             plot = metrics_summary_html + '\n' +  metrics_table_html
             )
@@ -236,7 +243,8 @@ class MultiqcModule(BaseMultiqcModule):
                          marginal_x="box",
                          marginal_y="box",
                          template="simple_white")
-
+        
+        fig.update_traces(marker=dict(size=14))
         fig.update_layout(xaxis_title='SNR',
                           yaxis_title='RC',
                           font=dict(family="Arial, sans-serif",
@@ -257,7 +265,7 @@ class MultiqcModule(BaseMultiqcModule):
             name='SNR and RC performance',
             anchor=id + '_anchor',
             description=description if description else
-            'Performance metrics and thresholds using reference RNAs',
+            'Performance metrics and thresholds using Quartet RNA reference materials',
             helptext=helptext if helptext else '''
             This longer description explains what exactly the numbers mean
             and supports markdown formatting. This means that we can do _this_:
@@ -346,8 +354,7 @@ class MultiqcModule(BaseMultiqcModule):
             self,
             id,
             df_rc,
-            title="Relative Correlation with Reference Datasets",
-            section_name=None,
+            title="RC",
             description=None,
             helptext=None):
         fig = px.scatter(df_rc,
@@ -378,10 +385,10 @@ class MultiqcModule(BaseMultiqcModule):
 
         # Add a report section with the scatter plot
         self.add_section(
-            name='Relative Correlation with Reference Datasets',
+            name='RC',
             anchor=id + '_anchor',
             description=description if description else
-            'Relative correlation with reference datasets was calculate based on the Pearson correlation coefficient between the relative expression levels of a dataset for a given pair of groups and the corresponding reference fold-change values',
+            'RC was calculate based on the Pearson correlation coefficient between the relative expression levels of a dataset for a given pair of groups and the corresponding reference fold-change values',
             helptext=helptext if helptext else '''
                 This longer description explains what exactly the numbers mean
                 and supports markdown formatting. This means that we can do _this_:
