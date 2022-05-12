@@ -215,7 +215,7 @@ class MultiqcModule(BaseMultiqcModule):
             anchor=id + '_anchor',
             description="""
             The total performance score is calculated to measure the overall quality of a dataset generated from a lab for its effectiveness in quantifying the transcriptomic differences among the four Quartet RNA reference materials by summarizing reference dataset-independent quality measurement (SNR) and reference dataset-dependent quality measurement (RC). The total score is expressed as the geometrical mean of SNR and RC. 
-            The submitted data to be tested can be divided into 3 levels based on the total score by comparing with historical batches: <span style="color: #b80d0d;font-weight:bold">Bad</span>, <span style="color: #d97c11;font-weight:bold">Fair</span>, <span style="color: #70c402;font-weight:bold">Good</span>, <span style="color: #0f9115;font-weight:bold">Great</span>.<br>
+            The submitted data to be tested can be divided into 4 levels based on the total score by comparing with historical batches: <span style="color: #b80d0d;font-weight:bold">Bad</span>, <span style="color: #d97c11;font-weight:bold">Fair</span>, <span style="color: #70c402;font-weight:bold">Good</span>, <span style="color: #0f9115;font-weight:bold">Great</span>.<br>
             * _Bad_ - the bottom 20%.
             * _Fair_ - between bottom 20% and bottom 50%.
             * _Good_ - between top 50% and top 20%.
