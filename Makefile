@@ -13,7 +13,7 @@ make-env:
 	cp resources/bin/exp2qcdt.sh .env/bin
 
 install-report:
-	cd report && .env/bin/python3 setup.py sdist && .env/bin/pip3 install dist/*.tar.gz
+	cd report && ../.env/bin/python3 setup.py sdist && ../.env/bin/pip3 install dist/*.tar.gz
 
 install-exp2qcdt:
 	@Rscript -e 'install.packages("renv", repos="http://cran.us.r-project.org")'
