@@ -74,10 +74,11 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   colnames(dt_ref_fc_test_d) <- c('gene', 'compare', 'meanlogFC_test', 'meanlogFC_ref')
   
   # log2fc correlation output data
+  dt_ref_fc_test_d[, meanlogFC_test := round(meanlogFC_test, digits = 3)]
   fwrite(dt_ref_fc_test_d, file = paste(result_dir, "/performance_assessment/logfc_cor_ref_test.txt", sep = ""), sep = "\t")
   
   # log2fc correlation output figure
-  cor_log2fc <- round(cor(dt_ref_fc_test_d$meanlogFC_test, dt_ref_fc_test_d$meanlogFC_ref), digits = 3)
+  cor_log2fc <- format(round(cor(dt_ref_fc_test_d$meanlogFC_test, dt_ref_fc_test_d$meanlogFC_ref), digits = 3), nsmall = 3)
   pt_logfc_cor <- ggplot2::ggplot(dt_ref_fc_test_d, aes(x = meanlogFC_ref, y = meanlogFC_test, color = compare)) +
     geom_point(alpha = 0.8, size = 0.3) +
     theme_few() + 
@@ -107,7 +108,6 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   }
   
   dt_snr <- output_snr_res(dt_fpkm_log, dt_counts, dt_meta)
-  snr_value <- dt_snr$SNR[1]
   snr_gene_num <- dt_snr$gene_num[1]
   
   ## figure of pca with snr
@@ -124,14 +124,16 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
       y = paste("PC1 (", dt_snr$PC2_ratio, "%)", sep = ""))
   
   ## output snr table
+  dt_snr$PC1 <- round(dt_snr$PC1 , digits = 3)
+  dt_snr$PC2 <- round(dt_snr$PC2 , digits = 3)
   fwrite(dt_snr, file = paste(result_dir, "/performance_assessment/pca_with_snr.txt", sep = ""), sep = "\t")
   
   ### output report data and figure-----------------------------
   data.table::setDF(dt_ref_qc_metrics_value)
-  test_metrics_value <- c('QC_test', dt_snr$SNR[1], cor_log2fc, rep(NA, 6))
+  test_metrics_value <- c('QC_test', as.character(dt_snr$SNR[1]), cor_log2fc, rep(NA, 6))
   dt_ref_qc_metrics_value[nrow(dt_ref_qc_metrics_value) + 1, ] <- test_metrics_value 
   data.table::setDT(dt_ref_qc_metrics_value)
-  dt_ref_qc_metrics_value[, SNR := as.numeric(SNR)][, RC := as.numeric(RC)][batch == 'QC_test', total_score := round(sqrt(SNR*RC), digits = 3)]
+  dt_ref_qc_metrics_value[, SNR := as.numeric(SNR)][, RC := as.numeric(RC)][batch == 'QC_test', total_score := format(round(sqrt(SNR*RC), digits = 3), nsmall = 3)]
   dt_ref_qc_metrics_value[batch == 'QC_test', group := 'Query'][batch != 'QC_test', group := 'Reference']
   dt_ref_qc_metrics_value[, total_score := as.numeric(total_score)]
   
@@ -159,7 +161,7 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   
   dt_metric_summary <- data.table(
     qc_metrics = c('Signal-to-Noise Ratio (SNR)', 'Relative Correlation with Reference Datasets (RC) ', 'Total Score'),
-    value = c(round(snr_value, digits = 3), cor_log2fc, as.numeric(dt_ref_qc_metrics_value[batch == 'QC_test'][['total_score']])),
+    value = c(as.character(dt_snr$SNR[1]), cor_log2fc, as.numeric(dt_ref_qc_metrics_value[batch == 'QC_test'][['total_score']])),
     historical_value = c('19.505 ± 7.039', '0.950 ± 0.028', '4.238 ± 0.849'),
     rank = c(paste(snr_rank, '/', rank_len, sep = ''), paste(rc_cor_rank, '/', rank_len, sep = ''), paste(total_score_rank, '/', rank_len, sep = '')))
   

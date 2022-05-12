@@ -184,13 +184,13 @@ class MultiqcModule(BaseMultiqcModule):
         'title': 'Value',
         'description': 'Value',
         'scale': False,
-        'format': '{0:.2f}'
+        'format': '{0:.3f}'
         }
         headers['historical_value'] = {
             'title': 'Historical value (mean ± SD)',
             'description': 'Historical Value (mean ± SD)',
             'scale': False,
-            'format': '{0:.2f}'
+            'format': '{0:.3f}'
             }
         headers['rank'] = {
             'title': 'Rank',
@@ -243,7 +243,8 @@ class MultiqcModule(BaseMultiqcModule):
                          marginal_x="box",
                          marginal_y="box",
                          template="simple_white")
-
+        
+        fig.update_traces(marker=dict(size=14))
         fig.update_layout(xaxis_title='SNR',
                           yaxis_title='RC',
                           font=dict(family="Arial, sans-serif",
@@ -264,7 +265,7 @@ class MultiqcModule(BaseMultiqcModule):
             name='SNR and RC performance',
             anchor=id + '_anchor',
             description=description if description else
-            'Performance metrics and thresholds using reference RNAs',
+            'Performance metrics and thresholds using Quartet RNA reference materials',
             helptext=helptext if helptext else '''
             This longer description explains what exactly the numbers mean
             and supports markdown formatting. This means that we can do _this_:
@@ -353,8 +354,7 @@ class MultiqcModule(BaseMultiqcModule):
             self,
             id,
             df_rc,
-            title="Relative Correlation with Reference Datasets",
-            section_name=None,
+            title="RC",
             description=None,
             helptext=None):
         fig = px.scatter(df_rc,
@@ -385,10 +385,10 @@ class MultiqcModule(BaseMultiqcModule):
 
         # Add a report section with the scatter plot
         self.add_section(
-            name='Relative Correlation with Reference Datasets',
+            name='RC',
             anchor=id + '_anchor',
             description=description if description else
-            'Relative correlation with reference datasets was calculate based on the Pearson correlation coefficient between the relative expression levels of a dataset for a given pair of groups and the corresponding reference fold-change values',
+            'RC was calculate based on the Pearson correlation coefficient between the relative expression levels of a dataset for a given pair of groups and the corresponding reference fold-change values',
             helptext=helptext if helptext else '''
                 This longer description explains what exactly the numbers mean
                 and supports markdown formatting. This means that we can do _this_:

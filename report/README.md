@@ -11,19 +11,22 @@
 To use this code, you need to install MultiQC and then your code. For example:
 
 ```bash
-# 环境配置
-conda create -n multiqc multiqc
-conda activate multiqc
+# Environment Configuration
+conda create -n quartet-rseqc-report
+conda activate quartet-rseqc-report
 git clone https://github.com/chinese-quartet/quartet-rnaseq-report.git
-cd rnaseq-report
+cd ./quartet-rseqc-report/report
 pip install -e .
 
-# 使用Multiqc命令
+# Usage
+multiqc ./ (results direction)
+
+# More Usage
 multiqc -h
 ```
 
 Use `python setup.py develop` if you're actively working on the code - then you don't need to rerun the installation every time you make an edit _(though you still do if you change anything in `setup.py`)_.
 
-### 注意事项
+### Cautions
 
-- post_alignment_qc/rnaseq_qc/和 post_alignment_qc/bam_qc/，这两个目录下所有文件名需要 samples_id.percent 形式（即 qualimap 输出原始形式，不添加 bam 和 rnase 等后缀），并且同一个样本两个目录下的 ID 要完全一致
+- post_alignment_qc/rnaseq_qc/ and post_alignment_qc/bam_qc/. All file names in both directories need to be in the form of samples_id.percent (i.e., the original form of qualimap output, without suffixes such as bam and rnase), and the IDs in both directories for the same sample should be identical
