@@ -133,7 +133,7 @@ calc_signoise_ratio <- function(pca_prcomp, exp_design) {
   
   dt_dist[, Type := ifelse(ID.A == ID.B, "Same",
                            ifelse(Group.A == Group.B, "Intra", "Inter"))]
-  dt_dist[, Dist := sqrt(dt_perc_pcs[1]$Percent * (pcs[ID.A, 1] - pcs[ID.B, 1]) ^ 2 + dt_perc_pcs[2]$Percent * (pcs[ID.A, 2] - pcs[ID.B, 2]) ^ 2)]
+  dt_dist[, Dist := dt_perc_pcs[1]$Percent * (pcs[ID.A, 1] - pcs[ID.B, 1]) ^ 2 + dt_perc_pcs[2]$Percent * (pcs[ID.A, 2] - pcs[ID.B, 2]) ^ 2]
   
   dt_dist_stats <- dt_dist[, .(Avg.Dist = mean(Dist)), by = .(Type)]
   setkey(dt_dist_stats, Type)
