@@ -7,19 +7,12 @@ Author: Jun Shang, Jingcheng Yang
 Maintainer: Jun Shang <shangjunv@163.com>
 Description: More about what it does (maybe more than one line)
 License: GPL-2 | file LICENSE
-Depends:
-  R (>= 3.2)
-Imports: 
-  data.table (>= 1.13.6),
-  cowplot (>= 1.1.1),
-  magrittr (>= 2.0.1),
-  ggplot2 (>= 3.3.5),
-  RColorBrewer (>= 1.1-2),
-  ggthemes (>= 4.2.4),
-  dplyr (>= 1.0.7),
-  edgeR (>= 3.28.1),
-  limma (>= 3.42.2),
-  reshape2 (>= 1.4.4),
-  stats
+Depends: R (>= 3.2)
+Imports: data.table (>= 1.13.6), cowplot (>= 1.1.1), magrittr (>=
+        2.0.1), ggplot2 (>= 3.3.5), RColorBrewer (>= 1.1-2), ggthemes
+        (>= 4.2.4), dplyr (>= 1.0.7), edgeR (>= 3.28.1), limma (>=
+        3.42.2), reshape2 (>= 1.4.4), stats
 RoxygenNote: 7.1.2
 Encoding: UTF-8
+NeedsCompilation: no
+Packaged: 2022-05-13 08:41:14 UTC; stead

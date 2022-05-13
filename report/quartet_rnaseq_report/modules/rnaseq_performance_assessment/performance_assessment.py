@@ -251,6 +251,8 @@ class MultiqcModule(BaseMultiqcModule):
                                     size=18,
                                     color="black"),
                           template="simple_white")
+        fig.update_layout(legend_traceorder="reversed")
+        fig.update_layout(legend_title_text='')
 
         html = plotly_plot(
             fig, {
@@ -313,6 +315,7 @@ class MultiqcModule(BaseMultiqcModule):
             'xanchor': 'center',
             'yanchor': 'top'
         })
+        fig.update_layout(legend_title_text='')
         fig.update_xaxes(showline=True,
                          linewidth=1,
                          linecolor='black',
@@ -354,9 +357,10 @@ class MultiqcModule(BaseMultiqcModule):
             self,
             id,
             df_rc,
-            title="RC",
+            title=None,
             description=None,
             helptext=None):
+        cor_value = 'Correlation = ' + df_rc.iloc[1].at['cor'] + ' (N = ' + df_rc.iloc[1].at['gene_num'] + ')'
         fig = px.scatter(df_rc,
                          x="meanlogFC_ref",
                          y="meanlogFC_test",
@@ -370,11 +374,18 @@ class MultiqcModule(BaseMultiqcModule):
                          marginal_y="box",
                          template="simple_white")
         fig.update_layout(
+            title=cor_value,
             xaxis_title='Reference Datasets',
-            yaxis_title='Query Data',
+            yaxis_title='Queried Data',
             font=dict(family="Arial, sans-serif", size=18, color="black"),
             template="simple_white")
-
+        fig.update_layout(title={
+            'y': 0.99,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top'
+        })
+        fig.update_layout(legend_title_text='')
         html = plotly_plot(
             fig, {
                 'id': id + '_plot',
