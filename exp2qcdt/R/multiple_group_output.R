@@ -32,7 +32,6 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   # import reference data
   dt_ref_qc_metrics_value <- ref_data$ref_qc_metrics_value
   dt_ref_fc_value <- ref_data$ref_fc_value
-  refqc_202011_forplot <- ref_data$refqc_202011_forplot
   
   # two group which two replicates are need 
   sample_type_list <- dt_meta[['sample']] %>% unique()
@@ -66,26 +65,26 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   }))
   
   # get reference data set compared group
-  dt_fc_test_d <- dt_fc_test[compare %in% unique(dt_ref_fc_value$compare)]
-  dt_fc_test_d[, gene_compare := paste(gene, compare, sep = '_')]
+  dt_fc_test[, gene_compare := paste(gene, compare, sep = '_')]
   dt_ref_fc_value[, gene_compare := paste(gene, compare, sep = '_')]
-  dt_ref_fc_test <- dt_fc_test_d[dt_ref_fc_value, on = 'gene_compare', nomatch = 0]
+  dt_ref_fc_test <- dt_fc_test[dt_ref_fc_value, on = 'gene_compare', nomatch = 0]
   dt_ref_fc_test_d <- dt_ref_fc_test[, c('gene', 'compare', 'meanlogFC', 'i.meanlogFC'), with = FALSE]
   colnames(dt_ref_fc_test_d) <- c('gene', 'compare', 'meanlogFC_test', 'meanlogFC_ref')
   
   # log2fc correlation output data
+  cor_log2fc <- format(round(cor(dt_ref_fc_test_d$meanlogFC_test, dt_ref_fc_test_d$meanlogFC_ref), digits = 3), nsmall = 3)
   dt_ref_fc_test_d[, meanlogFC_test := round(meanlogFC_test, digits = 3)]
+  dt_ref_fc_test_d[, cor := cor_log2fc][, gene_num := dim(dt_ref_fc_test_d)[1]]
   fwrite(dt_ref_fc_test_d, file = paste(result_dir, "/performance_assessment/logfc_cor_ref_test.txt", sep = ""), sep = "\t")
   
   # log2fc correlation output figure
-  cor_log2fc <- format(round(cor(dt_ref_fc_test_d$meanlogFC_test, dt_ref_fc_test_d$meanlogFC_ref), digits = 3), nsmall = 3)
   pt_logfc_cor <- ggplot2::ggplot(dt_ref_fc_test_d, aes(x = meanlogFC_ref, y = meanlogFC_test, color = compare)) +
     geom_point(alpha = 0.8, size = 0.3) +
     theme_few() + 
     theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5)) +
     scale_fill_viridis_c(name = "density") +
     labs(title = 'LogFC Correlation',
-         subtitle = paste('Correlation = ', cor_log2fc, sep = ''),
+         subtitle = paste('Correlation: ', cor_log2fc, ' (N = ', dim(dt_ref_fc_test_d)[1], ')', sep = ''),
          x = 'meanlogFC (Reference)',
          y = 'meanlogFC (Test)')
   

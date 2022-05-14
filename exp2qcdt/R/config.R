@@ -39,7 +39,7 @@ DEGanalysis <- function(exprMat, group){
   dge <- DGEList(counts = exprMat)
   design <- model.matrix(~group)
   
-  keep <- filterByExpr(dge, design)
+  keep <- filterByExpr(dge, design, design,min.count = 0)
   dge <- dge[keep,,keep.lib.sizes=FALSE]
   dge <- calcNormFactors(dge)
   
@@ -75,7 +75,6 @@ make_theme <- function() {
                         strip.text = element_text(size = 16))
   return(custom_theme)
 }
-
 
 #' Make scatter and box figure
 #' @importFrom ggplot2 ggplot
@@ -158,7 +157,6 @@ get_pca_list <- function(expr_mat_forsignoise, exp_design, dt_meta) {
   pca_list = cbind(pcs_add_meta, PC1_ratio, PC2_ratio, PC3_ratio, SNR, gene_num)
   return(pca_list)
 }
-
 
 #' Make the performance score figure
 #'
