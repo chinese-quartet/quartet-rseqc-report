@@ -1,4 +1,4 @@
 (ns quartet-rseqc-report.version)
 
 (def plugin-name "quartet-rseqc-report")
-(def version "0.2.0")
+(def version "0.2.1")
