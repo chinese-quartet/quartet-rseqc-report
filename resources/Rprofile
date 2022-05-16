@@ -8,4 +8,4 @@ pkgTest <- function(x) {
   }
 }
 
-pkgTest("exp2qcdt")
+pkgTest("exp2qcdt");

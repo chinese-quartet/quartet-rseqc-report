@@ -1,6 +1,6 @@
 info:
   name: QC Report for Quartet RNA-Seq
-  version: v0.2.1
+  version: v0.2.2
   description: Generate the QC Report for Quartet RNA-Seq data.
   category: Report
   home: https://github.com/chinese-quartet/quartet-rseqc-report
@@ -42,7 +42,7 @@ init:
   - step: unpack-env
     envtype: environment
     envname: Rprofile
-    postunpack: sed -i 's/<plugin_env_path>/{{ ENV_DIR }}/g' {{ ENV_DIR }}/Rprofile
+    postunpack: sed -i 's#<plugin_env_path>#{{ ENV_DIR }}#g' {{ ENV_DIR }}/Rprofile
   - step: load-namespace
     namespace: quartet-rseqc-report.core
   - step: register-plugin
