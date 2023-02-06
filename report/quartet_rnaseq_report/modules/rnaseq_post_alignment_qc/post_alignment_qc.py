@@ -96,8 +96,7 @@ class MultiqcModule(BaseMultiqcModule):
             'reads_aligned_exonic': r"exonic\s*=\s*([\d,]+)",
             'reads_aligned_intronic': r"intronic\s*=\s*([\d,]+)",
             'reads_aligned_intergenic': r"intergenic\s*=\s*([\d,]+)",
-            'reads_aligned_overlapping_exon':
-            r"overlapping exon\s*=\s*([\d,]+)",
+            'reads_aligned_overlapping_exon': r"overlapping exon\s*=\s*([\d,]+)",
         }
         for f in self.find_log_files(
                 'rnaseq_post_alignment_qc/rnaseq_qc/rnaseq_qc_results'):
@@ -137,39 +136,48 @@ class MultiqcModule(BaseMultiqcModule):
                     except ValueError:
                         d[k] = r_search.group(1)
 
-            for k in [
-                    'reads_aligned_exonic', 'reads_aligned_intronic',
-                    'reads_aligned_intergenic'
-            ]:
-                try:
-                    self.general_stats_data[s_name][k] = d[k]
-                except KeyError:
-                    pass
+            try:
+                total_read = d['reads_aligned_exonic'] + d['reads_aligned_intronic'] + d['reads_aligned_intergenic']
+                d['reads_aligned_exonic'] = (d['reads_aligned_exonic']/total_read) * 100
+                d['reads_aligned_intronic'] = (d['reads_aligned_intronic']/total_read) * 100
+                d['reads_aligned_intergenic'] = (d['reads_aligned_intergenic']/total_read) * 100
+                self.general_stats_data[s_name]['reads_aligned_exonic'] = d['reads_aligned_exonic']
+                self.general_stats_data[s_name]['reads_aligned_intronic'] = d['reads_aligned_intronic']
+                self.general_stats_data[s_name]['reads_aligned_intergenic'] = d['reads_aligned_intergenic']
+            except KeyError:
+                pass
 
         #### General Stats
         self.general_stats_headers['reads_aligned_exonic'] = {
-            'title': 'Exonic',
+            'title': '% Exonic',
             'description': 'Reads Aligned Exonic',
+            'scale': 'Set1',
+            'max': 100,
             'min': 0,
-            'scale': 'RdBu',
-            'shared_key': 'read_count'
+            'suffix': '',
+            'format': '{:,.1f}'
         }
 
         self.general_stats_headers['reads_aligned_intronic'] = {
-            'title': 'Intronic',
+            'title': '% Intronic',
             'description': 'Reads Aligned Intronic',
+            'scale': 'Set1',
+            'max': 100,
             'min': 0,
-            'scale': 'RdBu',
-            'shared_key': 'read_count'
+            'suffix': '',
+            'format': '{:,.1f}'
         }
 
         self.general_stats_headers['reads_aligned_intergenic'] = {
-            'title': 'Intergenic',
+            'title': '% Intergenic',
             'description': 'Reads Aligned Intergenic',
+            'scale': 'Set1',
+            'max': 100,
             'min': 0,
-            'scale': 'RdBu',
-            'shared_key': 'read_count'
-        }
+            'suffix': '',
+            'format': '{:,.1f}'
+        }     
+        
 
     def qm_rnaseq_parse_reports(self):
         """ Find Qualimap RNASeq reports and parse their data """
@@ -186,8 +194,7 @@ class MultiqcModule(BaseMultiqcModule):
             'reads_aligned_exonic': r"exonic\s*=\s*([\d,]+)",
             'reads_aligned_intronic': r"intronic\s*=\s*([\d,]+)",
             'reads_aligned_intergenic': r"intergenic\s*=\s*([\d,]+)",
-            'reads_aligned_overlapping_exon':
-            r"overlapping exon\s*=\s*([\d,]+)",
+            'reads_aligned_overlapping_exon': r"overlapping exon\s*=\s*([\d,]+)",
         }
         for f in self.find_log_files(
                 'rnaseq_post_alignment_qc/rnaseq_qc/rnaseq_qc_results'):
