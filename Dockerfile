@@ -24,7 +24,7 @@ RUN chmod 744 /usr/local/bin/lein
 
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_22.11.1-1-Linux-x86_64.sh -O miniconda.sh && bash miniconda.sh -b -p /opt/conda
 RUN /opt/conda/bin/conda install -c conda-forge -c bioconda mamba blas lapack cxx-compiler conda-pack
-RUN /opt/conda/bin/mamba create -n venv -c conda-forge -c bioconda -y python=3.9 r-renv hisat2==2.2.1 samtools==1.14  bioconductor-ballgown==2.26.0 bioconductor-genefilter==1.76.0 qualimap==2.2.2d fastq-screen==0.15.2 fastqc==0.11.9 fastp==0.23.2 stringtie==2.2.1
+RUN /opt/conda/bin/mamba create -n venv -c conda-forge -c bioconda -y python=3.9 r-renv r-base=3.6.3 hisat2==2.2.1 samtools==1.14  bioconductor-ballgown==2.18.0 bioconductor-genefilter==1.68.0 qualimap==2.2.2d fastq-screen==0.15.2 fastqc==0.11.9 fastp==0.23.2 stringtie==2.2.1
 ADD ./resources/requirements.txt /data/requirements.txt
 ADD ./bin/quartet-rseqc-report /opt/conda/envs/venv/bin/quartet-rseqc-report
 RUN /opt/conda/envs/venv/bin/pip install -r /data/requirements.txt
