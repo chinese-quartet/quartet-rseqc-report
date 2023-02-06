@@ -16,7 +16,7 @@ ENV LC_CTYPE en_US.UTF-8
 # git:     ./bin/version
 # make:    backend building
 # gettext: translations
-RUN apt-get update && apt-get install -y coreutils bash git wget make gettext
+RUN apt-get update && apt-get install -y coreutils bash git wget make gettext g++ gfortran
 
 # lein:    backend dependencies and building
 ADD ./bin/lein /usr/local/bin/lein
