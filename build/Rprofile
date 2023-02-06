@@ -1,4 +1,4 @@
-renv::activate("/opt/conda");
+renv::activate("/opt/conda/envs/venv/");
 renv::restore();
 pkgTest <- function(x) {
   if (!require(x,character.only = TRUE))
