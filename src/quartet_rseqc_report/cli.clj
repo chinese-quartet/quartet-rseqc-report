@@ -77,8 +77,8 @@
   [& args]
   ;; Need to make a Rprofile file in Makefile
   ;; e.g. echo 'renv::activate (".env"); renv::restore();' > .env/Rprofile
-  (if (exists? "/opt/conda/etc/Rprofile")
-    (System/setProperty "R_PROFILE_USER" "/opt/conda/etc/Rprofile")
+  (if (exists? "/venv/etc/Rprofile")
+    (System/setProperty "R_PROFILE_USER" "/venv/etc/Rprofile")
     (System/setProperty "R_PROFILE_USER" ".env/Rprofile"))
   (let [{:keys [options exit-message ok?]} (validate-args args)]
     (if exit-message

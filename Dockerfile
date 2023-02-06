@@ -23,17 +23,17 @@ ADD ./bin/lein /usr/local/bin/lein
 RUN chmod 744 /usr/local/bin/lein
 
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_22.11.1-1-Linux-x86_64.sh -O miniconda.sh && bash miniconda.sh -b -p /opt/conda
-RUN /opt/conda/bin/conda install -c conda-forge -c bioconda mamba
-RUN /opt/conda/bin/mamba install -c conda-forge -c bioconda -y python=3.9 r-base=3.6.3 r-renv blas lapack cxx-compiler conda-pack
+RUN /opt/conda/bin/conda install -c conda-forge -c bioconda mamba blas lapack cxx-compiler conda-pack
+RUN /opt/conda/bin/mamba create -n venv -c conda-forge -c bioconda -y python=3.9 r-base=3.6.3 r-renv hisat2==2.2.1 samtools==1.14  bioconductor-ballgown==2.26.0 bioconductor-genefilter==1.76.0 qualimap==2.2.2d fastq-screen==0.15.2 fastqc==0.11.9 fastp==0.23.2 stringtie==2.2.1
 ADD ./resources/requirements.txt /data/requirements.txt
-ADD ./bin/quartet-rseqc-report /opt/conda/bin/quartet-rseqc-report
-RUN /opt/conda/bin/pip install -r /data/requirements.txt
+ADD ./bin/quartet-rseqc-report /opt/conda/envs/venv/bin/quartet-rseqc-report
+RUN /opt/conda/envs/venv/bin/pip install -r /data/requirements.txt
 
-ADD ./resources/bin/exp2qcdt.sh /opt/conda/bin/exp2qcdt.sh
-ADD ./resources/renv /opt/conda/renv
-ADD ./resources/renv.lock /opt/conda/renv.lock
-ADD ./build/Rprofile /opt/conda/etc/Rprofile
-RUN Rscript /opt/conda/etc/Rprofile
+ADD ./resources/bin/exp2qcdt.sh /opt/conda/envs/venv/bin/exp2qcdt.sh
+ADD ./resources/renv /opt/conda/envs/venv/renv
+ADD ./resources/renv.lock /opt/conda/envs/venv/renv.lock
+ADD ./build/Rprofile /opt/conda/envs/venv/etc/Rprofile
+RUN Rscript /opt/conda/envs/venv/etc/Rprofile
 
 # install dependencies before adding the rest of the source to maximize caching
 # backend dependencies
@@ -46,8 +46,11 @@ ADD . .
 # build the app
 RUN lein uberjar
 
-# Build dependencies for rnaseq pipeline
-RUN /opt/conda/bin/mamba install -c conda-forge -c bioconda -y hisat2==2.2.1 samtools==1.14  bioconductor-ballgown==2.26.0 bioconductor-genefilter==1.76.0 qualimap==2.2.2d fastq-screen==0.15.2 fastqc==0.11.9 fastp==0.23.2 stringtie==2.2.1
+RUN conda-pack -n venv -o /tmp/env.tar && \
+  mkdir /venv && cd /venv && tar xf /tmp/env.tar && \
+  rm /tmp/env.tar
+
+RUN /venv/bin/conda-unpack
 
 # ###################
 # # STAGE 2: runner
@@ -57,34 +60,26 @@ FROM adoptopenjdk/openjdk8:x86_64-debianslim-jre8u345-b01 as runner
 
 LABEL org.opencontainers.image.source https://github.com/chinese-quartet/quartet-rseqc-report.git
 
-ENV PATH="$PATH:/opt/conda/bin"
+ENV PATH="$PATH:/venv/bin"
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV FC_LANG en-US
 ENV LC_CTYPE en_US.UTF-8
 
-RUN apt-get update && apt-get install -y coreutils bash git wget make gettext
-RUN echo "**** Install dev packages ****" && \
-    apt-get update && \
-    apt-get install -y curl && \
-    \
-    echo "*** Install common development dependencies" && \
-    apt-get install -y libmariadb-dev libxml2-dev libcurl4-openssl-dev libssl-dev && \
-    \
-    echo "**** Cleanup ****" && \
-    apt-get clean
-
+RUN apt-get update && apt-get install -y coreutils bash git wget
 
 WORKDIR /data
 
-COPY --from=builder /opt/conda /opt/conda
+COPY --from=builder /venv /venv
 COPY --from=builder /app/source/target/uberjar/quartet-rseqc-report*.jar /quartet-rseqc-report.jar
+COPY --from=builder /app/source/resources/Rprofile /venv/etc/Rprofile
+RUN sed -i 's/<plugin_env_path>/\/venv\/renv/g' /venv/etc/Rprofile
 
 ## Make count work properly.
-RUN ln -s /opt/conda/bin/prepDE.py /opt/conda/bin/count
+RUN ln -s /venv/bin/prepDE.py /venv/bin/count
 
 ## Add ballgown wrapper
-COPY ./build/ballgown /opt/conda/bin/ballgown
-RUN chmod a+x /opt/conda/bin/ballgown
+COPY ./build/ballgown /venv/bin/ballgown
+RUN chmod a+x /venv/bin/ballgown
 
 # Run it
 ENTRYPOINT ["quartet-rseqc-report"]
