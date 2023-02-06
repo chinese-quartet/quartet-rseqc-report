@@ -29,7 +29,7 @@ ADD ./resources/requirements.txt /data/requirements.txt
 ADD ./bin/quartet-rseqc-report /opt/conda/bin/quartet-rseqc-report
 RUN /opt/conda/bin/pip install -r /data/requirements.txt
 
-ADD ./resources/bin/rseqc.sh /opt/conda/bin/rseqc.sh
+ADD ./resources/bin/exp2qcdt.sh /opt/conda/bin/exp2qcdt.sh
 ADD ./resources/renv /opt/conda/renv
 ADD ./resources/renv.lock /opt/conda/renv.lock
 ADD ./build/Rprofile /opt/conda/etc/Rprofile
