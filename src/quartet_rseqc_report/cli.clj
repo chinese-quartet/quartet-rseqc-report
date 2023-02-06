@@ -1,7 +1,7 @@
 (ns quartet-rseqc-report.cli
   (:gen-class)
   (:require [quartet-rseqc-report.task :refer [make-report!]]
-            [local-fs.core :refer [file? directory?]]
+            [local-fs.core :refer [file? directory? exists?]]
             [quartet-rseqc-report.rseqc :refer [read-csv]]
             [clojure.string :as clj-str]
             [clojure.tools.cli :refer [parse-opts]]
@@ -77,7 +77,9 @@
   [& args]
   ;; Need to make a Rprofile file in Makefile
   ;; e.g. echo 'renv::activate (".env"); renv::restore();' > .env/Rprofile
-  (System/setProperty "R_PROFILE_USER" ".env/Rprofile")
+  (if (exists? "/opt/conda/etc/Rprofile")
+    (System/setProperty "R_PROFILE_USER" "/opt/conda/etc/Rprofile")
+    (System/setProperty "R_PROFILE_USER" ".env/Rprofile"))
   (let [{:keys [options exit-message ok?]} (validate-args args)]
     (if exit-message
       (exit (if ok? 0 1) exit-message)

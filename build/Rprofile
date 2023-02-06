@@ -1,0 +1,11 @@
+renv::activate("/opt/conda");
+renv::restore();
+pkgTest <- function(x) {
+  if (!require(x,character.only = TRUE))
+  {
+    renv::install("chinese-quartet/quartet-rseqc-report/exp2qcdt")
+    if(!require(x,character.only = TRUE)) stop("Package not found")
+  }
+}
+
+pkgTest("exp2qcdt");
