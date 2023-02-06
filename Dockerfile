@@ -33,7 +33,7 @@ ADD ./resources/bin/exp2qcdt.sh /opt/conda/envs/venv/bin/exp2qcdt.sh
 ADD ./resources/renv /opt/conda/envs/venv/renv
 ADD ./resources/renv.lock /opt/conda/envs/venv/renv.lock
 ADD ./build/Rprofile /opt/conda/envs/venv/etc/Rprofile
-RUN Rscript /opt/conda/envs/venv/etc/Rprofile
+RUN /opt/conda/envs/venv/bin/Rscript /opt/conda/envs/venv/etc/Rprofile
 
 # install dependencies before adding the rest of the source to maximize caching
 # backend dependencies
