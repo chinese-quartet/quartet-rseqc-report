@@ -3,7 +3,7 @@
 ###################
 
 # Build currently doesn't work on > Java 11 (i18n utils are busted) so build on 8 until we fix this
-FROM adoptopenjdk/openjdk8:x86_64-debianslim-jre8u345-b01 as builder
+FROM debian:stable-slim as builder
 
 WORKDIR /app/source
 
@@ -57,7 +57,7 @@ RUN /venv/bin/conda-unpack
 # # STAGE 2: runner
 # ###################
 
-FROM adoptopenjdk/openjdk8:x86_64-debianslim-jre8u345-b01 as runner
+FROM debian:stable-slim as runner
 
 LABEL org.opencontainers.image.source https://github.com/chinese-quartet/quartet-rseqc-report.git
 
