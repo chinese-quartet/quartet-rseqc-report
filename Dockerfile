@@ -24,9 +24,10 @@ RUN chmod 744 /usr/local/bin/lein
 
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_22.11.1-1-Linux-x86_64.sh -O miniconda.sh && bash miniconda.sh -b -p /opt/conda
 RUN /opt/conda/bin/conda install -c conda-forge -c bioconda -c anaconda mamba blas lapack cxx-compiler conda-pack gfortran_linux-64
-RUN /opt/conda/bin/mamba create -n venv -c bioconda -c conda-forge -y python=3.9 r-renv r-base=3.6.3 hisat2==2.2.1 samtools bioconductor-ballgown bioconductor-genefilter qualimap==2.2.2d fastq-screen==0.15.2 fastqc==0.11.9 fastp==0.23.2 stringtie==2.2.1
+RUN /opt/conda/bin/mamba create -n venv -c bioconda -c conda-forge -y python=3.9 r-renv r-base=3.6.3 hisat2==2.2.1 samtools bioconductor-ballgown bioconductor-genefilter qualimap==2.2.2d fastq-screen==0.15.2 fastqc==0.11.9 fastp==0.23.2 stringtie==2.2.1 cromwell
 ADD ./resources/requirements.txt /data/requirements.txt
 ADD ./bin/quartet-rseqc-report /opt/conda/envs/venv/bin/quartet-rseqc-report
+ADD ./bin/rseqc.py /opt/conda/envs/venv/bin/rseqc.py
 RUN /opt/conda/envs/venv/bin/pip install -r /data/requirements.txt
 
 ADD ./resources/bin/exp2qcdt.sh /opt/conda/envs/venv/bin/exp2qcdt.sh
@@ -81,5 +82,8 @@ RUN ln -s /venv/bin/prepDE.py /venv/bin/count
 COPY ./build/ballgown /venv/bin/ballgown
 RUN chmod a+x /venv/bin/ballgown
 
+## Workflow - WDL files
+COPY ./workflow /venv/workflow
+
 # Run it
-ENTRYPOINT ["quartet-rseqc-report"]
+ENTRYPOINT ["rseqc.py"]
