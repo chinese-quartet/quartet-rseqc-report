@@ -7,7 +7,7 @@ FROM debian:stable-slim as builder
 
 WORKDIR /app/source
 
-ENV PATH="$PATH:/opt/conda/bin"
+ENV PATH="$PATH:/opt/conda/bin:/opt/conda/envs/venv/bin"
 ENV FC_LANG en-US
 ENV LC_CTYPE en_US.UTF-8
 
