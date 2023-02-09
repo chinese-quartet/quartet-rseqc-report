@@ -4,6 +4,8 @@ import os
 import re
 import json
 import click
+# You may need to install https://github.com/yjcyxky/biominer-app-util firstly.
+from biominer_app_util.cli import render_app
 from subprocess import Popen, PIPE
 
 
@@ -54,36 +56,31 @@ def workflow(r1, r2, hisat2_index, fastq_screen_conf, gtf, output_dir):
     if not os.path.exists(wdl_dir):
         print("Cannot find the workflow, please contact the administrator.")
 
-    def zip_path_by_ext_program(input_path, output_path):
-        cmd = ['zip', '-r', '-q', output_path, input_path]
-        print('ZIP: Working Directory %s, CMD: %s' % (os.getcwd(), cmd))
-        proc = Popen(cmd, stdin=PIPE)
-        proc.communicate()
-
-    zip_path_by_ext_program('/venv/workflow/tasks', "/venv/workflow/tasks.zip")
-
+    project_name = "rseqc"
     data_dict = {
-        "rseqc.read1": r1,
-        "rseqc.read2": r2,
-        "rseqc.idx": hisat2_index,
-        "rseqc.fastq_screen_conf": fastq_screen_conf,
-        "rseqc.gtf": gtf
+        "project_name": project_name,
+        "read1": r1,
+        "read2": r2,
+        "idx": hisat2_index,
+        "fastq_screen_conf": fastq_screen_conf,
+        "gtf": gtf
     }
 
-    inputs_file = "/venv/workflow/inputs"
-    inputs = read_json(inputs_file)
-    inputs.update(data_dict)
+    output_workflow_dir = os.path.join(output_dir, project_name)
+    os.makedirs(output_workflow_dir, exist_ok=True)
 
-    write_json(inputs, inputs_file)
+    render_app(app_dir=wdl_dir, output_dir=output_workflow_dir,
+               project_name=project_name, sample=data_dict)
 
     def call_cromwell(inputs_fpath, workflow_fpath, workflow_root, tasks_path):
-        cmd = ['cromwell', 'run', workflow_fpath, "-i", inputs_fpath, "-p", tasks_path, "--workflow-root", workflow_root]
+        cmd = ['cromwell', 'run', workflow_fpath, "-i", inputs_fpath,
+               "-p", tasks_path, "--workflow-root", workflow_root]
         print('Run workflow and output results to %s.' % workflow_root)
         proc = Popen(cmd, stdin=PIPE)
         proc.communicate()
 
-    inputs_fpath = "/venv/workflow/inputs"
-    workflow_fpath = "/venv/workflow/workflow.wdl"
+    inputs_fpath = os.path.join(output_workflow_dir, "inputs")
+    workflow_fpath = os.path.join(output_workflow_dir, "workflow.wdl")
     workflow_root = output_dir
-    tasks_path = "/venv/workflow/tasks.zip"
+    tasks_path = os.path.join(output_workflow_dir, "tasks.zip")
     call_cromwell(inputs_fpath, workflow_fpath, workflow_root, tasks_path)

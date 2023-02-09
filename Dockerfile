@@ -20,11 +20,19 @@ RUN apt-get update && apt-get install -y coreutils bash git wget make gettext
 
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_22.11.1-1-Linux-x86_64.sh -O miniconda.sh && bash miniconda.sh -b -p /opt/conda
 RUN /opt/conda/bin/conda install -c conda-forge -c bioconda -c anaconda mamba blas lapack cxx-compiler conda-pack gfortran_linux-64
-RUN /opt/conda/bin/mamba create -n venv -c bioconda -c conda-forge -y python=3.9 r-renv r-base=3.6.3 hisat2==2.2.1 samtools bioconductor-ballgown bioconductor-genefilter qualimap==2.2.2d fastq-screen==0.15.2 fastqc==0.11.9 fastp==0.23.2 stringtie==2.2.1 cromwell==83
+
+# Note: cromwell==83 must not deleted.
+RUN /opt/conda/bin/mamba create -n venv -c bioconda -c conda-forge -y cromwell==83 python=3.9 r-renv r-base=3.6.3 hisat2==2.2.1 samtools bioconductor-ballgown bioconductor-genefilter qualimap==2.2.2d fastq-screen==0.15.2 fastqc==0.11.9 fastp==0.23.2 stringtie==2.2.1
+
+# Customized softewares
+RUN /opt/conda/envs/venv/bin/
 ADD ./resources/requirements.txt /data/requirements.txt
 ADD ./bin/quartet-rseqc-report /opt/conda/envs/venv/bin/quartet-rseqc-report
 ADD ./bin/rseqc.py /opt/conda/envs/venv/bin/rseqc.py
 RUN /opt/conda/envs/venv/bin/pip install -r /data/requirements.txt
+
+# For app render.
+RUN /opt/conda/envs/venv/bin/pip install git+https://github.com/yjcyxky/biominer-app-util.git
 
 ADD ./resources/bin/exp2qcdt.sh /opt/conda/envs/venv/bin/exp2qcdt.sh
 ADD ./resources/renv /opt/conda/envs/venv/renv
@@ -32,7 +40,11 @@ ADD ./resources/renv.lock /opt/conda/envs/venv/renv.lock
 ADD ./build/Rprofile /opt/conda/envs/venv/etc/Rprofile
 RUN /opt/conda/envs/venv/bin/Rscript /opt/conda/envs/venv/etc/Rprofile
 
-# lein:    backend dependencies and building
+# Build quartet-rseqc-report.jar
+# add the rest of the source
+ADD . .
+
+# lein: backend dependencies and building
 ADD ./bin/lein /usr/local/bin/lein
 RUN chmod 744 /usr/local/bin/lein
 
@@ -41,12 +53,10 @@ RUN chmod 744 /usr/local/bin/lein
 ADD project.clj .
 RUN lein deps
 
-# add the rest of the source
-ADD . .
-
 # build the app
 RUN lein uberjar
 
+# Pack the conda environment
 RUN conda-pack -n venv -o /tmp/env.tar && \
   mkdir /venv && cd /venv && tar xf /tmp/env.tar && \
   rm /tmp/env.tar
@@ -59,8 +69,6 @@ RUN /venv/bin/conda-unpack
 
 FROM debian:stable-slim as runner
 
-LABEL org.opencontainers.image.source https://github.com/chinese-quartet/quartet-rseqc-report.git
-
 ENV PATH="$PATH:/venv/bin"
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV FC_LANG en-US
@@ -70,6 +78,7 @@ RUN apt-get update && apt-get install -y coreutils bash git wget
 
 WORKDIR /data
 
+# Customized
 COPY --from=builder /venv /venv
 COPY --from=builder /app/source/target/uberjar/quartet-rseqc-report*.jar /quartet-rseqc-report.jar
 COPY --from=builder /app/source/resources/Rprofile /venv/etc/Rprofile

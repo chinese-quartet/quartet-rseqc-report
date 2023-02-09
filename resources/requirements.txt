@@ -1,1 +1,2 @@
+# MultiQC
 git+https://github.com/chinese-quartet/quartet-rseqc-report.git#subdirectory=report
