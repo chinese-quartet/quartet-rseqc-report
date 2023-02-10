@@ -40,8 +40,10 @@ ADD ./build/Rprofile /opt/conda/envs/venv/etc/Rprofile
 RUN /opt/conda/envs/venv/bin/Rscript /opt/conda/envs/venv/etc/Rprofile
 
 # Build quartet-rseqc-report.jar
-# add the rest of the source
+# Add the rest of the source
 ADD . .
+# Fetch all submodule
+RUN git submodule update --init --recursive
 
 # lein: backend dependencies and building
 ADD ./bin/lein /usr/local/bin/lein
@@ -83,15 +85,15 @@ COPY --from=builder /app/source/target/uberjar/quartet-rseqc-report*.jar /quarte
 COPY --from=builder /app/source/resources/Rprofile /venv/etc/Rprofile
 RUN sed -i 's/<plugin_env_path>/\/venv\/renv/g' /venv/etc/Rprofile
 
+## Workflow - WDL files
+COPY --from=builder /app/source/workflow /venv/workflow
+
 ## Make count work properly.
 RUN ln -s /venv/bin/prepDE.py /venv/bin/count
 
 ## Add ballgown wrapper
 COPY ./build/ballgown /venv/bin/ballgown
 RUN chmod a+x /venv/bin/ballgown
-
-## Workflow - WDL files
-COPY ./workflow /venv/workflow
 
 # Run it
 ENTRYPOINT ["rseqc.py"]

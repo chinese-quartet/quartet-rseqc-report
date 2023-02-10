@@ -44,13 +44,13 @@ def rseqc():
               type=click.Path(exists=True, file_okay=True),
               help="The config file for fastq-screen, the reference genomes must be located in the same directory with config file.")
 def workflow(r1, r2, hisat2_index, fastq_screen_conf, gtf, output_dir):
-    if not re.match(r'_R1.(fastq|fq).gz', r1):
+    if not re.match(r'.*_R1.(fastq|fq).gz', r1):
         raise Exception(
-            "The fastq file must be with suffixes of _R1.fastq.gz or _R1.fq.gz")
+            "The R1 fastq file must be with suffixes of _R1.fastq.gz or _R1.fq.gz")
 
-    if not re.match(r'_R2.(fastq|fq).gz', r2):
+    if not re.match(r'.*_R2.(fastq|fq).gz', r2):
         raise Exception(
-            "The fastq file must be with suffixes of _R2.fastq.gz or _R2.fq.gz")
+            "The R2 fastq file must be with suffixes of _R2.fastq.gz or _R2.fq.gz")
 
     wdl_dir = '/venv/workflow'
     if not os.path.exists(wdl_dir):
@@ -69,7 +69,7 @@ def workflow(r1, r2, hisat2_index, fastq_screen_conf, gtf, output_dir):
     output_workflow_dir = os.path.join(output_dir, project_name)
     os.makedirs(output_workflow_dir, exist_ok=True)
 
-    render_app(app_dir=wdl_dir, output_dir=output_workflow_dir,
+    render_app(wdl_dir, output_dir=output_workflow_dir,
                project_name=project_name, sample=data_dict)
 
     def call_cromwell(inputs_fpath, workflow_fpath, workflow_root, tasks_path):
@@ -84,3 +84,7 @@ def workflow(r1, r2, hisat2_index, fastq_screen_conf, gtf, output_dir):
     workflow_root = output_dir
     tasks_path = os.path.join(output_workflow_dir, "tasks.zip")
     call_cromwell(inputs_fpath, workflow_fpath, workflow_root, tasks_path)
+
+
+if __name__ == '__main__':
+    rseqc()
