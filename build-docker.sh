@@ -11,8 +11,3 @@ HASH=$(git show-ref --head --hash=8 head)  # first 8 letters of hash should be e
 docker build -t quartet-rseqc-report:${VERSION}-${HASH} . && \
 docker tag quartet-rseqc-report:${VERSION}-${HASH} ghcr.io/chinese-quartet/quartet-rseqc-report:${VERSION}-${HASH} && \
 docker push ghcr.io/chinese-quartet/quartet-rseqc-report:${VERSION}-${HASH}
-
-# Build runner docker image
-docker build -f Dockerfile.runner -t quartet-rseqc-report:runner-${VERSION}-${HASH} . && \
-docker tag quartet-rseqc-report:runner-${VERSION}-${HASH} ghcr.io/chinese-quartet/quartet-rseqc-report:runner-${VERSION}-${HASH} && \
-docker push ghcr.io/chinese-quartet/quartet-rseqc-report:runner-${VERSION}-${HASH}
