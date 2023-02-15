@@ -86,5 +86,23 @@ def workflow(r1, r2, hisat2_index, fastq_screen_conf, gtf, output_dir):
     call_cromwell(inputs_fpath, workflow_fpath, workflow_root, tasks_path)
 
 
+@rseqc.command(help="Run the report for RNA-Seq results.")
+@click.option('--result-dir', '-d', required=True,
+              type=click.Path(exists=True, file_okay=True),
+              help="A directory which contains a series of results from RNA-Seq pipeline.")
+@click.option('--metadata-file', '-m', required=True,
+              type=click.Path(exists=True, file_okay=True),
+              help="A metadata file")
+@click.option('--output-dir', '-o', required=True,
+              type=click.Path(exists=True, dir_okay=True),
+              help="A directory which will store the output report.")
+def report(result_dir, metadata_file, output_dir):
+        cmd = ['quartet-rseqc-report', '-d', result_dir, "-m", metadata_file,
+               "-o", output_dir]
+        print('Run quartet-rseqc-report and output the report to %s.' % output_dir)
+        proc = Popen(cmd, stdin=PIPE)
+        proc.communicate()    
+
+
 if __name__ == '__main__':
     rseqc()

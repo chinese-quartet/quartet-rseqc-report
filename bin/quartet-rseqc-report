@@ -8,7 +8,7 @@ JAVA_OPTS="$JAVA_OPTS -Djava.awt.headless=true"         # don't try to start AWT
 JAVA_OPTS="$JAVA_OPTS -Dfile.encoding=UTF-8"            # Use UTF-8
 
 # PATH
-export PATH=/opt/conda/bin:$PATH
+export PATH=/venv/bin:$PATH
 echo "Using these JAVA_OPTS: ${JAVA_OPTS}"
 
 echo "Run quartet-rseqc-report.jar with arguments" $@

@@ -50,6 +50,12 @@ Please access [Quartet Service](https://github.com/chinese-quartet/quartet-servi
 copm-cli install -n quartet-rseqc-report -V v0.2.2 -d plugins
 ```
 
+## Run with Docker
+
+```
+docker run -d -v /root/rseqc-raw.py:/venv/bin/rseqc.py -v /root/cromwell-local.conf:/venv/cromwell-local.conf -v /mnt/home_ssd/home/yangjingcheng/test_quartet_rseqc_report:/data -v /mnt/home_ssd:/mnt/home_ssd -v /root/workflow-raw:/venv/workflow -v /mnt/pgx_src_data_pool_4:/mnt/pgx_src_data_pool_4 -it ghcr.io/chinese-quartet/quartet-rseqc-report:7eaaa39-7eaaa395 workflow -i /mnt/pgx_src_data_pool_4/reference/human/GRCh38/hisat2/GRCh38.d1.vd1.fa.1.ht2 -g /mnt/pgx_src_data_pool_4/reference/human/GRCh38/annotation_files/gencode.v36.annotation.gtf -s /mnt/pgx_src_data_pool_4/reference/human/GRCh38/fastq_screen/fastq_screen.conf --output-dir /mnt/home_ssd/home/yangjingcheng/test_quartet_rseqc_report --r1 /mnt/pgx_src_data_pool_4/fuscc_lc_1000/rnaseq/clean/2568LC_R1.fq.gz --r2 /mnt/pgx_src_data_pool_4/fuscc_lc_1000/rnaseq/clean/2568LC_R2.fq.gz
+```
+
 ## Examples
 
 ...
