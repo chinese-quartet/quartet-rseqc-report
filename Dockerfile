@@ -88,6 +88,9 @@ RUN sed -i 's/<plugin_env_path>/\/venv\/renv/g' /venv/etc/Rprofile
 ## Workflow - WDL files
 COPY --from=builder /app/source/workflow /venv/workflow
 
+## Config file for cromwell instance
+COPY --from=builder /app/source/build/cromwell-local.conf /venv/cromwell-local.conf
+
 ## Make count work properly.
 RUN ln -s /venv/bin/prepDE.py /venv/bin/count
 

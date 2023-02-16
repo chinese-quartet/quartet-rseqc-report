@@ -73,8 +73,9 @@ def workflow(r1, r2, hisat2_index, fastq_screen_conf, gtf, output_dir):
                project_name=project_name, sample=data_dict)
 
     def call_cromwell(inputs_fpath, workflow_fpath, workflow_root, tasks_path):
-        cmd = ['cromwell', 'run', workflow_fpath, "-i", inputs_fpath,
-               "-p", tasks_path, "--workflow-root", workflow_root]
+        # cmd = ['cromwell', 'run', workflow_fpath, "-i", inputs_fpath,
+        #        "-p", tasks_path, "--workflow-root", workflow_root]
+        cmd = ['java', '-Dconfig.file=/venv/cromwell-local.conf', '-jar', '/venv/share/cromwell/cromwell.jar', 'run', workflow_fpath, "-i", inputs_fpath, "-p", tasks_path, "--workflow-root", workflow_root]
         print('Run workflow and output results to %s.' % workflow_root)
         proc = Popen(cmd, stdin=PIPE)
         proc.communicate()
@@ -97,11 +98,11 @@ def workflow(r1, r2, hisat2_index, fastq_screen_conf, gtf, output_dir):
               type=click.Path(exists=True, dir_okay=True),
               help="A directory which will store the output report.")
 def report(result_dir, metadata_file, output_dir):
-        cmd = ['quartet-rseqc-report', '-d', result_dir, "-m", metadata_file,
-               "-o", output_dir]
-        print('Run quartet-rseqc-report and output the report to %s.' % output_dir)
-        proc = Popen(cmd, stdin=PIPE)
-        proc.communicate()    
+    cmd = ['quartet-rseqc-report', '-d', result_dir, "-m", metadata_file,
+           "-o", output_dir]
+    print('Run quartet-rseqc-report and output the report to %s.' % output_dir)
+    proc = Popen(cmd, stdin=PIPE)
+    proc.communicate()
 
 
 if __name__ == '__main__':
