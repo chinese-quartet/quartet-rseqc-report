@@ -13,7 +13,7 @@ Assuming your data files are in the /your-data directory.
 ### 0. Prepare a set of subdirectories
 
 ```
-mkdir -p /your-data/fast_screen /your-data/hisat2 /your-data/gtf /your-data/results /your-data/raw-data /your-data/report
+mkdir -p /your-data/fastq_screen /your-data/hisat2 /your-data/gtf /your-data/results /your-data/raw-data /your-data/report
 ```
 
 ### 1. Download the dependency files

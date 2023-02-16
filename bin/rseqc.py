@@ -66,7 +66,7 @@ def workflow(r1, r2, hisat2_index, fastq_screen_conf, gtf, output_dir):
         "gtf": gtf
     }
 
-    output_workflow_dir = os.path.join(output_dir, project_name)
+    output_workflow_dir = os.path.join(os.path.dirname(output_dir), "workflow")
     os.makedirs(output_workflow_dir, exist_ok=True)
 
     render_app(wdl_dir, output_dir=output_workflow_dir,
@@ -82,9 +82,8 @@ def workflow(r1, r2, hisat2_index, fastq_screen_conf, gtf, output_dir):
 
     inputs_fpath = os.path.join(output_workflow_dir, "inputs")
     workflow_fpath = os.path.join(output_workflow_dir, "workflow.wdl")
-    workflow_root = output_dir
     tasks_path = os.path.join(output_workflow_dir, "tasks.zip")
-    call_cromwell(inputs_fpath, workflow_fpath, workflow_root, tasks_path)
+    call_cromwell(inputs_fpath, workflow_fpath, output_dir, tasks_path)
 
 
 @rseqc.command(help="Run the report for RNA-Seq results.")
