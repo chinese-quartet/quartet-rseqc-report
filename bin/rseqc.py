@@ -41,7 +41,7 @@ def rseqc():
               type=click.Path(exists=True, dir_okay=True, file_okay=False),
               help="The output directory.")
 @click.option('--fastq-screen-conf', '-s', required=True,
-              type=click.Path(exists=True, file_okay=True, file_okay=False),
+              type=click.Path(exists=True, file_okay=True, dir_okay=False),
               help="The config file for fastq-screen, the reference genomes must be located in the same directory with config file.")
 def workflow(r1, r2, hisat2_index, fastq_screen_conf, gtf, output_dir):
     if not re.match(r'.*_R1.(fastq|fq).gz', r1):
