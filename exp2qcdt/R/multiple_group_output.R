@@ -25,6 +25,7 @@
 #' @importFrom data.table "setDF"
 #' @importFrom data.table "setDT"
 #' @importFrom utils combn
+#' @importFrom scales rescale
 
 make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, result_dir, 
                                   abs_cor_median, pt_abs_median_cor) {
@@ -161,7 +162,7 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   dt_metric_summary <- data.table(
     qc_metrics = c('Signal-to-Noise Ratio (SNR)', 'Relative Correlation with Reference Datasets (RC) ', 'Total Score'),
     value = c(as.character(dt_snr$SNR[1]), cor_log2fc, as.numeric(dt_ref_qc_metrics_value[batch == 'QC_test'][['total_score']])),
-    historical_value = c('19.505 ± 7.039', '0.950 ± 0.028', '4.238 ± 0.849'),
+    historical_value = c('19.505 ± 7.039', '0.924 ± 0.048', '4.181 ± 0.865'),
     rank = c(paste(snr_rank, '/', rank_len, sep = ''), paste(rc_cor_rank, '/', rank_len, sep = ''), paste(total_score_rank, '/', rank_len, sep = '')))
   
   colnames(dt_metric_summary) <- c('qc_metrics', 'value', 'historical_value', 'rank')
@@ -176,6 +177,9 @@ make_performance_plot <- function(dt_fpkm, dt_fpkm_log, dt_counts, dt_meta, resu
   dt_ref_qc_metrics_value_s[dim(dt_ref_qc_metrics_value_s)[1]/5 <= rank & rank <= dim(dt_ref_qc_metrics_value_s)[1]*1/2, performance := 'Good']
   dt_ref_qc_metrics_value_s[dim(dt_ref_qc_metrics_value_s)[1]/5 < rev(rank) & rev(rank) <= dim(dt_ref_qc_metrics_value_s)[1]*1/2, performance := 'Fair']
   dt_ref_qc_metrics_value_s[rev(rank) < dim(dt_ref_qc_metrics_value_s)[1]/5, performance := 'Bad']
+  
+  # scaled_score 1-10
+  dt_ref_qc_metrics_value_s[, scaled_score := round(rescale(total_score, to = c(1, 10)), digits = 3)]
   fwrite(dt_ref_qc_metrics_value_s, paste(result_dir, "/performance_assessment/quality_score.txt", sep = ""), sep = "\t")
   
   ### quality score plot ---
