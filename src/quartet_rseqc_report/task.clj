@@ -144,14 +144,15 @@
             status (:status (last results))
             msg (apply str (map :msg results))
             process (if (= status "Success") 100 -1)]
-        (log/info (format "Running batch command: %s" (:msg results)))
+        (log/info (format "Running batch command: %s" msg))
         (update-log-process! log-path {:status status
                                        :msg msg}
                              task-id process))
       (catch Exception e
         (update-process! task-id -1)
-        (let [log (json/write-str {:status "Error" :msg (.toString e)})]
-          (log/info "Status: " log)
+        (let [msg (.toString e)
+              log (json/write-str {:status "Error" :msg msg})]
+          (log/info "Error: " msg)
           (spit log-path log))))))
 
 (def events-init

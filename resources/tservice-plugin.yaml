@@ -1,6 +1,6 @@
 info:
   name: QC Report for Quartet RNA-Seq
-  version: vv0.2.3
+  version: v0.2.3
   description: Generate the QC Report for Quartet RNA-Seq data.
   category: Report
   home: https://github.com/chinese-quartet/quartet-rseqc-report

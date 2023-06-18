@@ -8,8 +8,9 @@ VERSION=$(git describe --tags `git rev-list --tags --max-count=1` --always)
 HASH=$(git show-ref --head --hash=8 head)  # first 8 letters of hash should be enough; that's what GitHub uses
 
 # Change the version in the project.clj and resources/tservice-plugin.yaml
-sed -i "" "s/(defproject quartet-rseqc-report \".*\"/(defproject quartet-rseqc-report \"${VERSION}\"/g" project.clj
-sed -i "" "s/version: v.*$/version: v${VERSION}/g" resources/tservice-plugin.yaml
+TRIMMED_VERSION=$(echo $VERSION | sed 's/^v//')
+sed -i "" "s/(defproject quartet-rseqc-report \".*\"/(defproject quartet-rseqc-report \"${TRIMMED_VERSION}\"/g" project.clj
+sed -i "" "s/version: v.*$/version: v${TRIMMED_VERSION}/g" resources/tservice-plugin.yaml
 
 # Build standalone docker image
 docker build -t quartet-rseqc-report:${VERSION}-${HASH} . && \

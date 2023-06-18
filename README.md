@@ -7,7 +7,13 @@ see more details on [QDP Docs](https://docs.chinese-quartet.org/data_pipelines/t
 
 ## Build docker image
 
+You need to install [Docker](https://docs.docker.com/get-docker/) first.
+
 ```bash
+git clone https://github.com/chinese-quartet/quartet-rseqc-report
+
+cd quartet-rseqc-report
+
 bash build-docker.sh
 
 # After build docker image, you can run the docker image
