@@ -136,12 +136,12 @@ class MultiqcModule(BaseMultiqcModule):
             queried = "%.2f%s" % (int(query_rank)/total_len *200, '%')
         
         # ticks number
-        snr = dt_quality_score.loc[dt_quality_score['batch'] == 'QC_test', 'total_score'].iloc[0]
-        Q0 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Bad', 'total_score'].iloc[len_bad -1])
-        Q1 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Bad', 'total_score'].iloc[0])
-        Q2 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Fair', 'total_score'].iloc[0])
-        Q3 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Good', 'total_score'].iloc[0])
-        Q4 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Great', 'total_score'].iloc[0])
+        snr = dt_quality_score.loc[dt_quality_score['batch'] == 'QC_test', 'scaled_score'].iloc[0]
+        Q0 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Bad', 'scaled_score'].iloc[len_bad -1])
+        Q1 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Bad', 'scaled_score'].iloc[0])
+        Q2 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Fair', 'scaled_score'].iloc[0])
+        Q3 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Good', 'scaled_score'].iloc[0])
+        Q4 = "%.1f" % float(dt_quality_score.loc[dt_quality_score['performance'] == 'Great', 'scaled_score'].iloc[0])
         
         # Position of ticks
         tick_Q1 = "%.2f%s" % (len_bad/total_len * 100, '%')

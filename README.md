@@ -50,7 +50,7 @@ Please access [Quartet Service](https://github.com/chinese-quartet/quartet-servi
 ### Installation
 
 ```bash
-copm-cli install -n quartet-rseqc-report -V v0.2.3 -d plugins
+copm-cli install -n quartet-rseqc-report -V v0.2.4 -d plugins
 ```
 
 ## Examples
