@@ -25,16 +25,23 @@ RUN /opt/conda/bin/conda install -c conda-forge -c bioconda -c anaconda mamba bl
 RUN /opt/conda/bin/mamba create -n venv -c bioconda -c conda-forge -y python=3.9 r-renv r-base=3.6.3 hisat2==2.2.1 samtools bioconductor-ballgown bioconductor-genefilter qualimap==2.2.2d fastq-screen==0.15.2 fastqc==0.11.9 fastp==0.23.2 stringtie==2.2.1 cromwell==83
 
 # Customized softewares
-ADD ./resources/requirements.txt /data/requirements.txt
 ADD ./bin/quartet-rseqc-report /opt/conda/envs/venv/bin/quartet-rseqc-report
 ADD ./bin/rseqc.py /opt/conda/envs/venv/bin/rseqc.py
-RUN /opt/conda/envs/venv/bin/pip install -r /data/requirements.txt
+
+# Install report locally instead of remote to install the latest version.
+ADD report /report
+RUN /opt/conda/envs/venv/bin/pip install /report
 
 ADD ./resources/bin/exp2qcdt.sh /opt/conda/envs/venv/bin/exp2qcdt.sh
 ADD ./resources/renv /opt/conda/envs/venv/renv
 ADD ./resources/renv.lock /opt/conda/envs/venv/renv.lock
-ADD ./build/Rprofile /opt/conda/envs/venv/etc/Rprofile
-RUN /opt/conda/envs/venv/bin/Rscript /opt/conda/envs/venv/etc/Rprofile
+# Install exp2qcdt locally instead of remote to install the latest version.
+# ADD ./build/Rprofile /opt/conda/envs/venv/etc/Rprofile
+# RUN /opt/conda/envs/venv/bin/Rscript /opt/conda/envs/venv/etc/Rprofile
+
+# Disable cache to install all packages into the conda environment.
+COPY exp2qcdt /exp2qcdt
+RUN /opt/conda/envs/venv/bin/Rscript -e 'renv::activate("/opt/conda/envs/venv");renv::restore();renv::install("/exp2qcdt")'
 
 # For app render.
 RUN /opt/conda/envs/venv/bin/pip install git+https://github.com/yjcyxky/biominer-app-util.git
@@ -85,7 +92,12 @@ WORKDIR /data
 COPY --from=builder /venv /venv
 COPY --from=builder /app/source/target/uberjar/quartet-rseqc-report*.jar /quartet-rseqc-report.jar
 COPY --from=builder /app/source/resources/Rprofile /venv/etc/Rprofile
-RUN sed -i 's/<plugin_env_path>/\/venv\/renv/g' /venv/etc/Rprofile
+
+# Copy all the installed R packages from the builder.
+COPY --from=builder /root/.local/share/renv /root/.local/share/renv
+
+# Initialize Rprofile when running the container. The src/quartet_rseqc_report/cli.clj will check the Rprofile to find the path of the renv environment.
+RUN sed -i 's/<plugin_env_path>/\/venv/g' /venv/etc/Rprofile
 
 ## Workflow - WDL files
 COPY --from=builder /app/source/workflow /venv/workflow

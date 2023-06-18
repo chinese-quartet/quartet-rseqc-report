@@ -14,3 +14,4 @@ pom.xml.asc
 .Rproj.user
 examples
 .DS_Store
+.lsp

@@ -144,7 +144,7 @@
             status (:status (last results))
             msg (apply str (map :msg results))
             process (if (= status "Success") 100 -1)]
-        (log/info (format "Running batch command: %s" (pr-str results)))
+        (log/info (format "Running batch command: %s" (:msg results)))
         (update-log-process! log-path {:status status
                                        :msg msg}
                              task-id process))

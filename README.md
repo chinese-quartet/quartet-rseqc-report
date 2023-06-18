@@ -5,6 +5,15 @@
 see more details on [QDP Docs](https://docs.chinese-quartet.org/data_pipelines/transcriptomics/intro/).
 
 
+## Build docker image
+
+```bash
+bash build-docker.sh
+
+# After build docker image, you can run the docker image
+docker run -it --rm quartet-rseqc-report:<tag_name> --help
+```
+
 ## Build from source code
 
 ### Prerequisite
@@ -16,7 +25,11 @@ see more details on [QDP Docs](https://docs.chinese-quartet.org/data_pipelines/t
 - R >= 3.6.3
 
 ```
-conda create -c conda-forge -c bioconda -n quartet-rseqc-report python=3.9 openjdk=8.0.312 r-base=3.6.3
+# For Linux
+conda create -c conda-forge -c bioconda -c anaconda -n quartet-rseqc-report python=3.9 openjdk=8.0.312 r-base=3.6.3 blas lapack cxx-compiler conda-pack gfortran_linux-64
+
+# For Mac
+conda create -c conda-forge -c bioconda -c anaconda -n quartet-rseqc-report python=3.9 openjdk=8.0.312 r-base=3.6.3 blas lapack cxx-compiler conda-pack
 ```
 
 ### Installation
@@ -52,10 +65,6 @@ Please access [Quartet Service](https://github.com/chinese-quartet/quartet-servi
 ```bash
 copm-cli install -n quartet-rseqc-report -V v0.2.4 -d plugins
 ```
-
-## Examples
-
-...
 
 ## Contributions
 
