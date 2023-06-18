@@ -9,8 +9,14 @@ HASH=$(git show-ref --head --hash=8 head)  # first 8 letters of hash should be e
 
 # Change the version in the project.clj and resources/tservice-plugin.yaml
 TRIMMED_VERSION=$(echo $VERSION | sed 's/^v//')
-sed -i "" "s/(defproject quartet-rseqc-report \".*\"/(defproject quartet-rseqc-report \"${TRIMMED_VERSION}\"/g" project.clj
-sed -i "" "s/version: v.*$/version: v${TRIMMED_VERSION}/g" resources/tservice-plugin.yaml
+# If running on macOS, use sed -i '' instead of sed -i
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  sed -i "" "s/(defproject quartet-rseqc-report \".*\"/(defproject quartet-rseqc-report \"${TRIMMED_VERSION}\"/g" project.clj
+  sed -i "" "s/version: v.*$/version: v${TRIMMED_VERSION}/g" resources/tservice-plugin.yaml
+else
+  sed -i "s/(defproject quartet-rseqc-report \".*\"/(defproject quartet-rseqc-report \"${TRIMMED_VERSION}\"/g" project.clj
+  sed -i "s/version: v.*$/version: v${TRIMMED_VERSION}/g" resources/tservice-plugin.yaml
+fi
 
 # Build standalone docker image
 docker build -t quartet-rseqc-report:${VERSION}-${HASH} . && \
