@@ -12,6 +12,6 @@ pom.xml.asc
 .clj-kondo
 *.tar.gz
 .Rproj.user
-examples
+examples/quartet-rseqc-report
 .DS_Store
 .lsp

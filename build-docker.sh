@@ -12,14 +12,14 @@ TRIMMED_VERSION=$(echo $VERSION | sed 's/^v//')
 # If running on macOS, use sed -i '' instead of sed -i
 if [[ "$OSTYPE" == "darwin"* ]]; then
   sed -i "" "s/(defproject quartet-rseqc-report \".*\"/(defproject quartet-rseqc-report \"${TRIMMED_VERSION}\"/g" project.clj
-  sed -i "" "s/version: v.*$/version: v${TRIMMED_VERSION}/g" resources/tservice-plugin.yaml
+  sed -i "" "s/version: v.*$/version: v${TRIMMED_VERSION}-${HASH}/g" resources/tservice-plugin.yaml
 else
   sed -i "s/(defproject quartet-rseqc-report \".*\"/(defproject quartet-rseqc-report \"${TRIMMED_VERSION}\"/g" project.clj
-  sed -i "s/version: v.*$/version: v${TRIMMED_VERSION}/g" resources/tservice-plugin.yaml
+  sed -i "s/version: v.*$/version: v${TRIMMED_VERSION}-${HASH}/g" resources/tservice-plugin.yaml
 fi
 
 # Build standalone docker image
-docker build -t quartet-rseqc-report:${VERSION}-${HASH} . && \
+docker build -t quartet-rseqc-report:${VERSION}-${HASH} .
 
 if [ "$1" == "--push" ]; then
   docker tag quartet-rseqc-report:${VERSION}-${HASH} ghcr.io/chinese-quartet/quartet-rseqc-report:${VERSION}-${HASH} && \

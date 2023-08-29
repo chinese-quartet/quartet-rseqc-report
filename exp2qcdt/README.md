@@ -5,7 +5,7 @@ Convert expression table to qc data table for quartet project.
 ## Installation
 
 ```R
-devtools::install_github("clinico-omics/exp2qcdt")
+devtools::install_github("chinese-quartet/quartet-rseqc-report", subdir = "exp2qcdt")
 ```
 
 ## Usage

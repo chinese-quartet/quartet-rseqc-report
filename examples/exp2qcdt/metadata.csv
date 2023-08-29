@@ -1,0 +1,13 @@
+group,library,sample
+D5_1,D5-1_S1_L001_R1_001.fastq.gz,D5
+D5_2,D5-2_S5_L001_R1_001.fastq.gz,D5
+D5_3,D5-3_S9_L001_R1_001.fastq.gz,D5
+D6_1,D6-1_S2_L001_R1_001.fastq.gz,D6
+D6_2,D6-2_S6_L001_R1_001.fastq.gz,D6
+D6_3,D6-3_S10_L001_R1_001.fastq.gz,D6
+F7_1,F7-1_S3_L001_R1_001.fastq.gz,F7
+F7_2,F7-2_S7_L001_R1_001.fastq.gz,F7
+F7_3,F7-3_S11_L001_R1_001.fastq.gz,F7
+M8_1,M8-1_S4_L001_R1_001.fastq.gz,M8
+M8_2,M8-2_S8_L001_R1_001.fastq.gz,M8
+M8_3,M8-3_S12_L001_R1_001.fastq.gz,M8

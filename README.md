@@ -1,11 +1,63 @@
 # Quartet RSeQC Report
 
-## How to run Quartet RSeQC Report
+## For users [Recommended]
+
+### How to run Quartet RSeQC Report [Whole pipeline]
 
 see more details on [QDP Docs](https://docs.chinese-quartet.org/data_pipelines/transcriptomics/intro/).
 
 
-## Build docker image
+### How to generate Quartet RSeQC Report from the expression table [Only report]
+
+#### Pull docker image
+
+you need to get the tag name from [here](https://github.com/chinese-quartet/quartet-rseqc-report/pkgs/container/quartet-rseqc-report), and replace the `[tag_name]` with the tag name. such as `v0.2.4-15cd635b`
+
+```
+docker pull ghcr.io/chinese-quartet/quartet-rseqc-report:[tag_name]
+```
+
+#### Run docker image
+
+We assume you have the folloing files in the /report directory which is mounted to the docker container.
+
+```
+docker run -v <your-local-directory>:/report  --entrypoint bash -it ghcr.io/chinese-quartet/quartet-rseqc-report:[tag_name]
+
+# If you get a bash shell like this, it means you have successfully run the docker image
+# root@af1ae467b246:/data#
+```
+
+#### Run exp2qcdt to deal with the expression table
+
+> NOTE: 
+> 1. We assume you have the following files in the /report directory: `fpkm.csv`, `count.csv`, `metadata.csv`
+> 2. You must be sure that you are in the docker container
+
+The `fpkm.csv` and `count.csv` are the expression table, and the `metadata.csv` is the phenotype table.
+
+Get the example files from here: [`fpkm.csv`](./examples/exp2qcdt/fpkm.csv), [`count.csv`](./examples/exp2qcdt/count.csv), [`metadata.csv`](./examples/exp2qcdt/metadata.csv)
+
+```
+mkdir /report/output
+bash /venv/bin/exp2qcdt.sh -e /report/fpkm.csv -c /report/count.csv -m /report/metadata.csv -o /report/output
+```
+
+After the above command, you will get the following files in the `/report/output` directory in the docker container or <your-local-directory>/output directory in your local machine.
+
+![Results](./examples/exp2qcdt/results.png)
+
+#### Run multiqc to generate the report
+
+```
+multiqc /report/output -t quartet_rnaseq_report
+```
+
+After the above command, you will get the final report file `multiqc_report.html` in the `/report/output` directory in the docker container or <your-local-directory>/output directory in your local machine.
+
+
+## For developers
+### Build docker image [Recommended]
 
 You need to install [Docker](https://docs.docker.com/get-docker/) first.
 
@@ -20,9 +72,9 @@ bash build-docker.sh
 docker run -it --rm quartet-rseqc-report:<tag_name> --help
 ```
 
-## Build from source code
+### Build from source code [Not recommended]
 
-### Prerequisite
+#### Prerequisite
 
 - Bash
 - Python3 >= 3.7
@@ -38,7 +90,7 @@ conda create -c conda-forge -c bioconda -c anaconda -n quartet-rseqc-report pyth
 conda create -c conda-forge -c bioconda -c anaconda -n quartet-rseqc-report python=3.9 openjdk=8.0.312 r-base=3.6.3 blas lapack cxx-compiler conda-pack
 ```
 
-### Installation
+#### Installation
 
 ```
 # Activate conda environment
@@ -53,14 +105,14 @@ cd quartet-rseqc-report
 make all
 ```
 
-### Usage
+#### Usage
 
 ```bash
 source .env/bin/activate
 java -jar target/uberjar/quartet-rseqc-report-*-standalone.jar -h
 ```
 
-## Plugin Mode
+## For QDP developers [Plugin Mode]
 
 ### Prerequisite
 
