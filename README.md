@@ -1,5 +1,7 @@
 # Quartet RSeQC Report
 
+Quartet RSeQC Report is a quality assessment tool for RNA-seq data. It contains two parts: workflow and report. The workflow command takes raw reads (in FASTQ format), produces a set of qc result files from them. and you can use report command to report the results finally. We strongly recommend you to use the whole pipeline with docker to analyze your raw data and generate the report. See [Whole pipeline](#how-to-run-quartet-rseqc-report-whole-pipeline) for more details. If you only want to generate the report from the expression table, see [Only report](#how-to-generate-quartet-rseqc-report-from-the-expression-table-only-report) for more details.
+
 ## For users [Recommended]
 
 ### How to run Quartet RSeQC Report [Whole pipeline]
@@ -9,7 +11,7 @@ see more details on [QDP Docs](https://docs.chinese-quartet.org/data_pipelines/t
 
 ### How to generate Quartet RSeQC Report from the expression table [Only report]
 
-#### Pull docker image
+#### STEP1: Pull docker image
 
 you need to get the tag name from [here](https://github.com/chinese-quartet/quartet-rseqc-report/pkgs/container/quartet-rseqc-report), and replace the `[tag_name]` with the tag name. such as `v0.2.4-15cd635b`
 
@@ -17,7 +19,7 @@ you need to get the tag name from [here](https://github.com/chinese-quartet/quar
 docker pull ghcr.io/chinese-quartet/quartet-rseqc-report:[tag_name]
 ```
 
-#### Run docker image
+#### STEP2: Run docker image
 
 We assume you have the folloing files in the /report directory which is mounted to the docker container.
 
@@ -28,7 +30,7 @@ docker run -v <your-local-directory>:/report  --entrypoint bash -it ghcr.io/chin
 # root@af1ae467b246:/data#
 ```
 
-#### Run exp2qcdt to deal with the expression table
+#### STEP3: Run exp2qcdt to deal with the expression table
 
 > NOTE: 
 > 1. We assume you have the following files in the /report directory: `fpkm.csv`, `count.csv`, `metadata.csv`
@@ -47,7 +49,7 @@ After the above command, you will get the following files in the `/report/output
 
 ![Results](./examples/exp2qcdt/results.png)
 
-#### Run multiqc to generate the report
+#### STEP4: Run multiqc to generate the report
 
 ```
 multiqc /report/output -t quartet_rnaseq_report
