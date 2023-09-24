@@ -118,7 +118,7 @@ class MultiqcModule(BaseMultiqcModule):
         
         # heatmap
         # progress and arrow
-        total_len = dt_quality_score.shape[0]
+        total_len = dt_quality_score.shape[0] - 1
         len_bad = len(dt_quality_score[dt_quality_score["performance"]=='Bad'])
         len_fair = len(dt_quality_score[dt_quality_score["performance"]=='Fair'])
         len_good = len(dt_quality_score[dt_quality_score["performance"]=='Good'])

@@ -1,4 +1,4 @@
-(defproject quartet-rseqc-report "0.2.4"
+(defproject quartet-rseqc-report "0.2.5"
   :description "Visualizes Quality Control(QC) results for Quartet Project."
   :url "https://github.com/chinese-quartet/quartet-rseqc-report"
   :license {:name "Eclipse Public License"

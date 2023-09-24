@@ -1,7 +1,7 @@
 Package: exp2qcdt
 Type: Package
 Title: Convert expression table to qc datatable for quartet project
-Version: 0.2.4
+Version: 0.2.5
 Date: 2023-06-13
 Author: Jun Shang, Jingcheng Yang
 Maintainer: Jun Shang <shangjunv@163.com>
